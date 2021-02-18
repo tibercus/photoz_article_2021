@@ -1,0 +1,189 @@
+\usepackage{fontspec} % XeTeX
+\usepackage{xunicode} % Unicode для XeTeX
+\usepackage{xltxtra}  % Верхние и нижние индексы
+\usepackage{pdfpages} % Вставка PDF
+\usepackage{longtable}
+\usepackage{rotating}
+\usepackage{subcaption} % for subfigure
+
+\usepackage{listings} % Оформление исходного кода
+\lstset{
+    basicstyle=\small\ttfamily, % Размер и тип шрифта
+    breaklines=true,            % Перенос строк
+    tabsize=2,                  % Размер табуляции
+    frame=single,               % Рамка
+    literate={--}{{-{}-}}2,     % Корректно отображать двойной дефис
+    literate={---}{{-{}-{}-}}3  % Корректно отображать тройной дефис
+}
+
+% Русский язык
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+
+% Шрифты, xelatex
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{Times New Roman}
+\newfontfamily\cyrillicfont{Times New Roman}
+% \setsansfont{Liberation Sans}
+\setmonofont{FreeMono}
+
+\usepackage{geometry}
+\geometry{left=3cm}
+\geometry{right=1.5cm}
+\geometry{top=2cm}
+\geometry{bottom=2cm}
+
+\renewcommand{\baselinestretch}{1.3} % Полуторный межстрочный интервал
+\parindent 1.27cm % Абзацный отступ
+
+\usepackage{indentfirst} % включает отступ после заголовка
+\usepackage{hyperref}
+\urlstyle{same}
+
+\sloppy             % Избавляемся от переполнений
+\hyphenpenalty=1000 % Частота переносов
+\clubpenalty=10000  % Запрещаем разрыв страницы после первой строки абзаца
+\widowpenalty=10000 % Запрещаем разрыв страницы после последней строки абзаца
+
+% Пути к каталогам с изображениями
+\usepackage{graphicx} % Вставка картинок и дополнений
+\graphicspath{{resources/}}
+\usepackage{wrapfig}
+
+% Заголовки секций в оглавлении в верхнем регистре
+\usepackage{textcase}
+\makeatletter
+\let\oldcontentsline\contentsline
+\def\contentsline#1#2{
+    \expandafter\ifx\csname l@#1\endcsname\l@section
+        \expandafter\@firstoftwo
+    \else
+        \expandafter\@secondoftwo
+    \fi
+    {\oldcontentsline{#1}{\MakeTextUppercase{#2}}}
+    {\oldcontentsline{#1}{#2}}
+}
+\makeatother
+
+\usepackage{titlesec}
+\titleformat{\section}{\centering\uppercase}{\thesection.\quad}{0pt}{}
+\titlespacing\section{1.27cm}{0cm}{0cm}
+\titleformat{\subsection}{}{\thesubsection.\quad}{0pt}{}
+\titlespacing\subsection{1.27cm}{0cm}{0cm}
+\titleformat{\subsubsection}{}{\thesubsubsection.\quad}{0pt}{}
+\titlespacing\subsubsection{1.27cm}{0cm}{0cm}
+
+\newcommand{\anonsection}[1]{
+    \phantomsection
+    \section*{#1}
+    \addcontentsline{toc}{section}{#1}
+}
+
+\pagenumbering{arabic}
+
+% Содержание
+\usepackage{tocloft}
+% СОДЕРЖАНИЕ
+\renewcommand{\cfttoctitlefont}{\hspace{0.42\textwidth}\MakeTextUppercase}
+% Имена секций в содержании не жирным шрифтом
+\renewcommand{\cftsecfont}{\hspace{0pt}}
+% Точки для секций в содержании
+\renewcommand\cftsecleader{\cftdotfill{\cftdotsep}} 
+% Номера страниц не жирные
+\renewcommand\cftsecpagefont{\mdseries}
+\renewcommand{\contentsname}{Содержание}
+% Заголовок содержания
+
+\setcounter{tocdepth}{3}
+\setcounter{page}{1} % нумерация со второй страницы
+
+\usepackage{float}
+\usepackage{amssymb} % for mathbb font
+
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{argmax} % for argmax
+
+% Библиография: отступы и межстрочный интервал
+\makeatletter
+\renewenvironment{thebibliography}[1]
+    {\section*{\refname}
+        \list{\@biblabel{\@arabic\c@enumiv}}
+           {\settowidth\labelwidth{\@biblabel{#1}}
+            \leftmargin\labelsep
+            \itemindent 16.7mm
+            \@openbib@code
+            \usecounter{enumiv}
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}
+        }
+        \setlength{\itemsep}{0pt}
+    }
+\makeatother
+
+% Оформление библиографии и подрисуночных записей через точку
+\makeatletter
+\renewcommand*{\@biblabel}[1]{\hfill#1.}
+\renewcommand*\l@section{\@dottedtocline{1}{1em}{1em}}
+%\renewcommand{\thefigure}{\thesection.\arabic{figure}} % Формат рисунка секция.номер
+\renewcommand{\thefigure}{\arabic{figure}}
+%\renewcommand{\thetable}{\thesection.\arabic{table}}   % Формат таблицы секция.номер
+\renewcommand{\thetable}{\arabic{table}}
+\def\redeflsection{\def\l@section{\@dottedtocline{1}{0em}{10em}}}
+\makeatother
+
+% Списки
+\usepackage{enumitem}
+\setlist[enumerate,itemize]{leftmargin=12.7mm} % Отступы в списках
+
+\makeatletter
+    \AddEnumerateCounter{\asbuk}{\@asbuk}{м)}
+\makeatother
+\setlist{nolistsep}                           % Нет отступов между пунктами списка
+\renewcommand{\labelitemi}{--}                % Маркер списка --
+\renewcommand{\labelenumi}{\asbuk{enumi})}    % Список второго уровня
+\renewcommand{\labelenumii}{\arabic{enumii})} % Список третьего уровня
+
+% Содержание
+\usepackage{tocloft}
+\renewcommand{\cfttoctitlefont}{\hspace{0.38\textwidth}\MakeTextUppercase} % СОДЕРЖАНИЕ
+\renewcommand{\cftsecfont}{\hspace{0pt}}            % Имена секций в содержании не жирным шрифтом
+\renewcommand\cftsecleader{\cftdotfill{\cftdotsep}} % Точки для секций в содержании
+\renewcommand\cftsecpagefont{\mdseries}             % Номера страниц не жирные
+\setlength{\cftaftertoctitleskip}{0em}
+\setcounter{tocdepth}{3}                            % Глубина оглавления, до subsubsection
+
+% Список табличного материала
+\renewcommand{\cftlottitlefont}{\hspace{0.2\textwidth}\MakeTextUppercase}
+\renewcommand{\cfttabfont}{Таблица }
+
+% Формат подрисуночных надписей
+\RequirePackage{caption}
+\DeclareCaptionLabelSeparator{defffis}{ -- } % Разделитель
+\captionsetup[figure]{justification=centering, labelsep=defffis, format=plain} % Подпись рисунка по центру
+\captionsetup[table]{justification=raggedright, labelsep=defffis, format=plain, singlelinecheck=false} % Подпись таблицы слева
+\addto\captionsrussian{\renewcommand{\figurename}{Рисунок}} % Имя фигуры
+
+% Пользовательские функции
+\newcommand{\addimg}[4]{ % Добавление одного рисунка
+    \begin{figure}
+        \centering
+        \includegraphics[width=#2\linewidth]{#1}
+        \caption{#3} \label{#4}
+    \end{figure}
+}
+\newcommand{\addimghere}[4]{ % Добавить рисунок непосредственно в это место
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=#2\linewidth]{#1}
+        \caption{#3} \label{#4}
+    \end{figure}
+}
+\newcommand{\addtwoimghere}[5]{ % Вставка двух рисунков
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=#3\linewidth]{#1}
+        \hfill
+        \includegraphics[width=#3\linewidth]{#2}
+        \caption{#4} \label{#5}
+    \end{figure}
+}
