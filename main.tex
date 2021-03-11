@@ -216,18 +216,19 @@ We use photometric data from SDSS DR14 \citep{2018ApJS..235...42A}, Pan-STARRS1 
 \end{table*}
 
 \begin{table*}
-    \caption{Наборы признаков, используемых в моделях}
+    \caption{Наборы признаков, используемых в моделях TODO -- баг с нумерацией при использовании multicolumn}
     \label{tab:models}
     \centering
-    \begin{tabular}{r N c l}
+    \begin{tabular}{r N c c c c l}
     \hline
-        Model & \multicolumn{1}{c}{No.} & WISE Source & Feature sets used \\
+        {}                      & \multicolumn{4}{c}{Data} & {}\\
+        \multicolumn{1}{c}{No.} & SDSS & PS & LS & WISE & Feature sets used \\
     \hline
-        Pan-STARRS + WISE (PW) & \label{model:pw} & Rodion & \ref{feats:ps-mags-1}, \ref{feats:ps-mags-2}, \ref{feats:ps-colors-1}, \ref{feats:ps-colors-2}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ps-wise-colors-1} \\ %Pan-STARRS mags (1 and 2) and colors (1 and 2), WISE mags and colors, Pan-STARRS + WISE colors \\
-        SDSS + Pan-STARRS + WISE (SPW) & \label{model:spw} & Rodion & TODO где нет DESI LIS, юзаем Родиона, в т.ч. PW \\
-        DESI LIS + WISE (DW) & \label{model:dw} & DESI LIS & \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ls-wise-colors-1} \\ % DESI LIS mags and colors, WISE mags and colors, DESI LIS + WISE colors \\
-        Pan-STARRS + DESI LIS + WISE (PDW) & \label{model:pdw} & DESI LIS & \ref{feats:ps-mags-1}, \ref{feats:ps-colors-1}, \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ps-ls-colors-1}, \ref{feats:ps-wise-colors-1} \\ % Pan-STARRS mags (1) and colors (1), DESI LIS mags and colors, WISE mags and colors, Pan-STARRS + DESI LIS colors, Pan-STARRS + WISE colors \\
-        SDSS + Pan-STARRS + DESI LIS + WISE (SPDW) & \label{model:spdw} & DESI LIS & \ref{feats:sdss-mags-1}, \ref{feats:sdss-colors-1}, \ref{feats:ps-mags-1}, \ref{feats:ps-colors-1}, \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:sdss-wise-colors-1}, \ref{feats:sdss-ls-colors-1}, \ref{feats:ps-wise-colors-1} \\ % SDSS mags and colors, Pan-STARRS mags (1) and colors (1), DESI LIS mags and colors, WISE mags and colors, SDSS + WISE colors, SDSS + DESI LIS colors, Pan-STARRS + WISE colors \\
+        \label{model:pw} & & + & & Rodion & \ref{feats:ps-mags-1}, \ref{feats:ps-mags-2}, \ref{feats:ps-colors-1}, \ref{feats:ps-colors-2}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ps-wise-colors-1} \\ %Pan-STARRS mags (1 and 2) and colors (1 and 2), WISE mags and colors, Pan-STARRS + WISE colors \\
+        \label{model:spw} & + & + & & Rodion & TODO где нет DESI LIS, юзаем Родиона, в т.ч. PW \\
+        \label{model:dw} & & & + & DESI LIS & \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ls-wise-colors-1} \\ % DESI LIS mags and colors, WISE mags and colors, DESI LIS + WISE colors \\
+        \label{model:pdw} & & + & + & DESI LIS & \ref{feats:ps-mags-1}, \ref{feats:ps-colors-1}, \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ps-ls-colors-1}, \ref{feats:ps-wise-colors-1} \\ % Pan-STARRS mags (1) and colors (1), DESI LIS mags and colors, WISE mags and colors, Pan-STARRS + DESI LIS colors, Pan-STARRS + WISE colors \\
+        \label{model:spdw} & + & + & + & DESI LIS & \ref{feats:sdss-mags-1}, \ref{feats:sdss-colors-1}, \ref{feats:ps-mags-1}, \ref{feats:ps-colors-1}, \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:sdss-wise-colors-1}, \ref{feats:sdss-ls-colors-1}, \ref{feats:ps-wise-colors-1} \\ % SDSS mags and colors, Pan-STARRS mags (1) and colors (1), DESI LIS mags and colors, WISE mags and colors, SDSS + WISE colors, SDSS + DESI LIS colors, Pan-STARRS + WISE colors \\
     \hline
     \end{tabular}
 \end{table*}
@@ -405,6 +406,13 @@ At the prediction stage we take into account uncertainties in photometric fluxes
     \label{fig:metrics-cv2-gal}
 \end{figure*}
 
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-gal.png}
+    \caption{Скаттерплот кросс-валидации для галактик}
+    \label{fig:metrics-cv2-qso}
+\end{figure*}
+
 \subsection{Результаты на кросс-валидации (квазары)}
 В данном разделе рассматривается поведение моделей на двукратной кросс-валидации и на тестовой выборке оптических квазаров SDSS DR16q.
 
@@ -418,7 +426,7 @@ At the prediction stage we take into account uncertainties in photometric fluxes
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-qso.png}
+    \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-total.png}
     \caption{Скаттерплот на кросс-валидации}
     \label{fig:my_label}
 \end{figure*}
@@ -468,18 +476,101 @@ At the prediction stage we take into account uncertainties in photometric fluxes
     \item отсутствие фильтров $i$ и $y$ приводит к понижению точности прогнозов для ярких объектов (см. модели DESI LIS + WISE и Pan-STARRS + WISE).
 \end{itemize}
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-qso_r-mag.png}
-    \caption{Графики метрик точности моделей в зависимости от значения величины $r$, посчитанной из потоков каталога DESI LIS по формуле гиперболического синуса \eqref{eq:asinhmag}. На верхних графиках показана метрика $NMAD$ \eqref{eq:nmad}, на нижних графиках -- доля катастрофических выбросов $n_{>0.15}$ \eqref{eq:n015}. Слева -- метрики на двукратной кросс-валидации, справа -- на тестовой выборке оптических квазаров. Модели: Pan-STARRS + WISE -- синий пунктир, DESI LIS + WISE -- зеленый штрих-пунктир, Pan-STARRS + DESI LIS + WISE -- оранжевый штрих, SDSS + DESI LIS + WISE -- красная сплошная кривая.}
-    \label{fig:metrics-qso_z_mag}
-\end{figure*}
+% \begin{figure*}
+%     \centering
+%     \includegraphics[width=0.9\linewidth]{images/metrics-qso_r-mag.png}
+%     \caption{Графики метрик точности моделей в зависимости от значения величины $r$, посчитанной из потоков каталога DESI LIS по формуле гиперболического синуса \eqref{eq:asinhmag}. На верхних графиках показана метрика $NMAD$ \eqref{eq:nmad}, на нижних графиках -- доля катастрофических выбросов $n_{>0.15}$ \eqref{eq:n015}. Слева -- метрики на двукратной кросс-валидации, справа -- на тестовой выборке оптических квазаров. Модели: Pan-STARRS + WISE -- синий пунктир, DESI LIS + WISE -- зеленый штрих-пунктир, Pan-STARRS + DESI LIS + WISE -- оранжевый штрих, SDSS + DESI LIS + WISE -- красная сплошная кривая.}
+%     \label{fig:metrics-qso_z_mag}
+% \end{figure*}
 
 \subsection{Stripe82X results}\label{subsec:s82x_results}
 
 В данном разделе приведено описание результатов, полученных на выборке Stripe82X и сравнение с моделями (Ananna, Brescia \ref{}). В целом выводы о поведении моделей повторяют изложенное ранее в пункте \ref{}, поэтому здесь мы заострим внимание на сравнении с моделями других исследователей.
 
 На рис. \ref{fig:s82x} показаны диаграммы рассеяния прогнозов для шести моделей. Можно видеть, что модель на основе четырех широких обзоров SDSS + Pan-STARRS + DESI LIS + WISE так же показвыает себя с лучшей стороны (прогнозы сильнее сгруппрированы вокруг диагонали, меньшая доля выбросов, точные прогнозы имеют бОльшую достоверность). Модель Ananna в свою очередь дает слишком высокую уверенность прогнозов: существенная доля катастрофических выбросов имеет $PDZbest \sim 1$.
+
+\begin{table*}
+	\begin{tabular}{llllllllll}
+            \hline
+                              &      & \multicolumn{3}{l}{Stripe82x-A17 sample} & \multicolumn{3}{l}{Quasars of DR16q} & \multicolumn{2}{l}{Cross-Validation} \\
+                              &      &               $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ \\
+            subsample & model &                      &                 &                  &                  &                 &                  &                  &                 \\
+            \hline
+\hline
+            $All$ & PW &                0.056 &           0.149 &            0.023 &            0.063 &           0.165 &            0.031 &            0.046 &           0.109 \\
+                              & PDW &                0.046 &           0.113 &            0.075 &            0.049 &            0.12 &            0.068 &            0.037 &           0.085 \\
+                              & DW &                0.074 &           0.177 &  \textbf{-0.003} &            0.083 &            0.19 &  \textbf{-0.005} &            0.058 &           0.143 \\
+                              & SPDW &       \textbf{0.034} &  \textbf{0.089} &            0.104 &   \textbf{0.037} &  \textbf{0.076} &            0.093 &   \textbf{0.028} &  \textbf{0.048} \\
+\hline
+            $z_{spec} < 0.5$ & PW &                0.038 &  \textbf{0.083} &   \textbf{0.003} &            0.038 &           0.113 &   \textbf{0.028} &             0.02 &           0.031 \\
+                              & PDW &                0.031 &           0.086 &             0.04 &            0.033 &           0.112 &            0.044 &            0.016 &           0.027 \\
+                              & DW &                0.048 &           0.111 &            0.035 &            0.077 &           0.197 &           -0.056 &            0.019 &           0.045 \\
+                              & SPDW &        \textbf{0.03} &           0.084 &            0.062 &   \textbf{0.031} &  \textbf{0.097} &            0.056 &   \textbf{0.015} &  \textbf{0.025} \\
+\hline
+            $0.5 \leq z_{spec} < 1$ & PW &                0.053 &           0.147 &             0.03 &            0.048 &           0.139 &            0.061 &            0.037 &           0.088 \\
+                              & PDW &                0.047 &           0.138 &            0.072 &            0.042 &           0.112 &            0.084 &             0.03 &           0.078 \\
+                              & DW &                0.081 &           0.204 &  \textbf{-0.011} &            0.085 &           0.186 &  \textbf{-0.023} &            0.049 &           0.126 \\
+                              & SPDW &       \textbf{0.038} &  \textbf{0.106} &            0.122 &   \textbf{0.035} &  \textbf{0.089} &            0.124 &   \textbf{0.026} &  \textbf{0.058} \\
+\hline
+            $1 \leq z_{spec} < 1.5$ & PW &                0.079 &           0.173 &            0.025 &            0.083 &           0.195 &            0.031 &            0.069 &           0.142 \\
+                              & PDW &                0.061 &           0.109 &            0.074 &             0.07 &           0.146 &            0.066 &            0.059 &           0.099 \\
+                              & DW &                0.083 &           0.143 &    \textbf{0.01} &            0.088 &           0.177 &   \textbf{0.005} &            0.078 &           0.134 \\
+                              & SPDW &       \textbf{0.048} &  \textbf{0.088} &            0.122 &   \textbf{0.057} &    \textbf{0.1} &            0.107 &   \textbf{0.043} &   \textbf{0.06} \\
+\hline
+            $1.5 \leq z_{spec} < 2$ & PW &                0.075 &           0.158 &            0.075 &            0.076 &           0.157 &            0.088 &            0.069 &           0.142 \\
+                              & PDW &                0.043 &           0.102 &            0.127 &            0.056 &           0.128 &            0.088 &            0.051 &           0.109 \\
+                              & DW &                0.078 &           0.253 &  \textbf{-0.029} &            0.093 &           0.256 &  \textbf{-0.009} &            0.089 &           0.238 \\
+                              & SPDW &       \textbf{0.031} &  \textbf{0.065} &            0.144 &   \textbf{0.044} &  \textbf{0.093} &             0.12 &   \textbf{0.038} &  \textbf{0.061} \\
+\hline
+            $2 \leq z_{spec}$ & PW &                0.071 &           0.222 &  \textbf{-0.018} &            0.063 &           0.173 &  \textbf{-0.001} &            0.058 &           0.132 \\
+                              & PDW &                0.046 &           0.133 &            0.089 &            0.046 &           0.111 &            0.059 &            0.047 &           0.101 \\
+                              & DW &                0.091 &           0.206 &           -0.043 &            0.078 &           0.172 &            0.005 &             0.08 &           0.164 \\
+                              & SPDW &       \textbf{0.029} &  \textbf{0.098} &            0.072 &   \textbf{0.031} &  \textbf{0.055} &            0.072 &    \textbf{0.03} &  \textbf{0.043} \\
+\hline
+            \hline
+            \end{tabular}
+            \caption{Metrics by $zspec$}
+\end{table*}
+
+
+\begin{table*}
+	\begin{tabular}{llllllllll}
+            \hline
+                                   &      & \multicolumn{3}{l}{Stripe82x-A17 sample} & \multicolumn{3}{l}{Quasars of DR16q} & \multicolumn{2}{l}{Cross-Validation} \\
+                                   &      &               $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ \\
+            subsample & model &                      &                 &                  &                  &                 &                  &                  &                 \\
+            \hline
+\hline
+            $z_{mag} < 19$ & PW &                0.037 &           0.046 &   \textbf{0.015} &            0.039 &           0.077 &            0.053 &            0.025 &           0.033 \\
+                                   & PDW &                0.027 &            0.04 &            0.043 &            0.034 &           0.068 &            0.066 &             0.02 &           0.029 \\
+                                   & DW &                0.038 &            0.08 &            0.036 &            0.071 &           0.152 &  \textbf{-0.012} &            0.026 &            0.06 \\
+                                   & SPDW &       \textbf{0.024} &  \textbf{0.029} &            0.081 &   \textbf{0.025} &   \textbf{0.04} &            0.096 &   \textbf{0.017} &  \textbf{0.017} \\
+\hline
+            $19 \leq z_{mag} < 20$ & PW &                0.043 &           0.076 &            0.075 &            0.046 &           0.098 &            0.065 &            0.043 &           0.079 \\
+                                   & PDW &                0.036 &           0.065 &            0.114 &            0.038 &           0.075 &            0.082 &            0.035 &           0.064 \\
+                                   & DW &                0.071 &            0.11 &   \textbf{0.008} &            0.074 &           0.154 &  \textbf{-0.004} &            0.058 &           0.124 \\
+                                   & SPDW &       \textbf{0.028} &  \textbf{0.041} &            0.131 &   \textbf{0.028} &  \textbf{0.044} &            0.099 &   \textbf{0.027} &  \textbf{0.035} \\
+\hline
+            $20 \leq z_{mag} < 20.5$ & PW &                0.064 &           0.137 &            0.027 &            0.058 &           0.145 &            0.031 &            0.058 &           0.129 \\
+                                   & PDW &                0.046 &           0.105 &            0.107 &            0.045 &           0.105 &            0.069 &            0.048 &             0.1 \\
+                                   & DW &                0.075 &           0.165 &   \textbf{0.014} &            0.079 &           0.172 &   \textbf{0.007} &            0.081 &           0.174 \\
+                                   & SPDW &       \textbf{0.033} &  \textbf{0.074} &            0.107 &   \textbf{0.033} &  \textbf{0.056} &            0.101 &   \textbf{0.034} &  \textbf{0.054} \\
+\hline
+            $20.5 \leq z_{mag} < 21$ & PW &                0.076 &           0.199 &           -0.009 &            0.072 &           0.183 &            0.024 &            0.072 &           0.168 \\
+                                   & PDW &                0.056 &           0.121 &            0.078 &            0.054 &           0.127 &            0.077 &            0.057 &           0.128 \\
+                                   & DW &                0.088 &           0.219 &   \textbf{0.006} &            0.084 &           0.198 &   \textbf{0.004} &            0.089 &           0.206 \\
+                                   & SPDW &       \textbf{0.044} &  \textbf{0.106} &            0.105 &   \textbf{0.039} &  \textbf{0.082} &             0.09 &    \textbf{0.04} &  \textbf{0.073} \\
+\hline
+            $21 \leq z_{mag} < 23$ & PW &                0.119 &           0.319 &  \textbf{-0.011} &            0.102 &           0.258 &  \textbf{-0.003} &            0.088 &           0.213 \\
+                                   & PDW &                0.082 &           0.245 &            0.035 &            0.071 &           0.179 &            0.051 &            0.066 &           0.157 \\
+                                   & DW &                0.118 &           0.325 &           -0.073 &            0.098 &           0.236 &           -0.016 &            0.096 &           0.229 \\
+                                   & SPDW &       \textbf{0.063} &   \textbf{0.21} &            0.095 &   \textbf{0.054} &  \textbf{0.124} &            0.085 &   \textbf{0.048} &  \textbf{0.094} \\
+\hline
+            \hline
+            \end{tabular}
+            \caption{Metrics by $decals8tr_z$}
+\end{table*}
+
 
 
 \begin{figure*}
@@ -582,7 +673,7 @@ At the prediction stage we take into account uncertainties in photometric fluxes
 	\begin{tabular}{llllllllll}
             \hline
             {} & \multicolumn{3}{l}{$FSoft < 1e-14$ (951 objects)} & \multicolumn{3}{l}{$FSoft < 4e-14$ (2016 objects)} & \multicolumn{3}{l}{$FSoft < 1.0$ (2223 objects)} \\
-            {} &                        $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                         $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                       $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
+            {Model} &                        $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                         $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                       $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
             Model          &                               &                 &                 &                                &                 &                 &                              &                 &                 \\
             \hline
             PW             &                         0.068 &           0.188 &          -0.009 &                          0.058 &           0.154 &  \textbf{0.003} &                        0.056 &           0.148 &  \textbf{0.002} \\
