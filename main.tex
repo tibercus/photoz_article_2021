@@ -384,13 +384,6 @@ At the prediction stage we take into account uncertainties in photometric fluxes
 
 \subsection{Результаты на кросс-валидации (галактики)}
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-gal.png}
-    \caption{Скаттерплот галактик на кросс-валидации}
-    \label{fig:my_label}
-\end{figure*}
-
 % \begin{figure*}
 %     \centering
 %     \includegraphics[width=0.9\linewidth]{images/metrics-gal_spec-z.png}
@@ -426,7 +419,7 @@ At the prediction stage we take into account uncertainties in photometric fluxes
 \begin{figure*}
     \centering
     \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-qso.png}
-    \caption{Скаттерплот квазаров на кросс-валидации}
+    \caption{Скаттерплот на кросс-валидации}
     \label{fig:my_label}
 \end{figure*}
 
@@ -492,23 +485,31 @@ At the prediction stage we take into account uncertainties in photometric fluxes
 \begin{figure*}
     \centering
     \includegraphics[width=0.9\linewidth]{images/scatterplots-stripe82x.png}
-    \caption{Диаграммы рассеяния прогнозов четырех моделей Photo-z (Pan-STARRS + WISE слева сверху, Pan-STARRS + DESI LIS + WISE справа сверху, DESI LIS + WISE слева посередине и SDSS + PanSTARRS + DESI LIS + WISE справа посередине, шаблонная модель (Ananna, 2017) слева снизу и нейросетевая модель (Brescia, 2019) справа снизу) на тестовой выборке рентгеновских объектов Stripe82X. По оси абсцисс -- значение spec-z, по оси ординат -- значение прогноза photo-z. Цветом и размером кружка показана мера достоверности прогноза zConf (PDZbest для Ananna).}
+    \caption{Диаграммы рассеяния прогнозов четырех моделей Photo-z (Pan-STARRS + WISE слева сверху, Pan-STARRS + DESI LIS + WISE справа сверху, DESI LIS + WISE слева снизу и SDSS + PanSTARRS + DESI LIS + WISE справа снизу) на тестовой выборке рентгеновских объектов Stripe82X. По оси абсцисс -- значение spec-z, по оси ординат -- значение прогноза photo-z. Цветом и размером кружка показана мера достоверности прогноза zConf.}
+    \label{fig:s82x}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/scatterplots-stripe82x-sota.png}
+    \caption{Диаграммы рассеяния прогнозов для 35 модели + SOTA.}
     \label{fig:s82x}
 \end{figure*}
 
 \begin{table*}
 	\begin{tabular}{llllllllll}
             \hline
-            {} & \multicolumn{3}{l}{$All$ (2403 objects)} & \multicolumn{3}{l}{$z_{spec} < 0.5$ (570 objects)} & \multicolumn{3}{l}{$0.5 \leq z_{spec} < 1$ (635 objects)} \\
-            {} &               $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                         $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                                $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ \\
-            Model          &                      &                 &                  &                                &                 &                 &                                       &                 &                  \\
+            {} & \multicolumn{3}{l}{$All$ (2361 objects)} & \multicolumn{3}{l}{$z_{spec} < 0.5$ (563 objects)} & \multicolumn{3}{l}{$0.5 \leq z_{spec} < 1$ (629 objects)} \\
+            {} &               $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                         $NMAD$ &       $n>0.15$ &  $C_{68} - 0.68$ &                                $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
+            Model          &                      &                 &                 &                                &                &                  &                                       &                 &                 \\
             \hline
-            PW             &                0.057 &           0.149 &            0.042 &                          0.037 &           0.091 &  \textbf{0.022} &                                 0.054 &           0.145 &             0.06 \\
-            PDW            &                0.046 &           0.112 &            0.076 &                          0.031 &           0.086 &           0.041 &                                 0.046 &           0.134 &            0.073 \\
-            DW             &                0.073 &           0.177 &  \textbf{-0.008} &                          0.047 &           0.112 &           0.032 &                                 0.084 &           0.206 &  \textbf{-0.025} \\
-            SPDW           &       \textbf{0.034} &  \textbf{0.089} &            0.104 &                  \textbf{0.03} &  \textbf{0.084} &           0.062 &                        \textbf{0.038} &  \textbf{0.106} &            0.122 \\
-            Template Model &                0.066 &           0.177 &           -0.342 &                          0.075 &           0.114 &          -0.499 &                                 0.062 &           0.217 &           -0.289 \\
-            NN Model       &                0.066 &            0.16 &           -0.258 &                          0.073 &           0.116 &          -0.396 &                                 0.065 &           0.203 &           -0.193 \\
+            PW             &                0.056 &           0.148 &  \textbf{0.001} &                          0.037 &          0.083 &  \textbf{-0.017} &                                 0.053 &           0.145 &   \textbf{0.02} \\
+            PDW            &                0.045 &           0.109 &           0.077 &                          0.031 &          0.083 &            0.045 &                                 0.046 &           0.129 &           0.075 \\
+            DW             &                0.073 &           0.174 &          -0.007 &                          0.046 &           0.11 &            0.034 &                                 0.084 &           0.202 &          -0.025 \\
+            SPW            &                 0.04 &           0.105 &            0.089 &                          0.032 &          0.083 &           0.043 &                                 0.043 &           0.111 &            0.109 \\
+            SPDW           &       \textbf{0.034} &  \textbf{0.089} &           0.105 &                 \textbf{0.029} &  \textbf{0.08} &            0.068 &                        \textbf{0.038} &  \textbf{0.103} &           0.123 \\
+            Template Model &                0.065 &           0.175 &          -0.343 &                          0.075 &          0.112 &           -0.499 &                                 0.061 &           0.215 &          -0.287 \\
+            NN Model       &                0.066 &           0.158 &          -0.259 &                          0.072 &          0.114 &           -0.396 &                                 0.064 &           0.199 &          -0.192 \\
             \hline
             \end{tabular}
             \caption{Точность моделей в зависимости от красного смещения (spec-z) на выборке Stripe82X для моделей Pan-STARRS + WISE (PW), Pan-STARRS + DESI LIS + WISE (PDW), DESI LIS + WISE (DW), SDSS + Pan-STARRS + DESI LIS + WISE (SPDW), шаблонной модели Ananna \ref{} (Template Model) и нейросетевой модели Brescia \ref{} (NN Model). Для каждого интервала даны метрики $NMAD$ \eqref{eq:nmad}, доля катастрофических выбросов $n_{.0.15}$ \eqref{eq:n015} и калибровка 68-процентных доверительных интервалов $C_{68} - 0.68$ \eqref{eq:c68}.}
@@ -517,16 +518,17 @@ At the prediction stage we take into account uncertainties in photometric fluxes
 \begin{table*}
 	\begin{tabular}{llllllllll}
             \hline
-            {} & \multicolumn{3}{l}{$1 \leq z_{spec} < 1.5$ (514 objects)} & \multicolumn{3}{l}{$1.5 \leq z_{spec} < 2$ (369 objects)} & \multicolumn{3}{l}{$2 \leq z_{spec}$ (315 objects)} \\
-            {} &                                $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                                $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                          $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ \\
-            Model          &                                       &                 &                 &                                       &                 &                  &                                 &                 &                  \\
+            {} & \multicolumn{3}{l}{$1 \leq z_{spec} < 1.5$ (507 objects)} & \multicolumn{3}{l}{$1.5 \leq z_{spec} < 2$ (363 objects)} & \multicolumn{3}{l}{$2 \leq z_{spec}$ (299 objects)} \\
+            {} &                                $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                                $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                          $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ \\
+            Model          &                                       &                 &                  &                                       &                 &                 &                                 &                 &                  \\
             \hline
-            PW             &                                 0.081 &           0.187 &           0.034 &                                 0.082 &           0.163 &            0.057 &                           0.057 &           0.184 &            0.037 \\
-            PDW            &                                 0.061 &           0.105 &           0.073 &                                 0.042 &           0.103 &            0.128 &                           0.046 &           0.133 &            0.088 \\
-            DW             &                                 0.083 &            0.14 &  \textbf{0.001} &                                 0.076 &           0.255 &  \textbf{-0.032} &                           0.088 &           0.203 &  \textbf{-0.032} \\
-            SPDW           &                        \textbf{0.048} &  \textbf{0.088} &           0.122 &                        \textbf{0.031} &  \textbf{0.065} &            0.144 &                  \textbf{0.029} &  \textbf{0.098} &            0.072 \\
-            Template Model &                                  0.07 &           0.206 &          -0.285 &                                 0.075 &            0.22 &           -0.279 &                           0.045 &           0.111 &           -0.331 \\
-            NN Model       &                                 0.069 &           0.167 &          -0.207 &                                 0.067 &           0.182 &           -0.192 &                           0.047 &           0.114 &           -0.302 \\
+            PW             &                                 0.079 &           0.174 &            0.018 &                                 0.076 &            0.16 &  \textbf{0.028} &                            0.07 &           0.217 &           -0.068 \\
+            PDW            &                                 0.061 &           0.105 &            0.071 &                                  0.04 &           0.099 &            0.13 &                           0.045 &           0.137 &            0.086 \\
+            DW             &                                 0.082 &           0.138 &  \textbf{-0.001} &                                 0.075 &           0.251 &           -0.03 &                           0.088 &           0.201 &  \textbf{-0.024} \\
+            SPW            &                                 0.053 &           0.108 &            0.097 &                                  0.04 &           0.096 &           0.163 &                           0.039 &            0.14 &            0.029 \\
+            SPDW           &                        \textbf{0.048} &  \textbf{0.089} &            0.119 &                        \textbf{0.031} &  \textbf{0.066} &           0.141 &                  \textbf{0.027} &  \textbf{0.104} &            0.073 \\
+            Template Model &                                  0.07 &           0.205 &           -0.287 &                                 0.074 &           0.218 &          -0.286 &                           0.046 &           0.107 &           -0.332 \\
+            NN Model       &                                 0.069 &           0.166 &           -0.209 &                                 0.066 &           0.182 &          -0.192 &                           0.047 &           0.117 &           -0.305 \\
             \hline
             \end{tabular}
             \caption{Точность моделей в зависимости от красного смещения (spec-z) на выборке Stripe82X для моделей Pan-STARRS + WISE (PW), Pan-STARRS + DESI LIS + WISE (PDW), DESI LIS + WISE (DW), SDSS + Pan-STARRS + DESI LIS + WISE (SPDW), шаблонной модели Ananna \ref{} (Template Model) и нейросетевой модели Brescia \ref{} (NN Model). Для каждого интервала даны метрики $NMAD$ \eqref{eq:nmad}, доля катастрофических выбросов $n_{.0.15}$ \eqref{eq:n015} и калибровка 68-процентных доверительных интервалов $C_{68} - 0.68$ \eqref{eq:c68}.}
@@ -538,37 +540,39 @@ At the prediction stage we take into account uncertainties in photometric fluxes
 \begin{table*}
 	\begin{tabular}{llllllllll}
             \hline
-            {} & \multicolumn{3}{l}{$z_{mag} < 19$ (522 objects)} & \multicolumn{3}{l}{$19 \leq z_{mag} < 20$ (608 objects)} & \multicolumn{3}{l}{$20 \leq z_{mag} < 20.5$ (403 objects)} \\
+            {} & \multicolumn{3}{l}{$z_{mag} < 19$ (520 objects)} & \multicolumn{3}{l}{$19 \leq z_{mag} < 20$ (604 objects)} & \multicolumn{3}{l}{$20 \leq z_{mag} < 20.5$ (403 objects)} \\
             {} &                       $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                               $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                                 $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
             Model          &                              &                 &                 &                                      &                 &                 &                                        &                 &                 \\
             \hline
-            PW             &                        0.034 &           0.046 &           0.035 &                                0.043 &           0.062 &           0.088 &                                  0.064 &           0.119 &           0.035 \\
-            PDW            &                        0.027 &            0.04 &           0.044 &                                0.036 &           0.064 &           0.116 &                                  0.046 &           0.102 &           0.107 \\
-            DW             &                        0.039 &           0.084 &  \textbf{0.025} &                                0.068 &           0.112 &  \textbf{0.012} &                                  0.076 &           0.156 &  \textbf{0.012} \\
-            SPDW           &               \textbf{0.024} &  \textbf{0.029} &           0.081 &                       \textbf{0.028} &  \textbf{0.041} &           0.131 &                         \textbf{0.033} &  \textbf{0.074} &           0.107 \\
-            Template Model &                        0.061 &           0.092 &          -0.536 &                                0.062 &           0.145 &          -0.399 &                                  0.064 &           0.166 &           -0.38 \\
-            NN Model       &                        0.062 &           0.092 &          -0.464 &                                0.058 &           0.133 &          -0.308 &                                  0.061 &           0.144 &          -0.288 \\
+            PW             &                        0.037 &           0.046 &          -0.034 &                                0.042 &           0.073 &           0.063 &                                  0.064 &           0.134 &  \textbf{0.012} \\
+            PDW            &                        0.027 &            0.04 &           0.045 &                                0.036 &           0.065 &           0.116 &                                  0.046 &           0.102 &           0.107 \\
+            DW             &                        0.039 &           0.083 &  \textbf{0.024} &                                0.068 &           0.111 &  \textbf{0.015} &                                  0.076 &           0.156 &  \textbf{0.012} \\
+            SPW            &               \textbf{0.024} &           0.038 &           0.062 &                                0.031 &           0.045 &           0.115 &                                  0.041 &           0.087 &           0.104 \\
+            SPDW           &               \textbf{0.024} &  \textbf{0.029} &           0.082 &                       \textbf{0.028} &  \textbf{0.041} &           0.131 &                         \textbf{0.033} &  \textbf{0.074} &           0.107 \\
+            Template Model &                        0.061 &           0.092 &          -0.536 &                                0.062 &           0.144 &          -0.399 &                                  0.064 &           0.166 &           -0.38 \\
+            NN Model       &                        0.062 &           0.092 &          -0.463 &                                0.058 &           0.132 &          -0.309 &                                  0.061 &           0.144 &          -0.288 \\
             \hline
             \end{tabular}
-            \caption{Точность моделей в зависимости от величины в фильтре $z$, посчитанной по поткам DESI LIS с ипользованием формулы \eqref{eq:asinhmag}, на выборке Stripe82X для моделей Pan-STARRS + WISE (PW), Pan-STARRS + DESI LIS + WISE (PDW), DESI LIS + WISE (DW), SDSS + Pan-STARRS + DESI LIS + WISE (SPDW), шаблонной модели Ananna \ref{} (Template Model) и нейросетевой модели Brescia \ref{} (NN Model). Для каждого интервала даны метрики $NMAD$ \eqref{eq:nmad}, доля катастрофических выбросов $n_{.0.15}$ \eqref{eq:n015} и калибровка 68-процентных доверительных интервалов $C_{68} - 0.68$ \eqref{eq:c68}.}
+            \caption{Точность моделей в зависимости от величины в фильтре $z$ на выборке Stripe82X для моделей Pan-STARRS + WISE (PW), Pan-STARRS + DESI LIS + WISE (PDW), DESI LIS + WISE (DW), SDSS + Pan-STARRS + DESI LIS + WISE (SPDW), шаблонной модели Ananna \ref{} (Template Model) и нейросетевой модели Brescia \ref{} (NN Model). Для каждого интервала даны метрики $NMAD$ \eqref{eq:nmad}, доля катастрофических выбросов $n_{.0.15}$ \eqref{eq:n015} и калибровка 68-процентных доверительных интервалов $C_{68} - 0.68$ \eqref{eq:c68}.}
 \end{table*}
 
 \begin{table*}
 	\begin{tabular}{lllllll}
             \hline
-            {} & \multicolumn{3}{l}{$20.5 \leq z_{mag} < 21$ (358 objects)} & \multicolumn{3}{l}{$21 \leq z_{mag} < 23$ (510 objects)} \\
-            {} &                                 $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                               $NMAD$ &       $n>0.15$ & $C_{68} - 0.68$ \\
-            Model          &                                        &                 &                  &                                      &                &                 \\
+            {} & \multicolumn{3}{l}{$20.5 \leq z_{mag} < 21$ (356 objects)} & \multicolumn{3}{l}{$21 \leq z_{mag} < 23$ (476 objects)} \\
+            {} &                                 $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                               $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
+            Model          &                                        &                 &                  &                                      &                 &                 \\
             \hline
-            PW             &                                  0.066 &           0.176 &            0.035 &                                 0.12 &          0.359 &  \textbf{0.008} \\
-            PDW            &                                  0.056 &            0.12 &            0.074 &                                0.081 &          0.243 &           0.036 \\
-            DW             &                                  0.088 &           0.218 &  \textbf{-0.012} &                                0.119 &          0.337 &           -0.08 \\
-            SPDW           &                         \textbf{0.044} &  \textbf{0.106} &            0.105 &                       \textbf{0.063} &  \textbf{0.21} &           0.095 \\
-            Template Model &                                  0.057 &           0.201 &           -0.219 &                                0.087 &          0.294 &          -0.135 \\
-            NN Model       &                                  0.062 &            0.17 &           -0.135 &                                 0.09 &          0.267 &          -0.055 \\
+            PW             &                                  0.077 &           0.202 &  \textbf{-0.009} &                                0.123 &           0.321 &          -0.041 \\
+            PDW            &                                  0.056 &           0.121 &            0.073 &                                0.082 &           0.239 &  \textbf{0.038} \\
+            DW             &                                  0.088 &           0.219 &           -0.011 &                                0.119 &           0.334 &          -0.081 \\
+            SPW            &                                  0.054 &           0.126 &            0.076 &                                0.082 &           0.252 &            0.085 \\
+            SPDW           &                         \textbf{0.044} &  \textbf{0.107} &            0.107 &                       \textbf{0.064} &  \textbf{0.214} &           0.095 \\
+            Template Model &                                  0.057 &           0.199 &           -0.217 &                                0.087 &           0.294 &           -0.13 \\
+            NN Model       &                                  0.062 &           0.169 &           -0.132 &                                0.089 &           0.269 &          -0.043 \\
             \hline
             \end{tabular}
-            \caption{Точность моделей в зависимости от величины в фильтре $z$, посчитанной по поткам DESI LIS с ипользованием формулы \eqref{eq:asinhmag}, на выборке Stripe82X для моделей Pan-STARRS + WISE (PW), Pan-STARRS + DESI LIS + WISE (PDW), DESI LIS + WISE (DW), SDSS + Pan-STARRS + DESI LIS + WISE (SPDW), шаблонной модели Ananna \ref{} (Template Model) и нейросетевой модели Brescia \ref{} (NN Model). Для каждого интервала даны метрики $NMAD$ \eqref{eq:nmad}, доля катастрофических выбросов $n_{.0.15}$ \eqref{eq:n015} и калибровка 68-процентных доверительных интервалов $C_{68} - 0.68$ \eqref{eq:c68}.}
+            \caption{Точность моделей в зависимости от величины в фильтре $z$ на выборке Stripe82X для моделей Pan-STARRS + WISE (PW), Pan-STARRS + DESI LIS + WISE (PDW), DESI LIS + WISE (DW), SDSS + Pan-STARRS + DESI LIS + WISE (SPDW), шаблонной модели Ananna \ref{} (Template Model) и нейросетевой модели Brescia \ref{} (NN Model). Для каждого интервала даны метрики $NMAD$ \eqref{eq:nmad}, доля катастрофических выбросов $n_{.0.15}$ \eqref{eq:n015} и калибровка 68-процентных доверительных интервалов $C_{68} - 0.68$ \eqref{eq:c68}.}
 \end{table*}
 
 
@@ -577,19 +581,20 @@ At the prediction stage we take into account uncertainties in photometric fluxes
 \begin{table*}
 	\begin{tabular}{llllllllll}
             \hline
-            {} & \multicolumn{3}{l}{$FSoft < 3e-15$ (55 objects)} & \multicolumn{3}{l}{$FSoft < 1e-14$ (983 objects)} & \multicolumn{3}{l}{$FSoft < 4e-14$ (2055 objects)} \\
-            {} &                       $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                        $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                         $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ \\
-            Model          &                              &                 &                 &                               &                 &                 &                                &                 &                  \\
+            {} & \multicolumn{3}{l}{$FSoft < 1e-14$ (951 objects)} & \multicolumn{3}{l}{$FSoft < 4e-14$ (2016 objects)} & \multicolumn{3}{l}{$FSoft < 1.0$ (2223 objects)} \\
+            {} &                        $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                         $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ &                       $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
+            Model          &                               &                 &                 &                                &                 &                 &                              &                 &                 \\
             \hline
-            PW             &                        0.056 &           0.182 &           0.029 &                         0.067 &           0.186 &           0.032 &                           0.06 &           0.154 &            0.044 \\
-            PDW            &                         0.05 &           0.164 &           0.084 &                          0.05 &           0.133 &            0.08 &                          0.047 &           0.115 &            0.079 \\
-            DW             &                        0.059 &             0.2 &  \textbf{0.011} &                         0.075 &           0.202 &  \textbf{0.002} &                          0.074 &           0.179 &  \textbf{-0.007} \\
-            SPDW           &               \textbf{0.034} &  \textbf{0.127} &           0.102 &                \textbf{0.038} &  \textbf{0.109} &           0.098 &                 \textbf{0.035} &  \textbf{0.093} &            0.108 \\
-            Template Model &                        0.059 &             0.2 &          -0.425 &                         0.061 &           0.165 &           -0.28 &                          0.064 &           0.172 &           -0.323 \\
-            NN Model       &                        0.074 &  \textbf{0.127} &          -0.244 &                         0.064 &           0.149 &          -0.199 &                          0.065 &           0.155 &           -0.243 \\
+            PW             &                         0.068 &           0.188 &          -0.009 &                          0.058 &           0.154 &  \textbf{0.003} &                        0.056 &           0.148 &  \textbf{0.002} \\
+            PDW            &                         0.049 &           0.127 &           0.084 &                          0.047 &           0.113 &            0.08 &                        0.045 &           0.108 &            0.08 \\
+            DW             &                         0.073 &           0.196 &  \textbf{0.005} &                          0.073 &           0.176 &          -0.006 &                        0.073 &           0.172 &          -0.011 \\
+            SPW            &                         0.048 &           0.138 &           0.079 &                          0.042 &            0.11 &            0.091 &                         0.04 &           0.105 &            0.092 \\
+            SPDW           &                \textbf{0.038} &  \textbf{0.107} &             0.1 &                 \textbf{0.035} &  \textbf{0.092} &           0.109 &               \textbf{0.033} &  \textbf{0.088} &            0.11 \\
+            Template Model &                         0.061 &           0.161 &          -0.284 &                          0.064 &            0.17 &          -0.324 &                        0.064 &           0.175 &          -0.339 \\
+            NN Model       &                         0.063 &           0.145 &          -0.199 &                          0.065 &           0.153 &          -0.243 &                        0.065 &           0.159 &          -0.256 \\
             \hline
             \end{tabular}
-            \caption{Точность моделей в зависимости рентгеновского потока $FSoft$ на выборке Stripe82X для моделей Pan-STARRS + WISE (PW), Pan-STARRS + DESI LIS + WISE (PDW), DESI LIS + WISE (DW), SDSS + Pan-STARRS + DESI LIS + WISE (SPDW), шаблонной модели Ananna \ref{} (Template Model) и нейросетевой модели Brescia \ref{} (NN Model). Интервалы по рентгеновскому потоку соответствуют глубине (сколько летнего) обзора eRosita. Для каждого интервала даны метрики $NMAD$ \eqref{eq:nmad}, доля катастрофических выбросов $n_{.0.15}$ \eqref{eq:n015} и калибровка 68-процентных доверительных интервалов $C_{68} - 0.68$ \eqref{eq:c68}.}
+            \caption{Точность моделей в зависимости от рентгеновского потока (FSoft) на выборке Stripe82X для моделей Pan-STARRS + WISE (PW), Pan-STARRS + DESI LIS + WISE (PDW), DESI LIS + WISE (DW), SDSS + Pan-STARRS + DESI LIS + WISE (SPDW), шаблонной модели Ananna \ref{} (Template Model) и нейросетевой модели Brescia \ref{} (NN Model). Для каждого интервала даны метрики $NMAD$ \eqref{eq:nmad}, доля катастрофических выбросов $n_{.0.15}$ \eqref{eq:n015} и калибровка 68-процентных доверительных интервалов $C_{68} - 0.68$ \eqref{eq:c68}.}
 \end{table*}
 
 \subsection{PDZ reliability}
