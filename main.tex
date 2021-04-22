@@ -289,6 +289,20 @@ The SDSS spectral catalog was used to compile a large training sample (see Table
     \label{fig:train-peaks-cut}
 \end{figure*}
 
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/data-dist-dr16q-peaks-cut.png}
+    \caption{DR16q}
+    \label{fig:dr16q-peaks-cut}
+\end{figure*}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\linewidth]{images/data-dist-s82x.png}
+    \caption{S82X}
+    \label{fig:data-dist-s82x}
+\end{figure}
+
 \subsection{Stripe82X test sample}
 The Stripe82X sample of X-ray objects was first presented in (Ananna, 2017). This sample is currently the largest sample of X-ray objects with a qualitative classification by spectra, and it is marked by hand, which makes it the main test sample for the comparison of photo-z X-ray object models. The results chapter will compare our models with State-Of-The-Art models: the template model (Ananna, 2017) and the neural network model (Brescia, 2019). The properties of the sample are shown in more detail in Figures \ref{fig:data_distribution} and \ref{fig:data-dist-mags-ab}.
 
@@ -521,6 +535,21 @@ This approach has the following theoretical interpretation: the independence and
 % \end{equation}
 % Исследовать полноту стоит в зависимости от spec-z -- какую долю объектов на заданном spec-z мы обнаружим по прогнозам моделей.
 
+\subsection{Сравнение с моделями, известными в литературе на выборке Stripe82X}\label{ssec:sota-comp}
+
+Очередная цель этой статьи -- сравнение с моделями Photo-z, известными в литературе -- шаблонной моделью (Ananna, 2017) и нейросетевой моделью (Brescia, 2019). Для этого модели были протестированы на выборке Stripe82X, и были подсчитаны метрики точности \eqref{eq:nmad} и \eqref{eq:n015} на пересечении множества объектов, для которых удалось получить прогноз всеми моделями. Для наиболее точной модели получены значения метрик $~2$ раза лучше, чем для шаблонной и нейросетевой моделей для объектов $FSoft \geq 3e-15$ (см. табл. \ref{tab:stripe82x-intersection}).
+
+На рисунке \ref{fig:scatter-s82x-sota35} приведены диаграммы рассеяния шаблонной и нейросетевой моделей и комбинированные прогнозы представленных моделей (то есть, если не удалось сделать прогноз лучшей по точности моделей, пытаемся сделать прогноз следующей по точности моделью и т.д.). Видно, что наши модели показывают меньшее число ошибок второго рода (катастрофические выбросы в районе $spec-z ~ 0.5, photo-z ~ 2.0$ и сильно меньшее число выбросов ниже диагонали.
+
+Итоговые значения метрик точности $NMAD, n_{>0.15} = 0.039, 0.104/ 0.067, 0.175/ 0.067, 0.157$ для комбинированного прогноза представленными моделями / шаблонной модели (Ananna, 2017) / нейросетевой модели (Brescia, 2019), соответственно, на 2898 из 2909 объектах выборки Stirpe82X для которых имеются прогнозы шаблонной и нейросетевой модели. Для 11 объектов не удалось получить прогнозы представленными моделями.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/stripe82x-sota35-colored.png}
+    \caption{Scatterplots of predictions of template model (Ananna, 2017), combined prediction of models \ref{model:pw} -- \ref{model:spdw}, neural network model (Brescia, 2019) on Stripe82X X-ray test sample (from left to right). The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}. The number of predictions with each model in combined predictions is following: \ref{model:spdw} -- 2390, \ref{model:spw} -- 4, \ref{model:pdw} -- 26, \ref{model:pw} -- 1 \ref{model:dw} -- 463, has no prediction, comparing to Ananna and Brescia -- 11.}
+    \label{fig:scatter-s82x-sota35}
+\end{figure*}
+
 \subsection{Точность в зависимости от красного смещения объекта}\label{ssec:accuracy-as-fzspec}
 
 На рис. \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} слева приведены графики зависимости метрик качества точенчных прогнозов $NMAD$ \eqref{eq:nmad} и $n_{>0.15}$ \eqref{eq:n015} от значения спектрального красного смещения для представленных пяти моделей на кросс-валидации и тестовой выборке квазаров DR16q, соответственно. Основное, что можно заметить на графиках -- разнородность поведения моделей на разных красных смещениях. При этом поведение моделей может как согласовываться (все представленные модели показывают ухудшение точности в области $spec-z \sim 1.2$ по метрике NMAD) так и отличаться в зависимости от используемых данных (добавление в модель данных Pan-STARRS сильно улучшает точность моделей для близких квазаров на $spec-z < 1$ и квазаров на $spec-z \sim 2.3$ по метрике NMAD и уменьшает долю выбросов на $spec-z \sim 1.7$. В области $2.6 < spec-z < 3.7$ наивысшую точность показывают модели с использованием данных SDSS.
@@ -549,40 +578,89 @@ This approach has the following theoretical interpretation: the independence and
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplot-cv2-gal-a.png}
+    \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-gal.png}
     \caption{Scatterplots of cross-validation predictions of galaxies of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
     \label{fig:scatter-cv2-gal}
 \end{figure*}
 
 % \begin{figure*}
 %     \centering
-%     \includegraphics[width=0.9\linewidth]{images/scatterplot-cv2-qso-a.png}
+%     \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-qso.png}
 %     \caption{Scatterplots of cross-validation predictions of quasars of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
 %     \label{fig:scatter-cv2-qso}
 % \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplot-cv2-a.png}
+    \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-total.png}
     \caption{Scatterplots of cross-validation predictions of galaxies and quasars of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
     \label{fig:scatter-cv2-total}
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplot-dr16q-a.png}
+    \includegraphics[width=0.9\linewidth]{images/scatterplots-dr16q-wo-train.png}
     \caption{Scatterplots of predictions on SDSS DR16 quasars test sample of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
     \label{fig:scatter-dr16q_wo_train}
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplot-s82x-a.png}
+    \includegraphics[width=0.9\linewidth]{images/scatterplots-stripe82x.png}
     \caption{Scatterplots of predictions on Stripe82X X-ray test sample of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
     \label{fig:scatter-s82x}
 \end{figure*}
 
-\subsection{Зависимость точности от оптической величины}\label{ssec:accuracy-as-fzmag}
+\subsection{Сравнение разных моделей на объектах z > 5}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/vhzqs-gr5.png}
+    \caption{Диаграммы рассеяния для VHzQs}
+    \label{fig:vhzqs-gr5}
+\end{figure*}
+
+\begin{table}
+	\begin{tabular}{lrrrrr}
+            \hline
+            {} & \multicolumn{2}{l}{Intersection (174)} & \multicolumn{3}{l}{All possible} \\
+            Model &             $NMAD$ & $n_{>0.15}$ &       $NMAD$ & $n_{>0.15}$ & $N_{preds}$ \\
+            \hline
+            \ref{model:pw}   &              0.026 &       0.132 &        0.027 &       0.146 &         240 \\
+            \ref{model:pdw}  &              0.020 &       0.092 &        0.020 &       0.119 &         285 \\
+            \ref{model:dw}   &              0.016 &       0.057 &        0.023 &       0.098 &         338 \\
+            \ref{model:spw}  &              0.025 &       0.138 &        0.025 &       0.136 &         176 \\
+            \ref{model:spdw} &              0.019 &       0.115 &        0.022 &       0.115 &         209 \\
+            \hline
+            \end{tabular}
+            \caption{Точность на VHzQs (Ross \& Cross)}
+\end{table}
+
+
+\subsection{Сравнение моделей на разных классах объектов}
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/class-galaxy-cv2.png}
+    \caption{Метрики на ярких и слабых галактиках на кросс-валидации в зависимости от spec-z}
+    \label{fig:class-galaxy-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/class-qso-dr16q.png}
+    \caption{Метрики на ярких и слабых квазарах DR16q в зависимости от spec-z}
+    \label{fig:class-qso-dr16q}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/class-xray-s82x.png}
+    \caption{Метрики на ярких и слабых рентгеновских источниках в зависимости от spec-z}
+    \label{fig:class-xray-s82x}
+\end{figure*}
+
+
+\subsection{Зависимость точности от оптического потока}\label{ssec:accuracy-as-fzmag}
 На рис. \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} справа приведены графики зависимости метрик качества точечных прогнозов $NMAD$ \eqref{eq:nmad} и $n_{>0.15}$ \eqref{eq:n015} от значения оптической AB-величины в фильтре $z$ для представленных пяти моделей на кросс-валидации и тестовой выборке квазаров DR16q, соответственно. Наблюдается монотонная зависимость от яркости источника в оптике на всех выборках. На кросс валидации (галактики и квазары) все модели показывают точность значительно выше более ярких источниках ($z_{mag} < 20$), чем на слабых сточниках ($z_{mag} > 21$). Точность может отличаться в 2-3 раза (например, в таблице \ref{tab:total_metrics_table}, где приведены метрики в пяти интервалах по spec-z и по $z_{mag}$: на кросс-валидации модель на всем небе \ref{model:pw} показывает значения метрик $NMAD, n_{>0.15} = 0.043, 0.079$ на объектах $19 \leq z_{mag} < 20$ и $NMAD, n_{>0.15} = 0.088, 0.213$ на объектах $21 \leq z_{mag} < 23$, а наиболее точная модель \ref{model:spdw} -- $NMAD, n_{>0.15} = 0.027, 0.035$ и $NMAD, n_{>0.15} = 0.048, 0.094$, соответственно.
 
 На тестовой выборке квазаров DR16q наблюдается в целом та же зависимость, но, ввиду отсудствия объектов типа галактика в выборке, значения метрик ухудшаются на наиболее ярких квазарах $z_{mag} < 21.5$ (все модели показывают точность не лучше $NMAD, n>0.15 = 0.02, 0.02$). При этом все модели показывают точность не хуже $NMAD, n>0.15 = 0.04, 0.10$ кроме модели \ref{model:dw}, которая показывает точность в среднем $NMAD, n>0.15 = 0.07, 0.15$.
@@ -593,7 +671,24 @@ This approach has the following theoretical interpretation: the independence and
 
 В таблице \ref{tab:stripe82x-intersection} представлены метрики точности представленных пяти моделей на выборке Stripe82X для разных порогов по рентгеновскому потоку $FSoft$. Можно видеть, что точность всех моделей снижается до двух раз при увеличении глубины обзора. Модель \ref{model:dw} показывает однинаковую точность по метрике $NMAD = 0.73 \pm 0.01$, а доля выбросов ухудшается с $0.135$ на объектах $FSoft \geq 4e-14$ до $0.171$ при добавлении объектов $3e-15 \leq FSoft < 4e-14$.
 
-\subsection{Зависимость точность и полноты прогнозов от наблююдаемых и целевой величин}\label{ssec:precision-and-completeness}
+\subsection{Точность моделей в зависимости от zConf}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/metrics-zconf-cv2.png}
+    \caption{Метрики в зависимости от zConf}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/zconf-scatterplot-35.png}
+    \caption{Скаттерплоты в зависимости от zConf для модели \ref{model:spdw}}
+    \label{fig:zconf-scatterplot-35}
+\end{figure*}
+
+\subsection{Точность и полнота прогнозов}\label{ssec:precision-and-completeness}
+
 Одной из целей работы является оценка качества моделей в контексте отбора кандидатов на далекие ($spec-z > 3$) квазары. В качестве надежных прогнозов рассматриваются прогнозы с $zConf > 0.4$. Точным будем называть прогноз, имеющий $dz_{norm}$ \eqref{eq:dznorm} меньше $0.15$.
 
 Точность оценивалась в зависимость от величины в фильтре $z$ и от самого значения прогноза. Под этим мы имеем ввиду долю объектов с надежными прогнозами, имеющих точный прогноз (для какой доли объектов с заданным значением величины или значением прогноза и выскокой оценкой надежности zConf дан правильный прогноз), а именно \begin{equation}\label{eq:precision}
@@ -638,21 +733,6 @@ This approach has the following theoretical interpretation: the independence and
     \includegraphics[width=0.9\linewidth]{images/metrics-comp-dr16q.png}
     \caption{Plots of Completeness metric as a function of (from left to right) spectral redshift value, photometric redshift prediction value, and stellar magnitude in the filter z) on DR16q quasars test sample. The solid line shows model \ref{model:spdw}, the dot line shows model \ref{model:pw}, the dashed line shows model \ref{model:pdw}, the dash-dot line shows model \ref{model:dw}, and dash-dot-dot line shows model \ref{model:spw}.}
     \label{fig:metrics-comp-dr16q}
-\end{figure*}
-
-\subsection{Сравнение с другими моделями}\label{ssec:sota-comp}
-
-Очередная цель этой статьи -- сравнение с моделями Photo-z, известными в литературе -- шаблонной моделью (Ananna, 2017) и нейросетевой моделью (Brescia, 2019). Для этого модели были протестированы на выборке Stripe82X, и были подсчитаны метрики точности \eqref{eq:nmad} и \eqref{eq:n015} на пересечении множества объектов, для которых удалось получить прогноз всеми моделями. Для наиболее точной модели получены значения метрик $~2$ раза лучше, чем для шаблонной и нейросетевой моделей для объектов $FSoft \geq 3e-15$ (см. табл. \ref{tab:stripe82x-intersection}).
-
-На рисунке \ref{fig:scatter-s82x-sota35} приведены диаграммы рассеяния шаблонной и нейросетевой моделей и комбинированные прогнозы представленных моделей (то есть, если не удалось сделать прогноз лучшей по точности моделей, пытаемся сделать прогноз следующей по точности моделью и т.д.). Видно, что наши модели показывают меньшее число ошибок второго рода (катастрофические выбросы в районе $spec-z ~ 0.5, photo-z ~ 2.0$ и сильно меньшее число выбросов ниже диагонали.
-
-Итоговые значения метрик точности $NMAD, n_{>0.15} = 0.039, 0.104/ 0.067, 0.175/ 0.067, 0.157$ для комбинированного прогноза представленными моделями / шаблонной модели (Ananna, 2017) / нейросетевой модели (Brescia, 2019), соответственно, на 2898 из 2909 объектах выборки Stirpe82X для которых имеются прогнозы шаблонной и нейросетевой модели. Для 11 объектов не удалось получить прогнозы представленными моделями.
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplots-stripe82x-sota-combined.png}
-    \caption{Scatterplots of predictions of template model (Ananna, 2017), combined prediction of models \ref{model:pw} -- \ref{model:spdw}, neural network model (Brescia, 2019) on Stripe82X X-ray test sample (from left to right). The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}. The number of predictions with each model in combined predictions is following: \ref{model:spdw} -- 2403, \ref{model:spw} -- 4, \ref{model:pdw} -- 26, \ref{model:pw} -- 1 \ref{model:dw} -- 464, has no prediction, comparing to Ananna and Brescia -- 11.}
-    \label{fig:scatter-s82x-sota35}
 \end{figure*}
 
 \begin{table*}
@@ -778,54 +858,47 @@ This approach has the following theoretical interpretation: the independence and
 
 
 \begin{table*}
-	\begin{tabular}{lrrrrrrrrr}
+	\begin{tabular}{llllrlllrlllr}
             \hline
-            {} & \multicolumn{3}{l}{$FSoft \geq 3e-15$ (2665 objects)} & \multicolumn{3}{l}{$FSoft \geq 1e-14$ (1505 objects)} & \multicolumn{3}{l}{$FSoft \geq 4e-14$ (242 objects)} \\
-            {} &                         Precision & Completeness & $N_{preds}$ &                         Precision & Completeness & $N_{preds}$ &                        Precision & Completeness & $N_{preds}$ \\
-            Model &                                   &              &             &                                   &              &             &                                  &              &             \\
+            {} & \multicolumn{4}{l}{$FSoft \geq 3e-15$ (2653 objects)} & \multicolumn{4}{l}{$FSoft \geq 1e-14$ (1501 objects)} & \multicolumn{4}{l}{$FSoft \geq 4e-14$ (242 objects)} \\
+            {} &                         Precision &     $C_{preds}$ &   $C_{secureO}$ & $N_{preds}$ &                         Precision &     $C_{preds}$ &   $C_{secureO}$ & $N_{preds}$ &                        Precision &     $C_{preds}$ &   $C_{secureO}$ & $N_{preds}$ \\
+            Model &                                   &                 &                 &             &                                   &                 &                 &             &                                  &                 &                 &             \\
             \hline
-            PW    &                             0.935 &        0.722 &        2194 &                             0.937 &        0.770 &        1284 &                            0.944 &        0.876 &         210 \\
-            PDW   &                             0.944 &        0.758 &        2231 &                             0.948 &        0.805 &        1291 &                            0.953 &        0.876 &         210 \\
-            DW    &                             0.883 &        0.667 &        2651 &                             0.889 &        0.703 &        1498 &                            0.882 &        0.720 &         239 \\
-            SPW   &                             0.963 &        0.790 &        2173 &                             0.970 &        0.843 &        1274 &                            0.964 &        0.904 &         208 \\
-            SPDW  &                             0.969 &        0.801 &        2208 &                             0.975 &        0.846 &        1280 &                            0.974 &        0.918 &         208 \\
-            \hline
-            \end{tabular}
-            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw} from Stripe82X X-ray test sample. The first column shows model, the next two columns -- Precision \ref{eq:precision} and Completeness \ref{eq:completeness} metrics for objects with $FSoft < 1e-14$, the second two columns -- for objects with $FSoft < 4e-14$, and the last two columns -- for the entire sample.}
-\end{table*}
-
-\begin{table*}
-	\begin{tabular}{lllllll}
-            \hline
-            {} & \multicolumn{2}{l}{$FSoft \geq 3e-15$ (2170 objects)} & \multicolumn{2}{l}{$FSoft \geq 1e-14$ (1272 objects)} & \multicolumn{2}{l}{$FSoft \geq 4e-14$ (207 objects)} \\
-            {} &                         Precision &    Completeness &                         Precision &    Completeness &                        Precision &    Completeness \\
-            Model &                                   &                 &                                   &                 &                                  &                 \\
-            \hline
-            PW    &                             0.936 &           0.724 &                             0.939 &           0.774 &                            0.948 &           0.879 \\
-            PDW   &                             0.945 &           0.763 &                             0.948 &           0.807 &                            0.958 &           0.879 \\
-            DW    &                             0.883 &           0.674 &                             0.884 &           0.704 &                            0.877 &           0.725 \\
-            SPW   &                             0.963 &           0.789 &                              0.97 &           0.843 &                            0.964 &           0.903 \\
-            SPDW  &                    \textbf{0.968} &  \textbf{0.805} &                    \textbf{0.975} &  \textbf{0.847} &                   \textbf{0.974} &  \textbf{0.918} \\
+            PW    &                             0.935 &           0.726 &           0.597 &        2183 &                             0.937 &           0.773 &           0.659 &        1280 &                            0.944 &           0.876 &            0.76 &         210 \\
+            PDW   &                             0.944 &           0.762 &           0.637 &        2220 &                             0.948 &           0.807 &           0.692 &        1287 &                            0.953 &           0.876 &            0.76 &         210 \\
+            DW    &                             0.885 &            0.67 &  \textbf{0.666} &        2639 &                              0.89 &           0.704 &           0.701 &        1494 &                            0.882 &            0.72 &           0.711 &         239 \\
+            SPW   &                             0.963 &           0.794 &           0.647 &        2162 &                              0.97 &           0.846 &           0.716 &        1270 &                            0.964 &           0.904 &           0.777 &         208 \\
+            SPDW  &                    \textbf{0.969} &  \textbf{0.805} &  \textbf{0.666} &        2197 &                    \textbf{0.975} &  \textbf{0.849} &  \textbf{0.722} &        1276 &                   \textbf{0.974} &  \textbf{0.918} &  \textbf{0.789} &         208 \\
             \hline
             \end{tabular}
             \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw} from Stripe82X X-ray test sample. The first column shows model, the next two columns -- Precision \ref{eq:precision} and Completeness \ref{eq:completeness} metrics for objects with $FSoft < 1e-14$, the second two columns -- for objects with $FSoft < 4e-14$, and the last two columns -- for the entire sample.}
 \end{table*}
 
-% \subsection{PDZ reliability}
+% \begin{table*}
+% 	\begin{tabular}{lllllll}
+%             \hline
+%             {} & \multicolumn{2}{l}{$FSoft \geq 3e-15$ (2170 objects)} & \multicolumn{2}{l}{$FSoft \geq 1e-14$ (1272 objects)} & \multicolumn{2}{l}{$FSoft \geq 4e-14$ (207 objects)} \\
+%             {} &                         Precision &    Completeness &                         Precision &    Completeness &                        Precision &    Completeness \\
+%             Model &                                   &                 &                                   &                 &                                  &                 \\
+%             \hline
+%             PW    &                             0.936 &           0.724 &                             0.939 &           0.774 &                            0.948 &           0.879 \\
+%             PDW   &                             0.945 &           0.763 &                             0.948 &           0.807 &                            0.958 &           0.879 \\
+%             DW    &                             0.883 &           0.674 &                             0.884 &           0.704 &                            0.877 &           0.725 \\
+%             SPW   &                             0.963 &           0.789 &                              0.97 &           0.843 &                            0.964 &           0.903 \\
+%             SPDW  &                    \textbf{0.968} &  \textbf{0.805} &                    \textbf{0.975} &  \textbf{0.847} &                   \textbf{0.974} &  \textbf{0.918} \\
+%             \hline
+%             \end{tabular}
+%             \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw} from Stripe82X X-ray test sample. The first column shows model, the next two columns -- Precision \ref{eq:precision} and Completeness \ref{eq:completeness} metrics for objects with $FSoft < 1e-14$, the second two columns -- for objects with $FSoft < 4e-14$, and the last two columns -- for the entire sample.}
+% \end{table*}
 
-% \begin{figure*}
-%     \centering
-%     \includegraphics[width=0.9\linewidth]{images/zconf-cal-dr16q.png}
-%     \caption{zConf distribution on DR16q test sample}
-%     \label{fig:zconf-cal-dr16q}
-% \end{figure*}
+\subsection{zConf}
 
-% \begin{figure*}
-%     \centering
-%     \includegraphics[width=0.9\linewidth]{images/zconf-cal-stripe82X.png}
-%     \caption{zConf distribution on Stripe82X test sample}
-%     \label{fig:zconf-cal-stripe82X}
-% \end{figure*}
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/zconf-cal.png}
+    \caption{zConf distribution}
+    \label{fig:zconf-cal-dr16q}
+\end{figure*}
 
 % ===============================================================================
 % ===============================================================================
