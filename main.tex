@@ -172,115 +172,24 @@ It is important to note that only Pan-STARRS covers the entire eastern hemispher
     \caption{Comparison of photometric sky surveys from which photometric data were used by the presence of filters and the coverage area of the sky.}
     \label{tab:catalogs_comparison}
     \centering
-    \begin{tabular}{|l|c|c|c|}
+    \begin{tabular}{|l|c|c|c|c|}
     \hline
-        Survey & Filters & Types of fluxes & Sky coverage (square degrees) \\
+        Survey & Filters & Types of fluxes & Sky coverage (sq.degrees) & Ref \\
     \hline
-        SDSS DR16 & u,g,r,i,z,w1,w2 & PSF, cModel & 14555 (1/3 of the sky) \\
-        Pan-STARRS1 DR2 & g,r,i,z,y & PSF, Kron & 30000 (3/4 of the sky) \\
-        DESI LIS & g,r,z,w1,w2,w3,w4 & Model & 14000 (1/3 of the sky) \\[1ex]
+        SDSS DR16 & u,g,r,i,z & PSF, cModel & 14555 (1/3 of the sky) & Ref\\
+        Pan-STARRS1 DR2 & g,r,i,z,y & PSF, Kron & 30000 (3/4 of the sky) & \\
+        DESI LIS DR8 & g,r,z & Model & 14000 (1/3 of the sky) & \\
+        WISE & w1,w2,w3,w4 & forced photometry & whole sky & \\[1ex]
         \hline
     \end{tabular}
 \end{table*}
 
-\subsection{Spectral Data}
-
-
-\subsection{Features Set}
-To build Photo-z models, we construct an expert set of features. To do this, we first calculate hyperbolic magnitudes from fluxes:
-\begin{equation}\label{eq:asinhmag}
-    mag = \Bigg[asinh\Bigg(\frac{f/f_0}{2 \times b/f_0}\Bigg) + \log(b/f_0)\Bigg] \times \Bigg(\frac{-2.5}{\log 10}\Bigg) ~,
-\end{equation}
-where $f~[nanomaggies]$ и $b = \sigma_{flux}~[nanomaggies]$ - value and error of flux, and (\url{https://www.legacysurvey.org/dr9/description/#photometry})
-\begin{equation}
-    f_0 = 1~[nanomaggie] = 10^{-(48.6+22.5)/2.5}~[erg/cm^2/Hz].
-\end{equation}
-Magnitudes values makes it possible to use information about objects with negative fluxes. In addition, the values calculated by this formula contain information about flux errors. It is important to outline, that in SDSS survey $b$ is a mean error for a sky section, while we take the object's flux error $b = \sigma_{flux}~[nanomaggies]$.
-
-Описать свойства гиперболического синуса.
-
-However, we will give all charts in more standard AB-values, which are calculated by the following formula: the formula is taken from here: \url{https://www.sdss.org/dr12/algorithms/magnitudes/} (звезда яркосьтю 1 nanomaggie имеет величину 22.5 \url{https://www.sdss.org/dr12/help/glossary/#mag_pogson})
-\begin{equation}\label{eq:mag_ab}
-    m_{AB} = [22.5 mag] - 2.5 \log_{10} \frac{f}{f_0}
-\end{equation}
-
-Table \ref{tab:featuressets} below provides a description of the feature sets. Different models use photometry from different surveys, so the feature set is determined primarily by the source of the photometric data and spitted into magnitudes and colors. Then, if the model uses DESI LIS model magnitudes, we exclude the attributes associated with these magnitudes from the other surveys. That is why each of SDSS and Pan-STARRS features sets are splitted into two (\ref{feats:sdss-mags-1} and \ref{feats:sdss-mags-2}, \ref{feats:sdss-colors-1} and \ref{feats:sdss-colors-2} for SDSS; \ref{feats:ps-mags-1} and \ref{feats:ps-mags-2}, \ref{feats:ps-colors-1} and \ref{feats:ps-colors-2} for Pan-STARRS). For example, if the model uses the r and g mags from DESI LIS, the model r and g mags from the SDSS survey will not be included in the model, nor will the r-g color based on the SDSS model values. However, because of the absence of PSF magnitudes in DESI LIS, colors like $r_{psf} - r_{cmodel}$ and $r_{psf} - g_{psf}$ based on SDSS magnitudes will be included. Similarly for the Kron magnitudes of the Pan-STARRS surveys.
-
-Models are presented in Table \ref{tab:models}. In total, we present 5 models: model \ref{model:pw} based on Pan-STARRS and WISE photometry, model \ref{model:pdw} based on Pan-STARRS, DESI LIS and WISE photometry, model \ref{model:dw} based on DESI LIS and WISE photometry, model \ref{model:psw} based on SDSS, Pan-STARRS and WISE photometry and model \ref{model:spdw} based on photometry from all four sources.
-
-We use 2 sources of WISE photometry: DESI LIS survey and forced photometry for Pan-STARRS1 survey (Burenin et.al., 202X). The second must be used primarily for model \ref{model:pw}, since using WISE from DESI LIS, which has much less coverage than Pan-STARRS, the goal of building this model -- a forecast over the entire Russian eRosita sky -- will not be achieved.
-
-\begin{table*}
-    \label{tab:featuressets}
-    \caption{Description of the sets of features used. The first column contains the name of the feature set, the second column contains the feature set number, and the third column lists the magnitudes in the format $passband_{survey, type}$ (for DESI LIS magnitudes -- $passband_{LS}$) and colors based on those magnitudes in the format $mag_1 - mag_2$ that are part of the feature sets. Magnitudes are calculated by the hyperbolic sine formula \eqref{eq:asinhmag}. <<LS>> stands for <<DESI LIS>> and <<PS>> stands for Pan-STARRS1.}
-    \newcounter{FeatsSetNumber}[figure] 
-    \renewcommand{\theFeatsSetNumber}{\arabic{FeatsSetNumber}}
-    \setcounter{FeatsSetNumber}{0}
-	\begin{tabular}{ r l p{10cm} }
-	\hline
-	    Features sets & No. & Features \\
-    \hline
-        \multirow{2}{*}{SDSS mags} & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-mags-1} & \(u_{SDSS,psf}\), \(g_{SDSS,psf}\), \(r_{SDSS,psf}\), \(i_{SDSS,psf}\), \(z_{SDSS,psf}\), \(u_{SDSS,cmodel}\), \(i_{SDSS,cmodel}\), \\
-         & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-mags-2} & \(g_{SDSS,cmodel}\), \(r_{SDSS,cmodel}\), \(z_{SDSS,cmodel}\), \\
-        \multirow{2}{*}{SDSS colors} & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-colors-1} & \(u_{SDSS,psf}-g_{SDSS,psf}\), \(u_{SDSS,psf}-r_{SDSS,psf}\), \(u_{SDSS,psf}-i_{SDSS,psf}\), \(u_{SDSS,psf}-z_{SDSS,psf}\), \(u_{SDSS,psf}-u_{SDSS,cmodel}\), \(g_{SDSS,psf}-i_{SDSS,psf}\), \(g_{SDSS,psf}-g_{SDSS,cmodel}\), \(r_{SDSS,psf}-i_{SDSS,psf}\), \(i_{SDSS,psf}-z_{SDSS,psf}\), \(i_{SDSS,psf}-i_{SDSS,cmodel}\), \\
-         & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-colors-2} & \(g_{SDSS,psf}-r_{SDSS,psf}\), \(g_{SDSS,psf}-z_{SDSS,psf}\), \(r_{SDSS,psf}-z_{SDSS,psf}\), \(r_{SDSS,psf}-r_{SDSS,cmodel}\), \(z_{SDSS,psf}-z_{SDSS,cmodel}\) \\
-    \hline
-        \multirow{2}{*}{Pan-STARRS mags} & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-mags-1} & \(g_{PS,psf}\), \(r_{PS,psf}\), \(i_{PS,psf}\), \(z_{PS,psf}\), \(y_{PS,psf}\), \(i_{PS,kron}\), \(y_{PS,kron}\) \\
-         & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-mags-2} & \(g_{PS,kron}\), \(r_{PS,kron}\), \(z_{PS,kron}\) \\
-        \multirow{2}{*}{Pan-STARRS colors} & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-colors-1} & \(g_{PS,psf}-i_{PS,psf}\), \(g_{PS,psf}-y_{PS,psf}\), \(r_{PS,psf}-i_{PS,psf}\), \(r_{PS,psf}-y_{PS,psf}\), \(i_{PS,psf}-z_{PS,psf}\), \(i_{PS,psf}-y_{PS,psf}\), \(z_{PS,psf}-y_{PS,psf}\), \(i_{PS,psf}-i_{PS,kron}\), \(y_{PS,psf}-y_{PS,kron}\) \\
-         & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-colors-2} & \(g_{PS,psf}-r_{PS,psf}\) \(g_{PS,psf}-z_{PS,psf}\), \(r_{PS,psf}-z_{PS,psf}\), \(g_{PS,psf}-g_{PS,kron}\), \(r_{PS,psf}-r_{PS,kron}\), \(z_{PS,psf}-z_{PS,kron}\) \\
-    \hline
-        DESI LIS mags & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ls-mags-1} & \(g_{LS}\), \(r_{LS}\), \(z_{LS}\) \\
-        DESI LIS colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ls-colors-1} & \(g_{LS}-r_{LS}\), \(g_{LS}-z_{LS}\), \(r_{LS}-z_{LS}\) \\
-    \hline
-        WISE mags & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:wise-mags-1} & \(w1\), \(w2\) \\
-        WISE colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:wise-colors-1} & \(w1-w2\) \\
-    \hline
-        SDSS + DESI LIS colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-ls-colors-1} & \(g_{SDSS,cmodel}-g_{LS}\), \(r_{SDSS,cmodel}-r_{LS}\), \(z_{SDSS,cmodel}-z_{LS}\) \\
-        SDSS + WISE colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-wise-colors-1} & \(u_{SDSS,cmodel}-w1\), \(u_{SDSS,cmodel}-w2\), \(g_{SDSS,cmodel}-w1\), \(g_{SDSS,cmodel}-w2\), \(r_{SDSS,cmodel}-w1\), \(r_{SDSS,cmodel}-w2\), \(i_{SDSS,cmodel}-w1\), \(i_{SDSS,cmodel}-w2\), \(z_{SDSS,cmodel}-w1\), \(z_{SDSS,cmodel}-w2\) \\
-        Pan-STARRS + DESI LIS colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-ls-colors-1} & \(g_{PS,kron}-g_{LS}\), \(r_{PS,kron}-r_{LS}\), \(z_{PS,kron}-z_{LS}\) \\
-        Pan-STARRS + WISE colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-wise-colors-1} & \(g_{PS,kron}-w1\), \(g_{PS,kron}-w2\), \(r_{PS,kron}-w1\), \(r_{PS,kron}-w2\), \(i_{PS,kron}-w1\), \(i_{PS,kron}-w2\), \(z_{PS,kron}-w1\), \(z_{PS,kron}-w2\), \(y_{PS,kron}-w1\), \(y_{PS,kron}-w2\) \\
-        DESI LIS + WISE colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ls-wise-colors-1} & \(g_{LS}-w1\), \(g_{LS}-w2\), \(r_{LS}-w1\), \(r_{LS}-w2\), \(z_{LS}-w1\), \(z_{LS}-w2\) \\
-    \hline
-    \end{tabular}
-\end{table*}
-
-\begin{table*}
-    \caption{Models description. The first column indicates the model number, the next four columns indicate the photometry sources used by the model (SDSS, Pan-STARRS, DESI LIS, and WISE, respectively). For SDSS, PS, and LS <<+>> means use of survey photometry, skip -- non-use. For WISE, <<LS>> means use of infrared data from DESI LIS, <<RB>> -- forced photometry for the Pan-STARRS survey from the paper (Burenin et.al., 202X). The last column lists the feature sets from Table \ref{tab:featuressets} used to build the models. <<LS>> stands for <<DESI LIS>> and <<PS>> stands for Pan-STARRS1.}
-    \label{tab:models}
+\begin{figure*}
     \centering
-    \newcounter{ModelNumber}[figure] 
-    \renewcommand{\theModelNumber}{\arabic{ModelNumber}}
-    \setcounter{ModelNumber}{0}
-    \begin{tabular}{r c c c c l}
-    \hline
-        {}                      & \multicolumn{4}{c}{Data} & {}\\
-        No. & SDSS & PS & LS & WISE & Feature sets used \\
-    \hline
-        \refstepcounter{ModelNumber}\theModelNumber\label{model:pw} & & + & & RB & \ref{feats:ps-mags-1}, \ref{feats:ps-mags-2}, \ref{feats:ps-colors-1}, \ref{feats:ps-colors-2}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ps-wise-colors-1} \\ %Pan-STARRS mags (1 and 2) and colors (1 and 2), WISE mags and colors, Pan-STARRS + WISE colors \\
-        \refstepcounter{ModelNumber}\theModelNumber\label{model:pdw} & & + & + & LS & \ref{feats:ps-mags-1}, \ref{feats:ps-colors-1}, \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ps-ls-colors-1}, \ref{feats:ps-wise-colors-1} \\ % Pan-STARRS mags (1) and colors (1), DESI LIS mags and colors, WISE mags and colors, Pan-STARRS + DESI LIS colors, Pan-STARRS + WISE colors \\
-        \refstepcounter{ModelNumber}\theModelNumber\label{model:dw} & & & + & LS & \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ls-wise-colors-1} \\ % DESI LIS mags and colors, WISE mags and colors, DESI LIS + WISE colors \\
-        \refstepcounter{ModelNumber}\theModelNumber\label{model:spw} & + & + & & RB & \ref{feats:sdss-mags-1}, \ref{feats:sdss-mags-2}, \ref{feats:ps-colors-1}, \ref{feats:ps-colors-2}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:sdss-wise-colors-1}, \ref{feats:ps-wise-colors-1} \\
-        \refstepcounter{ModelNumber}\theModelNumber\label{model:spdw} & + & + & + & LS & \ref{feats:sdss-mags-1}, \ref{feats:sdss-colors-1}, \ref{feats:ps-mags-1}, \ref{feats:ps-colors-1}, \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:sdss-wise-colors-1}, \ref{feats:sdss-ls-colors-1}, \ref{feats:ps-wise-colors-1} \\ % SDSS mags and colors, Pan-STARRS mags (1) and colors (1), DESI LIS mags and colors, WISE mags and colors, SDSS + WISE colors, SDSS + DESI LIS colors, Pan-STARRS + WISE colors \\
-    \hline
-    \end{tabular}
-\end{table*}
-
-
-\subsection{Account for extinction}
-
-To account for Galactic extinction, the $E(B-V)$ estimates from the DESI LIS catalog and the $A/E(B-V)$ coefficients from \citep{2011ApJ...737..103S}. The adjusted values of fluxes and errors on fluxes are calculated using the following formulas:
-\begin{equation}
-    flux_{ebv, pb} = flux_{pb} 10^{0.4 * dm_{pb}},
-\end{equation}
-\begin{equation}
-    \sigma_{flux_{ebv, pb}} = \sigma_{flux_{pb}} 10^{0.4 * dm_{pb}},
-\end{equation}
-where $dm_{pb} = E(B-V) * [A/E(B-V)]_{pb}$, $[A/E(B-V)]_{pb}$ is coefficient from \citep{2011ApJ...737..103S} for $pb$ filter, $flux_{ebv, pb}$ и $\sigma_{flux_{ebv, pb}}$ are flux and errors on flux in $pb$ filter.
-
-\subsection{Train sample}
-
-The SDSS spectral catalog was used to compile a large training sample (see Table \ref{tab:samples}). Optical galaxies SDSS DR14 and quasars SDSS DR14q Paris'18 were balanced by class in order to approximate the distribution of X-ray sources. The distribution of the training sample objects was then aligned as shown in Figure 1. and the VHzQs quasars (Ross \& Corss, 20??) were added. The properties of the sample are shown in more detail in Figures \ref{fig:data_distribution} and \ref{fig:data-dist-mags-ab}.
+    \includegraphics[width=0.9\linewidth]{images/data-dist-mags-ab_final.png}
+    \caption{Histograms of object distributions in the samples according to the magnitude value of \eqref{eq:mag_ab} in the blue (g), red (z), and infrared (w1) filters. The first line of the graphs is the distribution of the training sample, the second line of the graphs is the distribution of the Stripe82X sample, and the third line is the distribution of the test sample of the SDSS DR16q quasars. The blue solid line shows the distribution of quasars, and the orange line shows the distribution of galaxies.}
+    \label{fig:data-dist-mags-ab}
+\end{figure*}
 
 \begin{figure*}
     \centering
@@ -289,54 +198,59 @@ The SDSS spectral catalog was used to compile a large training sample (see Table
     \label{fig:train-peaks-cut}
 \end{figure*}
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.95\linewidth]{images/data-dist-dr16q-peaks-cut.png}
-    \caption{DR16q}
-    \label{fig:dr16q-peaks-cut}
-\end{figure*}
-
 \begin{figure}
     \centering
+    \includegraphics[width=0.95\linewidth]{images/data-dist-dr16q-peaks-cut.png}
     \includegraphics[width=0.95\linewidth]{images/data-dist-s82x.png}
-    \caption{S82X}
-    \label{fig:data-dist-s82x}
+    \caption{Spec-z distribution for DR16q (top) and S82X (bottom panel) test samples.}
+    \label{fig:dr16q-peaks-cut}
 \end{figure}
+
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.95\linewidth]{images/data-dist-s82x.png}
+%    \caption{S82X}
+%    \label{fig:data-dist-s82x}
+%\end{figure}
+
+\subsection{Main spectral sample}
+
+The SDSS spectral catalog was used to compile a large training sample (see Table \ref{tab:samples}). Optical galaxies SDSS DR14 and quasars SDSS DR14q Paris'18 were balanced by class in order to approximate the distribution of X-ray sources. The distribution of the training sample objects was then aligned as shown in Figure 1. and the VHzQs quasars (Ross \& Corss, 20??) were added. The properties of the sample are shown in more detail in Figures \ref{fig:data_distribution} and \ref{fig:data-dist-mags-ab}.
+
+\subsection{DR16q quasars test sample}
+For a more detailed analysis of the behavior of the models on objects with $spec-z > 3$, a test sample of quasars was compiled. The objects with the most reliably measured spectral redshifts (\texttt{Z\_CONF == 3 and SOURCEZ == VI}) were selected from the SDSS DR16q spectral catalog, and the distribution peak at $z \sim 3$ was cut off, similarly to the training sample. The properties of the sample are shown in more detail in Figures \ref{fig:data_distribution} and \ref{fig:data-dist-mags-ab}.
 
 \subsection{Stripe82X test sample}
 The Stripe82X sample of X-ray objects was first presented in (Ananna, 2017). This sample is currently the largest sample of X-ray objects with a qualitative classification by spectra, and it is marked by hand, which makes it the main test sample for the comparison of photo-z X-ray object models. The results chapter will compare our models with State-Of-The-Art models: the template model (Ananna, 2017) and the neural network model (Brescia, 2019). The properties of the sample are shown in more detail in Figures \ref{fig:data_distribution} and \ref{fig:data-dist-mags-ab}.
 
-\subsection{Test sample of DR16q objects}
-For a more detailed analysis of the behavior of the models on objects with $spec-z > 3$, a test sample of quasars was compiled. The objects with the most reliably measured spectral redshifts (\texttt{Z\_CONF == 3 and SOURCEZ == VI}) were selected from the SDSS DR16q spectral catalog, and the distribution peak at $z \sim 3$ was cut off, similarly to the training sample. The properties of the sample are shown in more detail in Figures \ref{fig:data_distribution} and \ref{fig:data-dist-mags-ab}.
-
 \begin{table*}
-	\begin{tabular}{rllllllll}
+	\begin{tabular}{lllllllll}
             \hline
             {} & \multicolumn{3}{l}{No. sources} & \multicolumn{5}{l}{With photometry from} \\
             Sample &       Total &  Galaxy &     QSO &                   LS &      PS & LS \& PS & SDSS \& PS & All 3 surveys \\
             \hline
             Train sample                                              &      586176 &  136428 &  449748 &               580511 &  582240 &   579329 &     578815 &        577049 \\
-            Stripe82X                                                 &        2909 &     648 &    1771 &                 2898 &    2434 &     2407 &       2434 &          2407 \\
-            S82X ($\expnumber{3}{-15} \leq FSoft < \expnumber{1}{-14}$) &        1160 &     297 &     656 &                 1155 &     942 &      929 &        942 &           929 \\
-            S82X ($\expnumber{1}{-14} \leq FSoft < \expnumber{4}{-14}$) &        1263 &     194 &     859 &                 1260 &    1082 &     1073 &       1082 &          1073 \\
+            Stripe82X                                                 &        2653 &     508 &    1701 &                 2643 &    2224 &     2200 &       2224 &          2200 \\
+            S82X ($\expnumber{3}{-15} <= FSoft < \expnumber{1}{-14}$) &        1152 &     297 &     656 &                 1147 &     935 &      922 &        935 &           922 \\
+            S82X ($\expnumber{1}{-14} <= FSoft < \expnumber{4}{-14}$) &        1259 &     194 &     859 &                 1256 &    1078 &     1069 &       1078 &          1069 \\
             S82X ($FSoft > \expnumber{4}{-14}$)                       &         242 &      17 &     186 &                  240 &     211 &      209 &        211 &           209 \\
-            DR16q w/o train test                                      &       38091 &       0 &   38091 &                37949 &   32520 &    32466 &      32520 &         32466 \\
+            DR16q w/o train test                                      &       31867 &       0 &   31867 &                31750 &   27203 &    27156 &      27203 &         27156 \\
             \hline
             \end{tabular}
-            \label{tab:samples}
             \caption{Description of the samples used. The first column gives the name of the sample, the next three columns are the number of objects (total, separate galaxies, separate quasars), the next five columns are the number of objects with full DESI LIS photometry, Pan-STARRS, DESI LIS and Pan-STARRS simultaneously, SDSS and Pan-STARRS simultaneously, and all three surveys simultaneously, respectively. <<LS>> stands for DESI LIS, and <<PS>> stands for Pan-STARRS.}
 \end{table*}
 
+
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/data-dist-mags-ab.png}
-    \caption{Histograms of object distributions in the samples according to the magnitude value of \eqref{eq:mag_ab} in the blue (g), red (z), and infrared (w1) filters. The first line of the graphs is the distribution of the training sample, the second line of the graphs is the distribution of the Stripe82X sample, and the third line is the distribution of the test sample of the SDSS DR16q quasars. The blue solid line shows the distribution of quasars, and the orange line shows the distribution of galaxies.}
-    \label{fig:data-dist-mags-ab}
+    \includegraphics[width=0.95\linewidth]{images/data-dist-ab-upsidedown-dr16.png}
+    \caption{The distributions of the objects in the used samples. The abscissa axis is the spectral redshift, the ordinate axis is the value \eqref{eq:mag_ab} in the $z$ filter. The upper line of the graphs, from left to right, is the distributions of galaxies and quasars in the training sample and the test sample of SDSS DR16q quasars.  The bottom line of the graphs is the distribution of Stripe82X objects with different X-ray fluxes. Orange circles show galaxies, blue crosses show quasars.}
+    \label{fig:data_distribution}
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.95\linewidth]{images/data-dist-ab-upsidedown.png}
+    \includegraphics[width=0.95\linewidth]{images/data-dist-ab-upsidedown-s82x.png}
     \caption{The distributions of the objects in the used samples. The abscissa axis is the spectral redshift, the ordinate axis is the value \eqref{eq:mag_ab} in the $z$ filter. The upper line of the graphs, from left to right, is the distributions of galaxies and quasars in the training sample and the test sample of SDSS DR16q quasars.  The bottom line of the graphs is the distribution of Stripe82X objects with different X-ray fluxes. Orange circles show galaxies, blue crosses show quasars.}
     \label{fig:data_distribution}
 \end{figure*}
@@ -345,7 +259,7 @@ For a more detailed analysis of the behavior of the models on objects with $spec
 % ============================== The algorithm ==================================
 % ===============================================================================
 
-\section{The algorithm}\label{sec:thealgorithm}
+\section{Photo-z model}\label{sec:thealgorithm}
 
 \subsection{Probabilistic regression}
 To formulate a probabilistic regression problem, consider a probabilistic formulation of the regression problem. Let \(X\) be the set of object descriptions (feature space), \(Y\) be the target variable definition area. Let represent objects and target variable as random variables \(\xi : \Omega \rightarrow X, \eta : \Omega \rightarrow Y \). Then the process generating the data will be represented as a joint distribution \((\xi, \eta) \sim p(x, y)\). Let the training sample be given \(\mathcal{D}_n = (X_i, y_i)_{i=1}^n \sim p(x,y)\). Under the condition of homoscedasticity and normal distribution of errors on predictors, the regression problem is to construct an estimate of the conditional mean
@@ -369,6 +283,7 @@ where \(\mathcal{P}\) is the set of bounded functions satisfying the properties 
 
 Ideally, as the training sample size \(n\) increases, the solution \(\hat{p}(y|x)\) of the problem should converge to the density function of the original generating process \(p(x|y) = \frac{p(x,y)}{p(x)}\). However, the generating process is not explicitly known: only the training sample and the test sample, on which the quality will be evaluated, are known.
 
+\subsection{Point, interval and fully probabilistic predictions}
 To give an specific value we define point prediction as the prime mode of predicted distribution:\begin{equation}\label{eq:point-estimate}
     \hat{y}(x) = \arg\max_y \hat{\eta}(x) = \arg\max p(y|x).
 \end{equation}
@@ -398,38 +313,18 @@ On the other hand, we can consider an example of an estimator which gives the di
 
 In this paper we aim to achieve high accuracy in the first place.
 
-\subsection{Metrics}
 
-To evaluate the quality of the photo-z point forecasts obtained from the probabilistic forecast, we use 2 metrics standard for the photo-z forecast problem:
-\begin{itemize}
-    \item normalized median absolute deviation \begin{equation}\label{eq:nmad}
-        NMAD = 1.4826 \times median(|\delta z_{norm,i}|)
-    \end{equation}
-    \item and catastrophic outliers fraction \begin{equation}\label{eq:n015}
-        n_{>0.15} = \frac{\#\{i = \overline{1, N} | \delta z_{norm, i} > 0.15\}}{N};
-    \end{equation}
-\end{itemize}
-where \(N\) is the sample size, and the prediction error \begin{equation}\label{eq:dznorm}
-    \delta z_{norm,i} = \frac{\Delta z_i}{1+z_{spec,i}} = \frac{\hat{z}_{ph,i} - z_{spec,i}}{1+z_{spec,i}}.
-\end{equation}
-
-To assess the quality of confidence interval calibration, the theoretical and actual confidence level of 68 percent confidence intervals can be compared:
-\begin{equation}\label{eq:calpha}
-    C_{\alpha} = \frac{\#\{i = \overline{1, N} | z_{ph,i} \in CI_{\alpha, i}\}}{N}.
-\end{equation}
-A perfect calibration will achieve equality
-\begin{equation}\label{eq:perfect-ci}
-    C_{\alpha} = \alpha ~ \forall \alpha \in [0, 1]
-\end{equation}
-
-In this paper, we evaluate the calibration of the 68 percent confidence intervals:
-\begin{equation}\label{eq:c68}
-    C_{68} - 0.68 = \frac{\#\{i = \overline{1, N} | z_{ph,i} \in CI_{68, i}\}}{N} - 0.68.
-\end{equation}
 
 \subsection{Random forests for probabilistic photo-z}
 
-\subsubsection{Random forests algorithm}
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.55\linewidth]{images/qrf.png}
+    \caption{Schematic of the random forest algorithm used, adapted to obtain probabilistic forecasts photo-z.}
+    \label{fig:qrf_scheme}
+\end{figure*}
+
+\subsubsection{Random forest}
 Алгоритм случайного леса для решения задач регрессии классификации был впервые описан в \citep{2001MachL..45....5B} и представляет собой ансамбль деревьев решений $\{A^j\}$, которые строятся независимость. Прогноз случайного леса получается аггрегацией прогнозов всех деревьев. Например, для задачи регрессии итоговый прогноз равен среднему прогнозов деревьев.
 
 Каждое дерево $A^j$ строит разбиение пространства признаков $X$ на непересекающиеся подпространства $A^j_i$, которые в сумме дают все пространство, то есть
@@ -475,9 +370,9 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 \end{equation}.
 Сами по себе деревья решений являются несмещенными $Bias = 0$, но имеют высокий Variance. Путем усреднения ансамбля прогнозов удается понизить Variance.
 
-\subsection{Случайный лес как обобщенный метод ближайших соседей}
+\subsubsection{Случайный лес как обобщенный метод ближайших соседей}
 
-\subsection{Gaussian Kernel Density Estimator}
+\subsubsection{Gaussian Kernel Density Estimator}
 Gaussian Kernel Density Estimator (KDE) is a non-parametric way model, that estimated probability density function of a random variable. Given a random sample $\{y_i\}_{i=1}^{n_{sample}}$, generated by true distribution of the random variable $y$, the density function estimate is calculated as\begin{equation}\label{eq:kde}
     \hat{p}_i (y) = GKDE(\{y_i\}_{i=1}^{n_{sample}}, h) = \frac{1}{n_{sample} h}\sum_{i=1}^{n_{sample}} K(\frac{y - y_i}{h}),
 \end{equation}
@@ -486,7 +381,10 @@ Gaussian Kernel Density Estimator (KDE) is a non-parametric way model, that esti
 \end{equation}
 where $h$ is the kernel width parameter.
 
-\subsection{Random Forests adoptation for probabilistic photo-z via Gaussian KDE}
+\subsection{SRGz photo-z model}
+
+Random Forests adoptation for probabilistic photo-z via Gaussian KDE.
+
 This method is described in (Meshcheryakov, 2018). The random forest without depth constraint has been adapted for probabilistic predictions by applying kernel density estimation with a Gaussian kernel to the ensemble of tree forecasts. Thus, the prediction for object $x_i$ is a non-parametric estimate of the density of the conditional distribution:
 \begin{equation}\label{eq:predproba}
     \hat{p}_i (y) = \hat{p}(y|x_i) = GKDE(\{\hat{y}^{(j)}_i\}_{j=1}^{n_{trees}}, h).
@@ -494,12 +392,129 @@ This method is described in (Meshcheryakov, 2018). The random forest without dep
 
 This approach has the following theoretical interpretation: the independence and randomness of the tree construction allows us to consider the ensemble of tree predictions $\{\hat{y}^{(j)}_i\}_{j=1}^{n_{trees}}$ as a random sample generated by the true distribution $p(y|x_i)$. Thus \eqref{eq:kde} is an estimate of this distribution. A schematic of the method used is shown in Figure \ref{fig:qrf_scheme}.
 
-\begin{figure}
+\subsubsection{Model training and testing procedure}
+
+
+\subsubsection{Photometric features}
+To build Photo-z models, we construct an expert set of features. To do this, we first calculate hyperbolic magnitudes from fluxes:
+\begin{equation}\label{eq:asinhmag}
+    mag = \Bigg[asinh\Bigg(\frac{f/f_0}{2 \times b/f_0}\Bigg) + \log(b/f_0)\Bigg] \times \Bigg(\frac{-2.5}{\log 10}\Bigg) ~,
+\end{equation}
+where $f~[nanomaggies]$ и $b = \sigma_{flux}~[nanomaggies]$ - value and error of flux, and (\url{https://www.legacysurvey.org/dr9/description/#photometry})
+\begin{equation}
+    f_0 = 1~[nanomaggie] = 10^{-(48.6+22.5)/2.5}~[erg/cm^2/Hz].
+\end{equation}
+Magnitudes values makes it possible to use information about objects with negative fluxes. In addition, the values calculated by this formula contain information about flux errors. It is important to outline, that in SDSS survey $b$ is a mean error for a sky section, while we take the object's flux error $b = \sigma_{flux}~[nanomaggies]$.
+
+Описать свойства гиперболического синуса.
+
+However, we will give all charts in more standard AB-values, which are calculated by the following formula: the formula is taken from here: \url{https://www.sdss.org/dr12/algorithms/magnitudes/} (звезда яркосьтю 1 nanomaggie имеет величину 22.5 \url{https://www.sdss.org/dr12/help/glossary/#mag_pogson})
+\begin{equation}\label{eq:mag_ab}
+    m_{AB} = [22.5 mag] - 2.5 \log_{10} \frac{f}{f_0}
+\end{equation}
+
+Table \ref{tab:featuressets} below provides a description of the feature sets. Different models use photometry from different surveys, so the feature set is determined primarily by the source of the photometric data and spitted into magnitudes and colors. Then, if the model uses DESI LIS model magnitudes, we exclude the attributes associated with these magnitudes from the other surveys. That is why each of SDSS and Pan-STARRS features sets are splitted into two (\ref{feats:sdss-mags-1} and \ref{feats:sdss-mags-2}, \ref{feats:sdss-colors-1} and \ref{feats:sdss-colors-2} for SDSS; \ref{feats:ps-mags-1} and \ref{feats:ps-mags-2}, \ref{feats:ps-colors-1} and \ref{feats:ps-colors-2} for Pan-STARRS). For example, if the model uses the r and g mags from DESI LIS, the model r and g mags from the SDSS survey will not be included in the model, nor will the r-g color based on the SDSS model values. However, because of the absence of PSF magnitudes in DESI LIS, colors like $r_{psf} - r_{cmodel}$ and $r_{psf} - g_{psf}$ based on SDSS magnitudes will be included. Similarly for the Kron magnitudes of the Pan-STARRS surveys.
+
+Models are presented in Table \ref{tab:models}. In total, we present 5 models: model \ref{model:pw} based on Pan-STARRS and WISE photometry, model \ref{model:pdw} based on Pan-STARRS, DESI LIS and WISE photometry, model \ref{model:dw} based on DESI LIS and WISE photometry, model \ref{model:psw} based on SDSS, Pan-STARRS and WISE photometry and model \ref{model:spdw} based on photometry from all four sources.
+
+We use 2 sources of WISE photometry: DESI LIS survey and forced photometry for Pan-STARRS1 survey (Burenin et.al., 202X). The second must be used primarily for model \ref{model:pw}, since using WISE from DESI LIS, which has much less coverage than Pan-STARRS, the goal of building this model -- a forecast over the entire Russian eRosita sky -- will not be achieved.
+
+\begin{table*}
+    \label{tab:featuressets}
+    \caption{Description of the sets of features used. The first column contains the name of the feature set, the second column contains the feature set number, and the third column lists the magnitudes in the format $passband_{survey, type}$ (for DESI LIS magnitudes -- $passband_{LS}$) and colors based on those magnitudes in the format $mag_1 - mag_2$ that are part of the feature sets. Magnitudes are calculated by the hyperbolic sine formula \eqref{eq:asinhmag}. <<LS>> stands for <<DESI LIS>> and <<PS>> stands for Pan-STARRS1.}
+    \newcounter{FeatsSetNumber}[figure] 
+    \renewcommand{\theFeatsSetNumber}{\arabic{FeatsSetNumber}}
+    \setcounter{FeatsSetNumber}{0}
+	\begin{tabular}{ r l p{10cm} }
+	\hline
+	    Features sets & No. & Features \\
+    \hline
+        \multirow{2}{*}{SDSS mags} & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-mags-1} & \(u_{psf}\), \(g_{psf}\), \(r_{psf}\), \(i_{psf}\), \(z_{psf}\), \(u_{cmodel}\), \(i_{cmodel}\), \\
+         & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-mags-2} & \(g_{cmodel}\), \(r_{cmodel}\), \(z_{cmodel}\), \\
+        \multirow{2}{*}{SDSS colors} & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-colors-1} & \(u_{psf}-g_{psf}\), \(u_{psf}-r_{psf}\), \(u_{psf}-i_{psf}\), \(u_{psf}-z_{psf}\), \(u_{psf}-u_{cmodel}\), \(g_{psf}-i_{psf}\), \(g_{psf}-g_{cmodel}\), \(r_{psf}-i_{psf}\), \(i_{psf}-z_{psf}\), \(i_{psf}-i_{cmodel}\), \\
+         & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-colors-2} & \(g_{psf}-r_{psf}\), \(g_{psf}-z_{psf}\), \(r_{psf}-z_{psf}\), \(r_{psf}-r_{cmodel}\), \(z_{psf}-z_{cmodel}\) \\
+    \hline
+        \multirow{2}{*}{Pan-STARRS mags} & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-mags-1} & \(g_{PS,psf}\), \(r_{PS,psf}\), \(i_{PS,psf}\), \(z_{PS,psf}\), \(y_{PS,psf}\), \(i_{PS,kron}\), \(y_{PS,kron}\) \\
+         & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-mags-2} & \(g_{PS,kron}\), \(r_{PS,kron}\), \(z_{PS,kron}\) \\
+        \multirow{2}{*}{Pan-STARRS colors} & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-colors-1} & \(g_{PS,psf}-i_{PS,psf}\), \(g_{PS,psf}-y_{PS,psf}\), \(r_{PS,psf}-i_{PS,psf}\), \(r_{PS,psf}-y_{PS,psf}\), \(i_{PS,psf}-z_{PS,psf}\), \(i_{PS,psf}-y_{PS,psf}\), \(z_{PS,psf}-y_{PS,psf}\), \(i_{PS,psf}-i_{PS,kron}\), \(y_{PS,psf}-y_{PS,kron}\) \\
+         & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-colors-2} & \(g_{PS,psf}-r_{PS,psf}\) \(g_{PS,psf}-z_{PS,psf}\), \(r_{PS,psf}-z_{PS,psf}\), \(g_{PS,psf}-g_{PS,kron}\), \(r_{PS,psf}-r_{PS,kron}\), \(z_{PS,psf}-z_{PS,kron}\) \\
+    \hline
+        DESI LIS mags & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ls-mags-1} & \(g_{LS}\), \(r_{LS}\), \(z_{LS}\) \\
+        DESI LIS colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ls-colors-1} & \(g_{LS}-r_{LS}\), \(g_{LS}-z_{LS}\), \(r_{LS}-z_{LS}\) \\
+    \hline
+        WISE mags & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:wise-mags-1} & \(w1\), \(w2\) \\
+        WISE colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:wise-colors-1} & \(w1-w2\) \\
+    \hline
+        SDSS + DESI LIS colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-ls-colors-1} & \(g_{cmodel}-g_{LS}\), \(r_{cmodel}-r_{LS}\), \(z_{cmodel}-z_{LS}\) \\
+        SDSS + WISE colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:sdss-wise-colors-1} & \(u_{cmodel}-w1\), \(u_{cmodel}-w2\), \(g_{cmodel}-w1\), \(g_{cmodel}-w2\), \(r_{cmodel}-w1\), \(r_{cmodel}-w2\), \(i_{cmodel}-w1\), \(i_{cmodel}-w2\), \(z_{cmodel}-w1\), \(z_{cmodel}-w2\) \\
+        Pan-STARRS + DESI LIS colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-ls-colors-1} & \(g_{PS,kron}-g_{LS}\), \(r_{PS,kron}-r_{LS}\), \(z_{PS,kron}-z_{LS}\) \\
+        Pan-STARRS + WISE colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ps-wise-colors-1} & \(g_{PS,kron}-w1\), \(g_{PS,kron}-w2\), \(r_{PS,kron}-w1\), \(r_{PS,kron}-w2\), \(i_{PS,kron}-w1\), \(i_{PS,kron}-w2\), \(z_{PS,kron}-w1\), \(z_{PS,kron}-w2\), \(y_{PS,kron}-w1\), \(y_{PS,kron}-w2\) \\
+        DESI LIS + WISE colors & \refstepcounter{FeatsSetNumber}\theFeatsSetNumber\label{feats:ls-wise-colors-1} & \(g_{LS}-w1\), \(g_{LS}-w2\), \(r_{LS}-w1\), \(r_{LS}-w2\), \(z_{LS}-w1\), \(z_{LS}-w2\) \\
+    \hline
+    \end{tabular}
+\end{table*}
+
+\begin{table*}
+    \caption{Models description. The first column indicates the model number, the next four columns indicate the photometry sources used by the model (SDSS, Pan-STARRS, DESI LIS, and WISE, respectively). For SDSS, PS, and LS <<+>> means use of survey photometry, skip -- non-use. For WISE, <<LS>> means use of infrared data from DESI LIS, <<RB>> -- forced photometry for the Pan-STARRS survey from the paper (Burenin et.al., 202X). The last column lists the feature sets from Table \ref{tab:featuressets} used to build the models. <<LS>> stands for <<DESI LIS>> and <<PS>> stands for Pan-STARRS1.}
+    \label{tab:models}
     \centering
-    \includegraphics[width=0.95\linewidth]{images/qrf.png}
-    \caption{Schematic of the random forest algorithm used, adapted to obtain probabilistic forecasts photo-z.}
-    \label{fig:qrf_scheme}
-\end{figure}
+    \newcounter{ModelNumber}[figure] 
+    \renewcommand{\theModelNumber}{\arabic{ModelNumber}}
+    \setcounter{ModelNumber}{0}
+    \begin{tabular}{r c c c c l}
+    \hline
+        {}                      & \multicolumn{4}{c}{Data} & {}\\
+        No. & SDSS & PS & LS & WISE & Feature sets used \\
+    \hline
+        \refstepcounter{ModelNumber}\theModelNumber\label{model:pw} & & + & & RB & \ref{feats:ps-mags-1}, \ref{feats:ps-mags-2}, \ref{feats:ps-colors-1}, \ref{feats:ps-colors-2}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ps-wise-colors-1} \\ %Pan-STARRS mags (1 and 2) and colors (1 and 2), WISE mags and colors, Pan-STARRS + WISE colors \\
+        \refstepcounter{ModelNumber}\theModelNumber\label{model:pdw} & & + & + & LS & \ref{feats:ps-mags-1}, \ref{feats:ps-colors-1}, \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ps-ls-colors-1}, \ref{feats:ps-wise-colors-1} \\ % Pan-STARRS mags (1) and colors (1), DESI LIS mags and colors, WISE mags and colors, Pan-STARRS + DESI LIS colors, Pan-STARRS + WISE colors \\
+        \refstepcounter{ModelNumber}\theModelNumber\label{model:dw} & & & + & LS & \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:ls-wise-colors-1} \\ % DESI LIS mags and colors, WISE mags and colors, DESI LIS + WISE colors \\
+        \refstepcounter{ModelNumber}\theModelNumber\label{model:spw} & + & + & & RB & \ref{feats:sdss-mags-1}, \ref{feats:sdss-mags-2}, \ref{feats:ps-colors-1}, \ref{feats:ps-colors-2}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:sdss-wise-colors-1}, \ref{feats:ps-wise-colors-1} \\
+        \refstepcounter{ModelNumber}\theModelNumber\label{model:spdw} & + & + & + & LS & \ref{feats:sdss-mags-1}, \ref{feats:sdss-colors-1}, \ref{feats:ps-mags-1}, \ref{feats:ps-colors-1}, \ref{feats:ls-mags-1}, \ref{feats:ls-colors-1}, \ref{feats:wise-mags-1}, \ref{feats:wise-colors-1}, \ref{feats:sdss-wise-colors-1}, \ref{feats:sdss-ls-colors-1}, \ref{feats:ps-wise-colors-1} \\ % SDSS mags and colors, Pan-STARRS mags (1) and colors (1), DESI LIS mags and colors, WISE mags and colors, SDSS + WISE colors, SDSS + DESI LIS colors, Pan-STARRS + WISE colors \\
+    \hline
+    \end{tabular}
+\end{table*}
+
+
+\subsubsection{Account for extinction}
+
+To account for Galactic extinction, the $E(B-V)$ estimates from the DESI LIS catalog and the $A/E(B-V)$ coefficients from \citep{2011ApJ...737..103S}. The adjusted values of fluxes and errors on fluxes are calculated using the following formulas:
+\begin{equation}
+    flux_{ebv, pb} = flux_{pb} 10^{0.4 * dm_{pb}},
+\end{equation}
+\begin{equation}
+    \sigma_{flux_{ebv, pb}} = \sigma_{flux_{pb}} 10^{0.4 * dm_{pb}},
+\end{equation}
+where $dm_{pb} = E(B-V) * [A/E(B-V)]_{pb}$, $[A/E(B-V)]_{pb}$ is coefficient from \citep{2011ApJ...737..103S} for $pb$ filter, $flux_{ebv, pb}$ и $\sigma_{flux_{ebv, pb}}$ are flux and errors on flux in $pb$ filter.
+
+\subsection{Photo-z metrics}
+
+To evaluate the quality of the photo-z point forecasts obtained from the probabilistic forecast, we use 2 metrics standard for the photo-z forecast problem:
+\begin{itemize}
+    \item normalized median absolute deviation \begin{equation}\label{eq:nmad}
+        NMAD = 1.4826 \times median(|\delta z_{norm,i}|)
+    \end{equation}
+    \item and catastrophic outliers fraction \begin{equation}\label{eq:n015}
+        n_{>0.15} = \frac{\#\{i = \overline{1, N} | \delta z_{norm, i} > 0.15\}}{N};
+    \end{equation}
+\end{itemize}
+where \(N\) is the sample size, and the prediction error \begin{equation}\label{eq:dznorm}
+    \delta z_{norm,i} = \frac{\Delta z_i}{1+z_{spec,i}} = \frac{\hat{z}_{ph,i} - z_{spec,i}}{1+z_{spec,i}}.
+\end{equation}
+
+To assess the quality of confidence interval calibration, the theoretical and actual confidence level of 68 percent confidence intervals can be compared:
+\begin{equation}\label{eq:calpha}
+    C_{\alpha} = \frac{\#\{i = \overline{1, N} | z_{ph,i} \in CI_{\alpha, i}\}}{N}.
+\end{equation}
+A perfect calibration will achieve equality
+\begin{equation}\label{eq:perfect-ci}
+    C_{\alpha} = \alpha ~ \forall \alpha \in [0, 1]
+\end{equation}
+
+In this paper, we evaluate the calibration of the 68 percent confidence intervals:
+\begin{equation}\label{eq:c68}
+    C_{68} - 0.68 = \frac{\#\{i = \overline{1, N} | z_{ph,i} \in CI_{68, i}\}}{N} - 0.68.
+\end{equation}
 
 % ===============================================================================
 % ================================ Results ======================================
@@ -535,7 +550,85 @@ This approach has the following theoretical interpretation: the independence and
 % \end{equation}
 % Исследовать полноту стоит в зависимости от spec-z -- какую долю объектов на заданном spec-z мы обнаружим по прогнозам моделей.
 
-\subsection{Сравнение с моделями, известными в литературе на выборке Stripe82X}\label{ssec:sota-comp}
+\subsection{Сравнение точности photo-z рентгеновских источников на выборке Stripe82X}\label{ssec:sota-comp}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/stripe82x-sota35-colored_final.png}
+    \caption{Scatterplots of predictions of template model (Ananna, 2017), combined prediction of models \ref{model:pw} -- \ref{model:spdw}, neural network model (Brescia, 2019) on Stripe82X X-ray test sample with $FSoft > 3e-15$ (from left to right). The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}. The number of predictions with each model in combined predictions is following: \ref{model:spdw} -- 2197, \ref{model:dw} -- 442, has no prediction, comparing to Ananna and Brescia -- 11.}
+    \label{fig:scatter-s82x-sota35}
+\end{figure*}
+
+\begin{table*}
+	\begin{tabular}{llllllllll}
+            \hline
+            {} & \multicolumn{3}{l}{$FSoft \geq 3e-15$ (2170 objects)} & \multicolumn{3}{l}{$FSoft \geq 1e-14$ (1272 objects)} & \multicolumn{3}{l}{$FSoft \geq 4e-14$ (207 objects)} \\
+            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                           $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
+            Model          &                                   &                 &                  &                                   &                 &                  &                                  &                 &                 \\
+            \hline
+            \ref{model:pw}             &                             0.056 &           0.149 &            0.025 &                              0.05 &           0.119 &            0.033 &                            0.037 &           0.092 &  \textbf{0.025} \\
+            \ref{model:pdw}            &                             0.045 &           0.107 &            0.079 &                             0.042 &           0.094 &            0.076 &                             0.03 &           0.068 &           0.074 \\
+            \ref{model:dw}             &                             0.073 &           0.171 &  \textbf{-0.012} &                             0.073 &           0.154 &  \textbf{-0.022} &                            0.074 &           0.135 &          -0.057 \\
+            \ref{model:spw}            &                             0.039 &           0.105 &            0.094 &                             0.035 &            0.08 &            0.102 &                   \textbf{0.027} &           0.058 &           0.107 \\
+            \ref{model:spdw}           &                    \textbf{0.033} &  \textbf{0.087} &            0.109 &                     \textbf{0.03} &  \textbf{0.073} &            0.117 &                   \textbf{0.027} &  \textbf{0.043} &           0.122 \\
+            TM &                             0.065 &           0.174 &           -- &                             0.068 &           0.185 &            -- &                            0.073 &           0.222 &          -0.477 \\
+            NN             &                             0.065 &            0.16 &           -- &                             0.067 &            0.17 &           -- &                             0.07 &           0.222 &          -- \\
+            \hline
+            \end{tabular}
+            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) on objects from Stripe82X X-ray test sample that have prediction by every model. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample. <<TM>> stands for Template model (Ananna, 2017), and <<NN>> for Neural Network model (Brescia, 2019).}
+            \label{tab:stripe82x-intersection}
+\end{table*}
+
+\begin{table*}
+	\begin{tabular}{llllrlllrlllr}
+            \hline
+            {} & \multicolumn{4}{l}{$FSoft \geq 3e-15$ (2639 objects)} & \multicolumn{4}{l}{$FSoft \geq 1e-14$ (1494 objects)} & \multicolumn{4}{l}{$FSoft \geq 4e-14$ (239 objects)} \\
+            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                            $NMAD$ &       $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
+            Model                               &                                   &                 &                  &             &                                   &                &                  &             &                                  &                 &                  &             \\
+            \hline
+            \ref{model:pw}                      &                             0.056 &           0.145 &            0.029 &        2179 &                              0.05 &          0.117 &            0.034 &        1278 &                            0.038 &           0.096 &            0.023 &         209 \\
+            \ref{model:pdw}                     &                             0.045 &           0.107 &            0.082 &        2220 &                             0.042 &          0.093 &            0.079 &        1287 &                             0.03 &           0.071 &            0.068 &         210 \\
+            \ref{model:dw}                      &                             0.074 &           0.173 &  \textbf{-0.005} &        2639 &                             0.072 &          0.154 &  \textbf{-0.013} &        1494 &                            0.074 &           0.142 &           -0.048 &         239 \\
+            \ref{model:spw}                     &                             0.039 &           0.101 &            0.098 &        2159 &                             0.035 &          0.077 &            0.105 &        1268 &                   \textbf{0.027} &           0.058 &            0.107 &         207 \\
+            \ref{model:spdw}                    &                    \textbf{0.033} &  \textbf{0.084} &            0.113 &        2197 &                     \textbf{0.03} &  \textbf{0.07} &             0.12 &        1276 &                   \textbf{0.027} &  \textbf{0.043} &            0.118 &         208 \\
+            \ref{model:dw} w/o \ref{model:spdw} &                             0.078 &           0.179 &            0.021 &         442 &                             0.067 &          0.156 &             0.04 &         218 &                            0.063 &           0.161 &  \textbf{-0.003} &          31 \\
+            CP                                  &                             0.038 &             0.1 &            0.098 &        2639 &                             0.033 &          0.082 &            0.108 &        1494 &                            0.028 &           0.059 &            0.102 &         239 \\
+            Template Model                      &                             0.065 &           0.172 &           -- &        2639 &                             0.067 &          0.181 &           -- &        1494 &                            0.074 &           0.218 &           -- &         239 \\
+            NN Model                            &                             0.066 &           0.156 &           -- &        2639 &                             0.066 &          0.167 &           -- &        1494 &                            0.071 &           0.222 &           -- &         239 \\
+            \hline
+            \end{tabular}
+            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) from Stripe82X X-ray test sample. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample. <<TM>> stands for Template model (Ananna, 2017), <<NN>> for Neural Network model (Brescia, 2019), <<CP>> stands for combined predictions of models \ref{model:spdw} and \ref{model:dw}.}
+\end{table*}
+
+\begin{table*}
+	\begin{tabular}{lllllrlllrllll}
+            \hline
+                &    & \multicolumn{4}{l}{$FSoft \geq 3e-15$} & \multicolumn{4}{l}{$FSoft \geq 1e-14$} & \multicolumn{4}{l}{$FSoft \geq 4e-14$} \\
+                &    &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
+            Obj. Type & Model &                    &                 &                  &             &                    &                 &                  &             &                    &                 &                  &             \\
+            \hline
+            Galaxy & \ref{model:pw} &              0.047 &           0.116 &  \textbf{-0.017} &         415 &              0.047 &           0.091 &           -0.017 &         175 &                 -- &              -- &               -- &          -- \\
+                & \ref{model:pdw} &              0.038 &           0.102 &            0.052 &         422 &              0.037 &            0.08 &   \textbf{0.013} &         176 &                 -- &              -- &               -- &          -- \\
+                & \ref{model:dw} &              0.047 &           0.131 &            0.086 &         504 &              0.049 &            0.11 &            0.081 &         209 &                 -- &              -- &               -- &          -- \\
+                & \ref{model:spw} &              0.041 &           0.097 &            0.075 &         412 &              0.036 &            0.08 &            0.056 &         174 &                 -- &              -- &               -- &          -- \\
+                & \ref{model:spdw} &     \textbf{0.037} &           0.098 &            0.093 &         419 &     \textbf{0.034} &  \textbf{0.074} &             0.08 &         175 &                 -- &              -- &               -- &          -- \\
+                & \ref{model:dw} w/o \ref{model:spdw} &               0.05 &           0.129 &            0.155 &          85 &              0.042 &           0.118 &            0.232 &          34 &                 -- &              -- &               -- &          -- \\
+                & CP &              0.038 &           0.103 &            0.104 &         504 &     \textbf{0.034} &           0.081 &            0.105 &         209 &                 -- &              -- &               -- &          -- \\
+                & TM &              0.069 &           0.095 &           -0.394 &         504 &              0.071 &           0.105 &           -0.441 &         209 &                 -- &              -- &               -- &          -- \\
+                & NN &              0.068 &  \textbf{0.085} &           -0.295 &         504 &              0.071 &           0.105 &           -0.369 &         209 &                 -- &              -- &               -- &          -- \\
+            QSO & \ref{model:pw} &              0.061 &           0.156 &            0.036 &        1400 &               0.05 &           0.121 &            0.041 &         895 &              0.033 &           0.075 &             0.05 &       159.0 \\
+                & \ref{model:pdw} &              0.049 &           0.113 &            0.084 &        1425 &              0.042 &           0.092 &            0.092 &         900 &              0.028 &           0.063 &            0.087 &       159.0 \\
+                & \ref{model:dw} &              0.083 &           0.191 &            -0.03 &        1692 &              0.076 &            0.16 &           -0.033 &        1040 &              0.076 &           0.153 &           -0.057 &       183.0 \\
+                & \ref{model:spw} &               0.04 &            0.11 &             0.11 &        1386 &              0.035 &           0.081 &            0.112 &         889 &     \textbf{0.025} &            0.05 &            0.138 &       159.0 \\
+                & \ref{model:spdw} &     \textbf{0.034} &  \textbf{0.089} &            0.123 &        1409 &      \textbf{0.03} &  \textbf{0.074} &             0.13 &         894 &     \textbf{0.025} &  \textbf{0.038} &             0.15 &       159.0 \\
+                & \ref{model:dw} w/o \ref{model:spdw} &              0.085 &           0.191 &  \textbf{-0.023} &         283 &              0.072 &           0.151 &  \textbf{-0.016} &         146 &               0.07 &           0.208 &  \textbf{-0.013} &        24.0 \\
+                & CP &               0.04 &           0.106 &            0.099 &        1692 &              0.034 &           0.085 &            0.109 &        1040 &              0.027 &            0.06 &            0.129 &       183.0 \\
+                & TM &               0.07 &           0.203 &           -0.303 &        1692 &               0.07 &           0.196 &           -0.356 &        1040 &              0.077 &           0.224 &           -0.472 &       183.0 \\
+                & NN &               0.07 &           0.181 &           -0.226 &        1692 &              0.067 &           0.179 &           -0.271 &        1040 &              0.076 &            0.23 &           -0.369 &       183.0 \\
+            \hline
+            \end{tabular}
+            \caption{Точность Stripe82X на разных классах объектов}
+\end{table*}
 
 Очередная цель этой статьи -- сравнение с моделями Photo-z, известными в литературе -- шаблонной моделью (Ananna, 2017) и нейросетевой моделью (Brescia, 2019). Для этого модели были протестированы на выборке Stripe82X, и были подсчитаны метрики точности \eqref{eq:nmad} и \eqref{eq:n015} на пересечении множества объектов, для которых удалось получить прогноз всеми моделями. Для наиболее точной модели получены значения метрик $~2$ раза лучше, чем для шаблонной и нейросетевой моделей для объектов $FSoft \geq 3e-15$ (см. табл. \ref{tab:stripe82x-intersection}).
 
@@ -543,14 +636,9 @@ This approach has the following theoretical interpretation: the independence and
 
 Итоговые значения метрик точности $NMAD, n_{>0.15} = 0.039, 0.104/ 0.067, 0.175/ 0.067, 0.157$ для комбинированного прогноза представленными моделями / шаблонной модели (Ananna, 2017) / нейросетевой модели (Brescia, 2019), соответственно, на 2898 из 2909 объектах выборки Stirpe82X для которых имеются прогнозы шаблонной и нейросетевой модели. Для 11 объектов не удалось получить прогнозы представленными моделями.
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/stripe82x-sota35-colored.png}
-    \caption{Scatterplots of predictions of template model (Ananna, 2017), combined prediction of models \ref{model:pw} -- \ref{model:spdw}, neural network model (Brescia, 2019) on Stripe82X X-ray test sample (from left to right). The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}. The number of predictions with each model in combined predictions is following: \ref{model:spdw} -- 2390, \ref{model:spw} -- 4, \ref{model:pdw} -- 26, \ref{model:pw} -- 1 \ref{model:dw} -- 463, has no prediction, comparing to Ananna and Brescia -- 11.}
-    \label{fig:scatter-s82x-sota35}
-\end{figure*}
+\subsection{Детальный анализ точности моделей photo-z SRGz}
 
-\subsection{Точность в зависимости от красного смещения объекта}\label{ssec:accuracy-as-fzspec}
+\subsubsection{Зависимость от красного смещения}\label{ssec:accuracy-as-fzspec}
 
 На рис. \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} слева приведены графики зависимости метрик качества точенчных прогнозов $NMAD$ \eqref{eq:nmad} и $n_{>0.15}$ \eqref{eq:n015} от значения спектрального красного смещения для представленных пяти моделей на кросс-валидации и тестовой выборке квазаров DR16q, соответственно. Основное, что можно заметить на графиках -- разнородность поведения моделей на разных красных смещениях. При этом поведение моделей может как согласовываться (все представленные модели показывают ухудшение точности в области $spec-z \sim 1.2$ по метрике NMAD) так и отличаться в зависимости от используемых данных (добавление в модель данных Pan-STARRS сильно улучшает точность моделей для близких квазаров на $spec-z < 1$ и квазаров на $spec-z \sim 2.3$ по метрике NMAD и уменьшает долю выбросов на $spec-z \sim 1.7$. В области $2.6 < spec-z < 3.7$ наивысшую точность показывают модели с использованием данных SDSS.
 
@@ -564,126 +652,121 @@ This approach has the following theoretical interpretation: the independence and
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-dr16q-ab-mini.png}
+    \includegraphics[width=0.99\linewidth]{images/metrics-dr16q-ab-mini.png}
     \caption{Plots of NMAD \eqref{eq:nmad} (upper line of plots) and the fraction of catastrophic outliers \eqref{eq:n015} (lower line of plots) metrics as a function of (from left to right) spectral redshift value, photometric redshift prediction value, and stellar magnitude in the filter z) on DR16q quasars test sample. The solid line shows model \ref{model:spdw}, the dot line shows model \ref{model:pw}, the dashed line shows model \ref{model:pdw}, the dash-dot line shows model \ref{model:dw}, and dash-dot-dot line shows model \ref{model:spw}.}
     \label{fig:metrics-dr16q}
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-cv2-ab-mini.png}
+    \includegraphics[width=0.99\linewidth]{images/metrics-cv2-ab-mini.png}
     \caption{Plots of NMAD \eqref{eq:nmad} (upper line of plots) and the fraction of catastrophic outliers \eqref{eq:n015} (lower line of plots) metrics as a function of (from left to right) spectral redshift value, photometric redshift prediction value, and stellar magnitude in the filter z) of cross-validation predictions. The solid line shows model \ref{model:spdw}, the dot line shows model \ref{model:pw}, the dashed line shows model \ref{model:pdw}, the dash-dot line shows model \ref{model:dw}, and dash-dot-dot line shows model \ref{model:spw}.}
     \label{fig:metrics-cv2-total}
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-gal.png}
+    \includegraphics[width=0.55\linewidth]{images/scatterplots-cv2-gal-sorted.png}
     \caption{Scatterplots of cross-validation predictions of galaxies of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
     \label{fig:scatter-cv2-gal}
 \end{figure*}
 
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/scatterplots-dr16q-wo-train-sorted.png}
+    \caption{Scatterplots of predictions on SDSS DR16 quasars test sample of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
+    \label{fig:scatter-dr16q_wo_train}
+\end{figure*}
+
 % \begin{figure*}
 %     \centering
-%     \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-qso.png}
+%     \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-qso-sorted.png}
 %     \caption{Scatterplots of cross-validation predictions of quasars of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
 %     \label{fig:scatter-cv2-qso}
 % \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplots-cv2-total.png}
+    \includegraphics[width=0.99\linewidth]{images/scatterplots-cv2-total-sorted.png}
     \caption{Scatterplots of cross-validation predictions of galaxies and quasars of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
     \label{fig:scatter-cv2-total}
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplots-dr16q-wo-train.png}
-    \caption{Scatterplots of predictions on SDSS DR16 quasars test sample of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
-    \label{fig:scatter-dr16q_wo_train}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/scatterplots-stripe82x.png}
+    \includegraphics[width=0.99\linewidth]{images/scatterplots-stripe82x-sorted.png}
     \caption{Scatterplots of predictions on Stripe82X X-ray test sample of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
     \label{fig:scatter-s82x}
 \end{figure*}
 
-\subsection{Сравнение разных моделей на объектах z > 5}
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/vhzqs-gr5.png}
-    \caption{Диаграммы рассеяния для VHzQs}
-    \label{fig:vhzqs-gr5}
-\end{figure*}
-
-\begin{table}
-	\begin{tabular}{lrrrrr}
-            \hline
-            {} & \multicolumn{2}{l}{Intersection (174)} & \multicolumn{3}{l}{All possible} \\
-            Model &             $NMAD$ & $n_{>0.15}$ &       $NMAD$ & $n_{>0.15}$ & $N_{preds}$ \\
-            \hline
-            \ref{model:pw}   &              0.026 &       0.132 &        0.027 &       0.146 &         240 \\
-            \ref{model:pdw}  &              0.020 &       0.092 &        0.020 &       0.119 &         285 \\
-            \ref{model:dw}   &              0.016 &       0.057 &        0.023 &       0.098 &         338 \\
-            \ref{model:spw}  &              0.025 &       0.138 &        0.025 &       0.136 &         176 \\
-            \ref{model:spdw} &              0.019 &       0.115 &        0.022 &       0.115 &         209 \\
-            \hline
-            \end{tabular}
-            \caption{Точность на VHzQs (Ross \& Cross)}
-\end{table}
-
-
-\subsection{Сравнение моделей на разных классах объектов}
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/class-galaxy-cv2.png}
-    \caption{Метрики на ярких и слабых галактиках на кросс-валидации в зависимости от spec-z}
-    \label{fig:class-galaxy-cv2}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/class-qso-dr16q.png}
-    \caption{Метрики на ярких и слабых квазарах DR16q в зависимости от spec-z}
-    \label{fig:class-qso-dr16q}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/class-xray-s82x.png}
-    \caption{Метрики на ярких и слабых рентгеновских источниках в зависимости от spec-z}
-    \label{fig:class-xray-s82x}
-\end{figure*}
-
-
-\subsection{Зависимость точности от оптического потока}\label{ssec:accuracy-as-fzmag}
+\subsubsection{Зависимость от оптического потока}\label{ssec:accuracy-as-fzmag}
 На рис. \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} справа приведены графики зависимости метрик качества точечных прогнозов $NMAD$ \eqref{eq:nmad} и $n_{>0.15}$ \eqref{eq:n015} от значения оптической AB-величины в фильтре $z$ для представленных пяти моделей на кросс-валидации и тестовой выборке квазаров DR16q, соответственно. Наблюдается монотонная зависимость от яркости источника в оптике на всех выборках. На кросс валидации (галактики и квазары) все модели показывают точность значительно выше более ярких источниках ($z_{mag} < 20$), чем на слабых сточниках ($z_{mag} > 21$). Точность может отличаться в 2-3 раза (например, в таблице \ref{tab:total_metrics_table}, где приведены метрики в пяти интервалах по spec-z и по $z_{mag}$: на кросс-валидации модель на всем небе \ref{model:pw} показывает значения метрик $NMAD, n_{>0.15} = 0.043, 0.079$ на объектах $19 \leq z_{mag} < 20$ и $NMAD, n_{>0.15} = 0.088, 0.213$ на объектах $21 \leq z_{mag} < 23$, а наиболее точная модель \ref{model:spdw} -- $NMAD, n_{>0.15} = 0.027, 0.035$ и $NMAD, n_{>0.15} = 0.048, 0.094$, соответственно.
 
 На тестовой выборке квазаров DR16q наблюдается в целом та же зависимость, но, ввиду отсудствия объектов типа галактика в выборке, значения метрик ухудшаются на наиболее ярких квазарах $z_{mag} < 21.5$ (все модели показывают точность не лучше $NMAD, n>0.15 = 0.02, 0.02$). При этом все модели показывают точность не хуже $NMAD, n>0.15 = 0.04, 0.10$ кроме модели \ref{model:dw}, которая показывает точность в среднем $NMAD, n>0.15 = 0.07, 0.15$.
 
 Добавление в модель признаков DESI LIS так же значительно улучшает точность моделей на слабых источниках (см. модели \ref{model:pw} и \ref{model:pdw} и модели \ref{model:spw} и \ref{model:spdw} на рис \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} и в таблице \ref{tab:total_metrics_table} для $21 < z_{mag} < 23$), при том модель \ref{model:dw} на основе только признаков DESI LIS и WISE превосходит по точности только модель \ref{model:pw} на основе только признаков Pan-STARRS, и только на наиболее слабых источниках (квазарах с $z_mag > 21.5$, см. рис. \ref{fig:metrics-dr16q}).
 
-\subsection{Зависимость точности от рентгеновского потока}\label{ssec:accuracy-as-ffx}
+\subsubsection{Зависимость от рентгеновского потока}\label{ssec:accuracy-as-ffx}
 
 В таблице \ref{tab:stripe82x-intersection} представлены метрики точности представленных пяти моделей на выборке Stripe82X для разных порогов по рентгеновскому потоку $FSoft$. Можно видеть, что точность всех моделей снижается до двух раз при увеличении глубины обзора. Модель \ref{model:dw} показывает однинаковую точность по метрике $NMAD = 0.73 \pm 0.01$, а доля выбросов ухудшается с $0.135$ на объектах $FSoft \geq 4e-14$ до $0.171$ при добавлении объектов $3e-15 \leq FSoft < 4e-14$.
 
-\subsection{Точность моделей в зависимости от zConf}
+\subsubsection{Зависимость от класса объекта (QSO/GALAXY)}
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/class-galaxy-cv2.png}
+    \caption{Метрики на ярких и слабых галактиках на кросс-валидации в зависимости от spec-z}
+    \label{fig:class-galaxy-cv2}
+\end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-zconf-cv2.png}
+    \includegraphics[width=0.99\linewidth]{images/class-qso-dr16q.png}
+    \caption{Метрики на ярких и слабых квазарах DR16q в зависимости от spec-z}
+    \label{fig:class-qso-dr16q}
+\end{figure*}
+
+%\begin{figure*}
+%    \centering
+%    \includegraphics[width=0.99\linewidth]{images/class-xray-s82x.png}
+%    \caption{Метрики на ярких и слабых рентгеновских источниках в зависимости от spec-z}
+%    \label{fig:class-xray-s82x}
+%\end{figure*}
+
+\subsection{Отбор объектов по параметру уверенности прогноза (zConf)}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-cv2-qso.png}
+    \caption{Метрики в зависимости от zConf на квазарах кросс-валидации}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-dr16q.png}
+    \caption{Метрики в зависимости от zConf на DR16q}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2.png}
     \caption{Метрики в зависимости от zConf}
     \label{fig:metrics-zconf-cv2}
 \end{figure*}
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.9\linewidth]{images/zconf-scatterplot-35.png}
+    \includegraphics[width=0.99\linewidth]{images/zconf-scatterplot-35.png}
     \caption{Скаттерплоты в зависимости от zConf для модели \ref{model:spdw}}
+    \label{fig:zconf-scatterplot-35}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/zconf-scatterplot-35-s82x.png}
+    \caption{Скаттерплоты в зависимости от zConf для модели \ref{model:spdw} на S82X}
     \label{fig:zconf-scatterplot-35}
 \end{figure*}
 
@@ -736,80 +819,79 @@ This approach has the following theoretical interpretation: the independence and
 \end{figure*}
 
 \begin{table*}
-	\begin{tabular}{llrrrrrrrrr}
+	\begin{tabular}{lllllllllll}
             \hline
                               &                  & \multicolumn{3}{l}{Stripe82x-A17 sample} & \multicolumn{3}{l}{Quasars of DR16q} & \multicolumn{3}{l}{Cross-Validation} \\
                               &                  &               $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ \\
             subsample & model &                      &                 &                  &                  &                 &                  &                  &                 &                  \\
-
+            \hline
 \hline
-            All objects       & \ref{model:pw} &                0.056 &           0.149 &            0.023 &            0.063 &           0.165 &            0.031 &            0.046 &           0.109 &            0.052 \\
-                              & \ref{model:pdw} &                0.046 &           0.113 &            0.075 &            0.049 &            0.12 &            0.068 &            0.037 &           0.085 &            0.072 \\
-                              & \ref{model:dw} &                0.074 &           0.177 &  \textbf{-0.003} &            0.083 &            0.19 &  \textbf{-0.005} &            0.058 &           0.143 &  \textbf{-0.008} \\
-                              & \ref{model:spw} &                 0.04 &           0.105 &            0.089 &             0.04 &           0.088 &            0.082 &            0.031 &           0.054 &            0.084 \\
-                              & \ref{model:spdw} &       \textbf{0.034} &  \textbf{0.089} &            0.104 &   \textbf{0.037} &  \textbf{0.076} &            0.093 &   \textbf{0.028} &  \textbf{0.048} &            0.093 \\
+            $All$ & \ref{model:pw} &                0.056 &           0.146 &            0.028 &            0.065 &            0.17 &            0.022 &            0.047 &           0.111 &            0.045 \\
+                              & \ref{model:pdw} &                0.045 &           0.107 &            0.082 &             0.05 &           0.125 &            0.062 &            0.037 &           0.085 &            0.072 \\
+                              & \ref{model:dw} &                0.074 &           0.173 &  \textbf{-0.005} &            0.083 &           0.194 &  \textbf{-0.014} &            0.058 &           0.143 &  \textbf{-0.008} \\
+                              & \ref{model:spw} &                0.039 &             0.1 &            0.098 &            0.041 &            0.09 &            0.077 &            0.033 &           0.055 &            0.082 \\
+                              & \ref{model:spdw} &       \textbf{0.033} &  \textbf{0.084} &            0.113 &   \textbf{0.037} &  \textbf{0.078} &            0.089 &   \textbf{0.028} &  \textbf{0.048} &            0.093 \\
 \hline
+            $z_{spec} < 0.5$ & \ref{model:pw} &                0.035 &  \textbf{0.066} &   \textbf{0.016} &            0.038 &           0.113 &   \textbf{0.028} &            0.023 &           0.031 &   \textbf{0.003} \\
+                              & \ref{model:pdw} &                 0.03 &            0.07 &            0.061 &            0.033 &           0.112 &            0.044 &            0.016 &           0.027 &            0.072 \\
+                              & \ref{model:dw} &                0.048 &           0.103 &            0.042 &            0.077 &           0.197 &           -0.056 &            0.019 &           0.045 &           -0.004 \\
+                              & \ref{model:spw} &                0.029 &           0.068 &            0.075 &            0.032 &  \textbf{0.085} &            0.063 &            0.021 &           0.028 &            0.022 \\
+                              & \ref{model:spdw} &       \textbf{0.027} &           0.074 &            0.094 &   \textbf{0.031} &           0.097 &            0.056 &   \textbf{0.015} &  \textbf{0.025} &            0.094 \\
 \hline
-            $z_{spec} < 0.5$ & \ref{model:pw} &                0.038 &  \textbf{0.083} &   \textbf{0.003} &            0.038 &           0.113 &   \textbf{0.028} &             0.02 &           0.031 &            0.045 \\
-                              & \ref{model:pdw} &                0.031 &           0.086 &             0.04 &            0.033 &           0.112 &            0.044 &            0.016 &           0.027 &            0.072 \\
-                              & \ref{model:dw} &                0.048 &           0.111 &            0.035 &            0.077 &           0.197 &           -0.056 &            0.019 &           0.045 &  \textbf{-0.004} \\
-                              & \ref{model:spw} &                0.032 &  \textbf{0.083} &            0.044 &            0.032 &  \textbf{0.085} &            0.063 &            0.018 &           0.026 &            0.076 \\
-                              & \ref{model:spdw} &        \textbf{0.03} &           0.084 &            0.062 &   \textbf{0.031} &           0.097 &            0.056 &   \textbf{0.015} &  \textbf{0.025} &            0.094 \\
+            $0.5 \leq z_{spec} < 1$ & \ref{model:pw} &                0.053 &           0.146 &            0.028 &            0.048 &           0.142 &             0.06 &            0.038 &           0.089 &            0.047 \\
+                              & \ref{model:pdw} &                0.045 &           0.131 &            0.068 &            0.042 &           0.117 &            0.081 &             0.03 &           0.078 &             0.08 \\
+                              & \ref{model:dw} &                0.081 &           0.193 &  \textbf{-0.019} &            0.086 &           0.189 &  \textbf{-0.032} &            0.049 &           0.126 &  \textbf{-0.013} \\
+                              & \ref{model:spw} &                 0.04 &           0.107 &            0.109 &            0.037 &             0.1 &            0.101 &            0.031 &           0.059 &            0.089 \\
+                              & \ref{model:spdw} &       \textbf{0.037} &    \textbf{0.1} &            0.122 &   \textbf{0.035} &  \textbf{0.091} &             0.12 &   \textbf{0.026} &  \textbf{0.058} &            0.111 \\
 \hline
-            $0.5 \leq z_{spec} < 1$ & \ref{model:pw} &                0.053 &           0.147 &             0.03 &            0.048 &           0.139 &            0.061 &            0.037 &           0.088 &             0.06 \\
-                              & \ref{model:pdw} &                0.047 &           0.138 &            0.072 &            0.042 &           0.112 &            0.084 &             0.03 &           0.078 &             0.08 \\
-                              & \ref{model:dw} &                0.081 &           0.204 &  \textbf{-0.011} &            0.085 &           0.186 &  \textbf{-0.023} &            0.049 &           0.126 &  \textbf{-0.013} \\
-                              & \ref{model:spw} &                0.043 &           0.111 &            0.109 &            0.037 &           0.097 &            0.106 &             0.03 &            0.06 &            0.099 \\
-                              & \ref{model:spdw} &       \textbf{0.038} &  \textbf{0.106} &            0.122 &   \textbf{0.035} &  \textbf{0.089} &            0.124 &   \textbf{0.026} &  \textbf{0.058} &            0.111 \\
+            $1 \leq z_{spec} < 1.5$ & \ref{model:pw} &                 0.08 &           0.172 &            0.025 &            0.083 &           0.194 &            0.033 &            0.069 &            0.14 &            0.056 \\
+                              & \ref{model:pdw} &                0.061 &           0.108 &            0.079 &            0.068 &           0.144 &            0.069 &            0.059 &           0.099 &            0.074 \\
+                              & \ref{model:dw} &                0.082 &           0.139 &   \textbf{0.012} &            0.087 &           0.176 &   \textbf{0.007} &            0.078 &           0.134 &   \textbf{0.019} \\
+                              & \ref{model:spw} &                0.055 &           0.108 &            0.097 &            0.057 &           0.114 &             0.11 &            0.045 &           0.068 &            0.109 \\
+                              & \ref{model:spdw} &       \textbf{0.048} &  \textbf{0.086} &            0.118 &   \textbf{0.055} &  \textbf{0.101} &            0.105 &   \textbf{0.043} &   \textbf{0.06} &            0.105 \\
 \hline
-            $1 \leq z_{spec} < 1.5$ & \ref{model:pw} &                0.079 &           0.173 &            0.025 &            0.083 &           0.195 &            0.031 &            0.069 &           0.142 &            0.051 \\
-                              & \ref{model:pdw} &                0.061 &           0.109 &            0.074 &             0.07 &           0.146 &            0.066 &            0.059 &           0.099 &            0.074 \\
-                              & \ref{model:dw} &                0.083 &           0.143 &    \textbf{0.01} &            0.088 &           0.177 &   \textbf{0.005} &            0.078 &           0.134 &   \textbf{0.019} \\
-                              & \ref{model:spw} &                0.053 &           0.108 &            0.097 &            0.058 &           0.113 &             0.11 &            0.046 &            0.07 &            0.099 \\
-                              & \ref{model:spdw} &       \textbf{0.048} &  \textbf{0.088} &            0.122 &   \textbf{0.057} &    \textbf{0.1} &            0.107 &   \textbf{0.043} &   \textbf{0.06} &            0.105 \\
+            $1.5 \leq z_{spec} < 2$ & \ref{model:pw} &                0.076 &           0.154 &            0.076 &            0.077 &           0.153 &            0.088 &            0.069 &           0.136 &            0.075 \\
+                              & \ref{model:pdw} &                0.044 &           0.099 &            0.127 &            0.056 &           0.125 &            0.089 &            0.051 &           0.109 &            0.077 \\
+                              & \ref{model:dw} &                0.081 &           0.258 &  \textbf{-0.035} &            0.094 &           0.255 &  \textbf{-0.008} &            0.089 &           0.238 &  \textbf{-0.042} \\
+                              & \ref{model:spw} &                 0.04 &           0.094 &            0.164 &            0.054 &             0.1 &            0.111 &            0.044 &           0.073 &            0.115 \\
+                              & \ref{model:spdw} &       \textbf{0.031} &  \textbf{0.061} &            0.147 &   \textbf{0.045} &  \textbf{0.089} &            0.121 &   \textbf{0.038} &  \textbf{0.061} &            0.105 \\
 \hline
-            $1.5 \leq z_{spec} < 2$ & \ref{model:pw} &                0.075 &           0.158 &            0.075 &            0.076 &           0.157 &            0.088 &            0.069 &           0.142 &            0.061 \\
-                              & \ref{model:pdw} &                0.043 &           0.102 &            0.127 &            0.056 &           0.128 &            0.088 &            0.051 &           0.109 &            0.077 \\
-                              & \ref{model:dw} &                0.078 &           0.253 &  \textbf{-0.029} &            0.093 &           0.256 &  \textbf{-0.009} &            0.089 &           0.238 &  \textbf{-0.042} \\
-                              & \ref{model:spw} &                 0.04 &           0.096 &            0.163 &            0.053 &           0.103 &            0.115 &            0.043 &           0.073 &            0.101 \\
-                              & \ref{model:spdw} &       \textbf{0.031} &  \textbf{0.065} &            0.144 &   \textbf{0.044} &  \textbf{0.093} &             0.12 &   \textbf{0.038} &  \textbf{0.061} &            0.105 \\
+            $2 \leq z_{spec}$ & \ref{model:pw} &                0.066 &           0.221 &  \textbf{-0.004} &            0.069 &           0.188 &           -0.028 &            0.059 &           0.142 &            0.048 \\
+                              & \ref{model:pdw} &                0.043 &           0.126 &            0.096 &            0.048 &           0.122 &            0.044 &            0.047 &           0.101 &            0.064 \\
+                              & \ref{model:dw} &                0.087 &           0.198 &           -0.042 &            0.078 &           0.179 &  \textbf{-0.012} &             0.08 &           0.164 &  \textbf{-0.002} \\
+                              & \ref{model:spw} &                0.038 &           0.136 &            0.037 &            0.036 &           0.072 &            0.041 &            0.033 &           0.053 &            0.081 \\
+                              & \ref{model:spdw} &       \textbf{0.027} &  \textbf{0.092} &            0.074 &   \textbf{0.031} &  \textbf{0.056} &            0.063 &    \textbf{0.03} &  \textbf{0.043} &            0.072 \\
 \hline
-            $2 \leq z_{spec}$ & \ref{model:pw} &                0.071 &           0.222 &  \textbf{-0.018} &            0.063 &           0.173 &  \textbf{-0.001} &            0.058 &           0.132 &            0.046 \\
-                              & \ref{model:pdw} &                0.046 &           0.133 &            0.089 &            0.046 &           0.111 &            0.059 &            0.047 &           0.101 &            0.064 \\
-                              & \ref{model:dw} &                0.091 &           0.206 &           -0.043 &            0.078 &           0.172 &            0.005 &             0.08 &           0.164 &  \textbf{-0.002} \\
-                              & \ref{model:spw} &                0.039 &            0.14 &             0.03 &            0.035 &            0.07 &            0.053 &            0.033 &           0.048 &            0.064 \\
-                              & \ref{model:spdw} &       \textbf{0.029} &  \textbf{0.098} &            0.072 &   \textbf{0.031} &  \textbf{0.055} &            0.072 &    \textbf{0.03} &  \textbf{0.043} &            0.072 \\
+            \hline
+            $z_{mag} < 19$ & \ref{model:pw} &                0.035 &           0.025 &    \textbf{0.03} &            0.039 &           0.077 &            0.052 &            0.027 &           0.033 &            0.035 \\
+                                   & \ref{model:pdw} &                0.026 &           0.016 &            0.069 &            0.034 &           0.069 &            0.064 &            0.019 &           0.028 &            0.077 \\
+                                   & \ref{model:dw} &                0.037 &           0.064 &            0.046 &            0.071 &            0.15 &  \textbf{-0.018} &            0.026 &           0.059 &  \textbf{-0.006} \\
+                                   & \ref{model:spw} &                0.023 &           0.016 &            0.098 &            0.026 &  \textbf{0.036} &            0.101 &            0.021 &           0.017 &            0.064 \\
+                                   & \ref{model:spdw} &       \textbf{0.019} &  \textbf{0.009} &            0.115 &   \textbf{0.025} &           0.043 &            0.092 &   \textbf{0.017} &  \textbf{0.016} &            0.104 \\
 \hline
+            $19 \leq z_{mag} < 20$ & \ref{model:pw} &                0.042 &           0.077 &            0.075 &            0.046 &           0.103 &            0.059 &            0.043 &           0.079 &            0.055 \\
+                                   & \ref{model:pdw} &                0.036 &           0.063 &            0.114 &            0.039 &           0.079 &            0.076 &            0.034 &           0.063 &            0.076 \\
+                                   & \ref{model:dw} &                0.072 &           0.111 &  \textbf{-0.004} &            0.074 &           0.156 &  \textbf{-0.013} &            0.056 &           0.121 &  \textbf{-0.006} \\
+                                   & \ref{model:spw} &                 0.03 &           0.044 &            0.116 &            0.031 &            0.05 &            0.094 &             0.03 &           0.037 &            0.088 \\
+                                   & \ref{model:spdw} &       \textbf{0.029} &   \textbf{0.04} &            0.131 &   \textbf{0.029} &  \textbf{0.044} &            0.099 &   \textbf{0.026} &  \textbf{0.034} &            0.097 \\
 \hline
-            $z_{mag} < 19$ & \ref{model:pw} &                0.037 &           0.046 &   \textbf{0.015} &            0.039 &           0.077 &            0.053 &            0.025 &           0.033 &            0.059 \\
-                                   & \ref{model:pdw} &                0.027 &            0.04 &            0.043 &            0.034 &           0.068 &            0.066 &             0.02 &           0.029 &            0.077 \\
-                                   & \ref{model:dw} &                0.038 &            0.08 &            0.036 &            0.071 &           0.152 &  \textbf{-0.012} &            0.026 &            0.06 &  \textbf{-0.006} \\
-                                   & \ref{model:spw} &       \textbf{0.024} &           0.038 &            0.062 &            0.026 &  \textbf{0.035} &            0.102 &            0.019 &           0.018 &            0.092 \\
-                                   & \ref{model:spdw} &       \textbf{0.024} &  \textbf{0.029} &            0.081 &   \textbf{0.025} &            0.04 &            0.096 &   \textbf{0.017} &  \textbf{0.017} &            0.104 \\
+            $20 \leq z_{mag} < 20.5$ & \ref{model:pw} &                0.063 &            0.13 &            0.036 &            0.062 &           0.153 &            0.016 &            0.059 &            0.13 &            0.055 \\
+                                   & \ref{model:pdw} &                0.046 &           0.109 &            0.099 &            0.046 &           0.114 &            0.062 &            0.047 &           0.098 &            0.072 \\
+                                   & \ref{model:dw} &                0.078 &           0.173 &   \textbf{0.001} &            0.079 &           0.181 &  \textbf{-0.008} &             0.08 &           0.171 &  \textbf{-0.008} \\
+                                   & \ref{model:spw} &                0.041 &           0.081 &             0.11 &            0.038 &           0.067 &            0.075 &            0.037 &           0.058 &            0.097 \\
+                                   & \ref{model:spdw} &       \textbf{0.033} &   \textbf{0.07} &             0.11 &   \textbf{0.033} &  \textbf{0.058} &            0.094 &   \textbf{0.034} &  \textbf{0.053} &            0.096 \\
 \hline
-            $19 \leq z_{mag} < 20$ & \ref{model:pw} &                0.043 &           0.076 &            0.075 &            0.046 &           0.098 &            0.065 &            0.043 &           0.079 &            0.059 \\
-                                   & \ref{model:pdw} &                0.036 &           0.065 &            0.114 &            0.038 &           0.075 &            0.082 &            0.035 &           0.064 &            0.076 \\
-                                   & \ref{model:dw} &                0.071 &            0.11 &   \textbf{0.008} &            0.074 &           0.154 &  \textbf{-0.004} &            0.058 &           0.124 &  \textbf{-0.006} \\
-                                   & \ref{model:spw} &                0.031 &           0.045 &            0.115 &             0.03 &            0.05 &            0.095 &            0.029 &           0.037 &             0.09 \\
-                                   & \ref{model:spdw} &       \textbf{0.028} &  \textbf{0.041} &            0.131 &   \textbf{0.028} &  \textbf{0.044} &            0.099 &   \textbf{0.027} &  \textbf{0.035} &            0.097 \\
+            $20.5 \leq z_{mag} < 21$ & \ref{model:pw} &                0.079 &           0.201 &           -0.007 &            0.075 &           0.188 &            0.014 &            0.071 &           0.169 &            0.044 \\
+                                   & \ref{model:pdw} &                0.055 &           0.117 &             0.08 &            0.054 &           0.131 &            0.074 &            0.056 &           0.126 &            0.064 \\
+                                   & \ref{model:dw} &                0.087 &           0.207 &   \textbf{0.004} &            0.084 &           0.199 &  \textbf{-0.006} &            0.089 &           0.204 &   \textbf{-0.01} \\
+                                   & \ref{model:spw} &                0.054 &           0.126 &            0.083 &            0.047 &           0.099 &            0.059 &            0.045 &           0.083 &            0.084 \\
+                                   & \ref{model:spdw} &       \textbf{0.041} &  \textbf{0.101} &            0.109 &    \textbf{0.04} &  \textbf{0.083} &            0.085 &    \textbf{0.04} &  \textbf{0.071} &            0.083 \\
 \hline
-            $20 \leq z_{mag} < 20.5$ & \ref{model:pw} &                0.064 &           0.137 &            0.027 &            0.058 &           0.145 &            0.031 &            0.058 &           0.129 &            0.052 \\
-                                   & \ref{model:pdw} &                0.046 &           0.105 &            0.107 &            0.045 &           0.105 &            0.069 &            0.048 &             0.1 &            0.071 \\
-                                   & \ref{model:dw} &                0.075 &           0.165 &   \textbf{0.014} &            0.079 &           0.172 &   \textbf{0.007} &            0.081 &           0.174 &  \textbf{-0.007} \\
-                                   & \ref{model:spw} &                0.041 &           0.087 &            0.105 &            0.037 &           0.065 &            0.083 &            0.037 &           0.059 &            0.087 \\
-                                   & \ref{model:spdw} &       \textbf{0.033} &  \textbf{0.074} &            0.107 &   \textbf{0.033} &  \textbf{0.056} &            0.101 &   \textbf{0.034} &  \textbf{0.054} &            0.094 \\
-\hline
-            $20.5 \leq z_{mag} < 21$ & \ref{model:pw} &                0.076 &           0.199 &           -0.009 &            0.072 &           0.183 &            0.024 &            0.072 &           0.168 &             0.04 \\
-                                   & \ref{model:pdw} &                0.056 &           0.121 &            0.078 &            0.054 &           0.127 &            0.077 &            0.057 &           0.128 &            0.063 \\
-                                   & \ref{model:dw} &                0.088 &           0.219 &   \textbf{0.006} &            0.084 &           0.198 &   \textbf{0.004} &            0.089 &           0.206 &  \textbf{-0.011} \\
-                                   & \ref{model:spw} &                0.054 &           0.126 &            0.076 &            0.046 &           0.099 &            0.067 &            0.044 &           0.083 &            0.072 \\
-                                   & \ref{model:spdw} &       \textbf{0.044} &  \textbf{0.106} &            0.105 &   \textbf{0.039} &  \textbf{0.082} &             0.09 &    \textbf{0.04} &  \textbf{0.073} &            0.081 \\
-\hline
-            $21 \leq z_{mag} < 23$ & \ref{model:pw} &                0.119 &           0.319 &  \textbf{-0.011} &            0.102 &           0.258 &  \textbf{-0.003} &            0.088 &           0.213 &            0.037 \\
-                                   & \ref{model:pdw} &                0.082 &           0.245 &            0.035 &            0.071 &           0.179 &            0.051 &            0.066 &           0.157 &            0.065 \\
-                                   & \ref{model:dw} &                0.118 &           0.325 &           -0.073 &            0.098 &           0.236 &           -0.016 &            0.096 &           0.229 &  \textbf{-0.011} \\
-                                   & \ref{model:spw} &                0.082 &           0.252 &            0.085 &            0.064 &           0.151 &            0.072 &            0.054 &           0.111 &            0.069 \\
-                                   & \ref{model:spdw} &       \textbf{0.063} &   \textbf{0.21} &            0.095 &   \textbf{0.054} &  \textbf{0.124} &            0.085 &   \textbf{0.048} &  \textbf{0.094} &             0.08 \\
+            $21 \leq z_{mag} < 23$ & \ref{model:pw} &                0.123 &           0.318 &  \textbf{-0.011} &            0.107 &           0.266 &  \textbf{-0.015} &            0.089 &           0.213 &             0.04 \\
+                                   & \ref{model:pdw} &                0.079 &           0.234 &            0.043 &            0.073 &           0.185 &            0.043 &            0.066 &           0.156 &            0.065 \\
+                                   & \ref{model:dw} &                0.114 &           0.315 &           -0.063 &            0.099 &           0.245 &           -0.022 &            0.096 &           0.229 &  \textbf{-0.011} \\
+                                   & \ref{model:spw} &                0.082 &            0.25 &            0.081 &            0.066 &           0.155 &            0.065 &            0.054 &           0.111 &            0.084 \\
+                                   & \ref{model:spdw} &       \textbf{0.063} &  \textbf{0.204} &            0.095 &   \textbf{0.055} &  \textbf{0.127} &             0.08 &   \textbf{0.048} &  \textbf{0.093} &             0.08 \\
 \hline
             \hline
             \end{tabular}
@@ -817,58 +899,20 @@ This approach has the following theoretical interpretation: the independence and
             \label{tab:total_metrics_table}
 \end{table*}
 
-\begin{table*}
-	\begin{tabular}{llllllllll}
-            \hline
-            {} & \multicolumn{3}{l}{$FSoft \geq 3e-15$ (2170 objects)} & \multicolumn{3}{l}{$FSoft \geq 1e-14$ (1272 objects)} & \multicolumn{3}{l}{$FSoft \geq 4e-14$ (207 objects)} \\
-            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                           $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
-            Model          &                                   &                 &                  &                                   &                 &                  &                                  &                 &                 \\
-            \hline
-            \ref{model:pw}             &                             0.056 &           0.149 &            0.025 &                              0.05 &           0.119 &            0.033 &                            0.037 &           0.092 &  \textbf{0.025} \\
-            \ref{model:pdw}            &                             0.045 &           0.107 &            0.079 &                             0.042 &           0.094 &            0.076 &                             0.03 &           0.068 &           0.074 \\
-            \ref{model:dw}             &                             0.073 &           0.171 &  \textbf{-0.012} &                             0.073 &           0.154 &  \textbf{-0.022} &                            0.074 &           0.135 &          -0.057 \\
-            \ref{model:spw}            &                             0.039 &           0.105 &            0.094 &                             0.035 &            0.08 &            0.102 &                   \textbf{0.027} &           0.058 &           0.107 \\
-            \ref{model:spdw}           &                    \textbf{0.033} &  \textbf{0.087} &            0.109 &                     \textbf{0.03} &  \textbf{0.073} &            0.117 &                   \textbf{0.027} &  \textbf{0.043} &           0.122 \\
-            TM &                             0.065 &           0.174 &           -0.336 &                             0.068 &           0.185 &            -0.38 &                            0.073 &           0.222 &          -0.477 \\
-            NN             &                             0.065 &            0.16 &           -0.256 &                             0.067 &            0.17 &           -0.299 &                             0.07 &           0.222 &          -0.385 \\
-            \hline
-            \end{tabular}
-            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) on objects from Stripe82X X-ray test sample that have prediction by every model. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample. <<TM>> stands for Template model (Ananna, 2017), and <<NN>> for Neural Network model (Brescia, 2019).}
-            \label{tab:stripe82x-intersection}
-\end{table*}
-
-\begin{table*}
-	\begin{tabular}{llllrlllrlllr}
-            \hline
-            {} & \multicolumn{4}{l}{$FSoft \geq 3e-15$ (2665 objects in total)} & \multicolumn{4}{l}{$FSoft \geq 1e-14$ (1505 objects in total)} & \multicolumn{4}{l}{$FSoft \geq 4e-14$ (242 objects in total)} \\
-            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                           $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ & $N_{preds}$ \\
-            Model          &                                   &                 &                  &             &                                   &                 &                  &             &                                  &                 &                 &             \\
-            \hline
-            \ref{model:pw}             &                             0.056 &           0.149 &            0.025 &        2194 &                              0.05 &            0.12 &            0.033 &        1284 &                            0.038 &           0.095 &  \textbf{0.025} &         210 \\
-            \ref{model:pdw}            &                             0.045 &           0.111 &            0.078 &        2231 &                             0.042 &           0.096 &            0.077 &        1291 &                             0.03 &           0.071 &           0.068 &         210 \\
-            \ref{model:dw}             &                             0.074 &           0.175 &  \textbf{-0.007} &        2651 &                             0.072 &           0.155 &  \textbf{-0.013} &        1498 &                            0.074 &           0.142 &          -0.048 &         239 \\
-            \ref{model:spw}            &                             0.039 &           0.104 &            0.095 &        2173 &                             0.035 &            0.08 &            0.103 &        1274 &                   \textbf{0.027} &           0.058 &           0.108 &         208 \\
-            \ref{model:spdw}           &                    \textbf{0.033} &  \textbf{0.087} &            0.109 &        2208 &                     \textbf{0.03} &  \textbf{0.073} &            0.118 &        1280 &                   \textbf{0.027} &  \textbf{0.043} &           0.118 &         208 \\
-            TM &                             0.066 &           0.175 &           -0.329 &        2665 &                             0.068 &           0.183 &           -0.375 &        1505 &                            0.074 &           0.219 &          -0.478 &         242 \\
-            NN              &                             0.067 &           0.159 &           -0.249 &        2665 &                             0.067 &           0.169 &           -0.291 &        1505 &                            0.072 &           0.223 &           -0.37 &         242 \\
-            \hline
-            \end{tabular}
-            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) from Stripe82X X-ray test sample. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample. <<TM>> stands for Template model (Ananna, 2017), and <<NN>> for Neural Network model (Brescia, 2019).}
-\end{table*}
 
 
 \begin{table*}
-	\begin{tabular}{llllrlllrlllr}
+	\begin{tabular}{lllllrllllrllllr}
             \hline
-            {} & \multicolumn{4}{l}{$FSoft \geq 3e-15$ (2653 objects)} & \multicolumn{4}{l}{$FSoft \geq 1e-14$ (1501 objects)} & \multicolumn{4}{l}{$FSoft \geq 4e-14$ (242 objects)} \\
-            {} &                         Precision &     $C_{preds}$ &   $C_{secureO}$ & $N_{preds}$ &                         Precision &     $C_{preds}$ &   $C_{secureO}$ & $N_{preds}$ &                        Precision &     $C_{preds}$ &   $C_{secureO}$ & $N_{preds}$ \\
-            Model &                                   &                 &                 &             &                                   &                 &                 &             &                                  &                 &                 &             \\
+            {} & \multicolumn{5}{l}{$FSoft \geq 3e-15$ (2653 objects)} & \multicolumn{5}{l}{$FSoft \geq 1e-14$ (1501 objects)} & \multicolumn{5}{l}{$FSoft \geq 4e-14$ (242 objects)} \\
+            {} &                         Precision &     $C_{preds}$ &   $C_{secureO}$ &     $C_{Xray}$ & $N_{preds}$ &                         Precision &     $C_{preds}$ &   $C_{secureO}$ &      $C_{Xray}$ & $N_{preds}$ &                        Precision &     $C_{preds}$ &   $C_{secureO}$ &      $C_{Xray}$ & $N_{preds}$ \\
+            Model &                                   &                 &                 &                &             &                                   &                 &                 &                 &             &                                  &                 &                 &                 &             \\
             \hline
-            PW    &                             0.935 &           0.726 &           0.597 &        2183 &                             0.937 &           0.773 &           0.659 &        1280 &                            0.944 &           0.876 &            0.76 &         210 \\
-            PDW   &                             0.944 &           0.762 &           0.637 &        2220 &                             0.948 &           0.807 &           0.692 &        1287 &                            0.953 &           0.876 &            0.76 &         210 \\
-            DW    &                             0.885 &            0.67 &  \textbf{0.666} &        2639 &                              0.89 &           0.704 &           0.701 &        1494 &                            0.882 &            0.72 &           0.711 &         239 \\
-            SPW   &                             0.963 &           0.794 &           0.647 &        2162 &                              0.97 &           0.846 &           0.716 &        1270 &                            0.964 &           0.904 &           0.777 &         208 \\
-            SPDW  &                    \textbf{0.969} &  \textbf{0.805} &  \textbf{0.666} &        2197 &                    \textbf{0.975} &  \textbf{0.849} &  \textbf{0.722} &        1276 &                   \textbf{0.974} &  \textbf{0.918} &  \textbf{0.789} &         208 \\
+            PW    &                             0.935 &           0.726 &           0.597 &          0.304 &        2183 &                             0.937 &           0.773 &           0.659 &           0.427 &        1280 &                            0.944 &           0.876 &            0.76 &           0.546 &         210 \\
+            PDW   &                             0.944 &           0.762 &           0.637 &          0.325 &        2220 &                             0.948 &           0.807 &           0.692 &           0.449 &        1287 &                            0.953 &           0.876 &            0.76 &           0.546 &         210 \\
+            DW    &                             0.885 &            0.67 &  \textbf{0.666} &  \textbf{0.34} &        2639 &                              0.89 &           0.704 &           0.701 &           0.455 &        1494 &                            0.882 &            0.72 &           0.711 &            0.51 &         239 \\
+            SPW   &                             0.963 &           0.794 &           0.647 &           0.33 &        2162 &                              0.97 &           0.846 &           0.716 &           0.464 &        1270 &                            0.964 &           0.904 &           0.777 &           0.558 &         208 \\
+            SPDW  &                    \textbf{0.969} &  \textbf{0.805} &  \textbf{0.666} &  \textbf{0.34} &        2197 &                    \textbf{0.975} &  \textbf{0.849} &  \textbf{0.722} &  \textbf{0.468} &        1276 &                   \textbf{0.974} &  \textbf{0.918} &  \textbf{0.789} &  \textbf{0.567} &         208 \\
             \hline
             \end{tabular}
             \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw} from Stripe82X X-ray test sample. The first column shows model, the next two columns -- Precision \ref{eq:precision} and Completeness \ref{eq:completeness} metrics for objects with $FSoft < 1e-14$, the second two columns -- for objects with $FSoft < 4e-14$, and the last two columns -- for the entire sample.}
@@ -899,6 +943,54 @@ This approach has the following theoretical interpretation: the independence and
     \caption{zConf distribution}
     \label{fig:zconf-cal-dr16q}
 \end{figure*}
+
+\subsection{Сравнение разных моделей на объектах z > 5}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/xray-qso-zgr5.png}
+    \caption{Скаттерплоты на рентгеновских квазарах z > 5 (Chandra + Георгий)}
+    \label{fig:my_label}
+\end{figure*}
+
+\begin{table*}
+	\begin{tabular}{lrrrrrrrrr}
+            \hline
+            {} & \multicolumn{2}{l}{Intersection (35)} & \multicolumn{7}{l}{All possible} \\
+            {} &            $NMAD$ & $n_{>0.15}$ &       $NMAD$ & $n_{>0.15}$ & $N_{preds}$ & Precision & $n_{NaN}$ & $n_{low~conf}$ & $C_{total}$ \\
+            \hline
+            Pan-STARRS + WISE                   &             0.028 &       0.143 &        0.029 &       0.143 &          42 &     1.000 &     0.567 &          0.041 &       0.330 \\
+            Pan-STARRS + DESI LIS + WISE        &             0.024 &       0.143 &        0.027 &       0.171 &          41 &     1.000 &     0.577 &          0.062 &       0.289 \\
+            DESI LIS + WISE                     &             0.013 &       0.057 &        0.018 &       0.119 &          59 &     1.000 &     0.392 &          0.052 &       0.485 \\
+            SDSS + Pan-STARRS + DESI LIS + WISE &             0.027 &       0.257 &        0.027 &       0.257 &          35 &     0.962 &     0.639 &          0.010 &       0.258 \\
+            \hline
+            \end{tabular}
+            \caption{Точность на рентгеновских квазарах z > 5 (Chandra + Георгий)}
+\end{table*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/vhzqs-gr5.png}
+    \caption{Диаграммы рассеяния для VHzQs}
+    \label{fig:vhzqs-gr5}
+\end{figure*}
+
+\begin{table*}
+	\begin{tabular}{lrrrrrrrrr}
+            \hline
+            {} & \multicolumn{2}{l}{Intersection (186)} & \multicolumn{7}{l}{All possible} \\
+            {} &             $NMAD$ & $n_{>0.15}$ &       $NMAD$ & $n_{>0.15}$ & $N_{preds}$ & Precision & $n_{NaN}$ & $n_{low~conf}$ & $C_{total}$ \\
+            \hline
+            \ref{model:pw}   &              0.024 &       0.134 &        0.026 &       0.154 &         260 &     1.000 &     0.467 &          0.055 &       0.395 \\
+            \ref{model:pdw}  &              0.020 &       0.091 &        0.020 &       0.120 &         301 &     1.000 &     0.383 &          0.059 &       0.484 \\
+            \ref{model:dw}   &              0.017 &       0.059 &        0.023 &       0.099 &         364 &     0.993 &     0.254 &          0.051 &       0.621 \\
+            \ref{model:spw}  &              0.025 &       0.140 &        0.025 &       0.140 &         193 &     1.000 &     0.605 &          0.041 &       0.299 \\
+            \ref{model:spdw} &              0.019 &       0.113 &        0.020 &       0.113 &         222 &     1.000 &     0.545 &          0.041 &       0.363 \\
+            \hline
+            \end{tabular}
+            \caption{Точность на оптических квазарах $z>5$ из  VHzQs (Ross \& Cross)}
+\end{table*}
+
 
 % ===============================================================================
 % ===============================================================================
