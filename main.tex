@@ -519,8 +519,49 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 % ===============================================================================
 % ================================ Results ======================================
 % ===============================================================================
+\clearpage
 
 \section{Results}
+
+\subsection{Анализ качества моделей на рентгеновских данных (Stripe82X)}
+\begin{enumerate}
+	\item Цель -- оценить точности прогнозов на полугодовом, годовом и четырехлетнем обзрах ерозиты
+	\item Точность на объектах 4e-14
+	\item Точность на объектах 1e-14
+	\item Точность на объектах 3e-15
+	\item Везде превосходство модели 35
+	\item Сравнение с Ananna, Brescia
+\end{enumerate}
+
+\subsection{Поведение моделей на объектах разных популяциях объектов}
+\begin{enumerate}
+	\item Описание цели
+	\item На разных красных смещениях модели имеют разнородную точность
+	\item Точность моделей ухудшается на слабых источниках
+	\item Модели дают высокую точность для галактик и значительное число ошибок для близких квазаров
+	\item Точность на ярких и слабых галактиках
+	\item Точность на ярких и слабых квазарах
+\end{enumerate}
+
+\subsection{Стратегия отбора надежных прогнозов}
+\begin{enumerate}
+	\item Что мы хотим получить?
+	\item Смотрим на графики и понимаем, что zConf > 0.4 == шлак
+\end{enumerate}
+
+\subsection{Точность и полнота прогнозов}
+\begin{enumerate}
+	\item Что хотим, зачем нужно
+	\item Метрики определяем в соответствии со стратегией отбора
+	\item полнота
+	\item точность
+\end{enumerate}
+
+\clearpage\clearpage\clearpage\clearpage
+\clearpage
+\section{Results OLD}
+
+
 
 Нашей целью является анализ качества моделей, построенных на разных наборах признаков (подробнее см. в \ref{}), в зависимости от целевой величины (spec-z) \ref{ssec:accuracy-as-fzspec} и наблюдаемых предикторов (звездной величины в фильтре z \ref{ssec:accuracy-as-fzmag}, рентгеновского потока \ref{ssec:accuracy-as-ffx}). Чтобы добиться лучшего разрешения (это особенно актуально для объектов на $z > 3$) мы используем метод двукратной перекрестной оценки и выборку оптических квазаров SDSS DR16q, описанную в разделе \ref{}.
 
@@ -550,7 +591,22 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 % \end{equation}
 % Исследовать полноту стоит в зависимости от spec-z -- какую долю объектов на заданном spec-z мы обнаружим по прогнозам моделей.
 
+\clearpage
+
 \subsection{Сравнение точности photo-z рентгеновских источников на выборке Stripe82X}\label{ssec:sota-comp}
+
+\underline{Сравнение с Ananna и Brescia. Точность выше в 1.5 раза (TODO разобраться с объектами без прогнзов).}
+
+\subsection{Визуальное сравнение качества прогнозов. В каких областях стал меньше выбросов}
+
+\underline{Точность в зависимости от рентгеновского потока.}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/scatterplots-stripe82x-sorted.png}
+    \caption{Scatterplots of predictions on Stripe82X X-ray test sample of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
+    \label{fig:scatter-s82x}
+\end{figure*}
 
 \begin{figure*}
     \centering
@@ -636,19 +692,29 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 
 Итоговые значения метрик точности $NMAD, n_{>0.15} = 0.039, 0.104/ 0.067, 0.175/ 0.067, 0.157$ для комбинированного прогноза представленными моделями / шаблонной модели (Ananna, 2017) / нейросетевой модели (Brescia, 2019), соответственно, на 2639 из ??? объектов выборки Stirpe82X с рентгеновским потоком FSoft > 3e-15 для которых имеются прогнозы шаблонной и нейросетевой модели. 
 
+В таблице \ref{tab:stripe82x-intersection} представлены метрики точности представленных пяти моделей на выборке Stripe82X для разных порогов по рентгеновскому потоку $FSoft$. Можно видеть, что точность всех моделей снижается до двух раз при увеличении глубины обзора. Модель \ref{model:dw} показывает однинаковую точность по метрике $NMAD = 0.73 \pm 0.01$, а доля выбросов ухудшается с $0.135$ на объектах $FSoft \geq 4e-14$ до $0.171$ при добавлении объектов $3e-15 \leq FSoft < 4e-14$.
+
+\clearpage
+
 \subsection{Детальный анализ точности моделей photo-z SRGz}
 
-\subsubsection{Зависимость от красного смещения}\label{ssec:accuracy-as-fzspec}
+\subsubsection{Поведение моделей на объектах разных классов}
 
-На рис. \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} слева приведены графики зависимости метрик качества точенчных прогнозов $NMAD$ \eqref{eq:nmad} и $n_{>0.15}$ \eqref{eq:n015} от значения спектрального красного смещения для представленных пяти моделей на кросс-валидации и тестовой выборке квазаров DR16q, соответственно. Основное, что можно заметить на графиках -- разнородность поведения моделей на разных красных смещениях. При этом поведение моделей может как согласовываться (все представленные модели показывают ухудшение точности в области $spec-z \sim 1.2$ по метрике NMAD) так и отличаться в зависимости от используемых данных (добавление в модель данных Pan-STARRS сильно улучшает точность моделей для близких квазаров на $spec-z < 1$ и квазаров на $spec-z \sim 2.3$ по метрике NMAD и уменьшает долю выбросов на $spec-z \sim 1.7$. В области $2.6 < spec-z < 3.7$ наивысшую точность показывают модели с использованием данных SDSS.
+\underline{Зависимость метрик от спектрального красного смещения. Разнородное поведение моделей на разных красных смещениях.}
 
-На рисунках \ref{fig:scatter-cv2-total} и \ref{fig:scatter-dr16q_wo_train} диаграммы рассеяния прогнозов моделей \ref{model:spdw} и \ref{model:pw} (верхние 2 графика) и \ref{model:pdw} и \ref{model:dw} (нижние 2 графика) на кросс-валидации и для тестовой выборки квазаров DR16q, соответственно. Для моделей \ref{model:pdw} и \ref{model:dw} показаны только объекты, для которых не удалось сделать прогнозы моделью \ref{model:spdw}. На диаграммах видно облако точек, которые отстоят далеко от главной диагонали и выходят за границы серой области -- катастрофические выбросы, согласно метрике \eqref{eq:n015}, то есть ошибка прогноза $dz_{norm}$ \eqref{eq:dznorm} превышает 0.15. Модель \ref{model:pw} имеет крупное облако точек в районе $[0, 3.5] \times [0, 3.5]$. У наиблее точной модели облако точек уменьшается, что особенно заметно на DR16q.
+Визуальный анализ числа выбросов. Явное превосходство 35ой модели, ошибки второго рода.
 
-Так же на на диаграммах рассеяния кросс-валидационных прогнозов можно видеть, что наиблее далекие объекты ($6.5 < spec-z < 7.0$) обнаруживаются в большинстве своем только моделью DESI LIS. Прогноз наиболее точной моделью \ref{model:spdw} для таких объектов нельзя сделать ввиду отсутствия или неполноты фотометрии SDSS и/или Pan-STARRS1 для этих объектов.
+Причины ошибок первого рода (показать примеры спектров).
 
-На диаграммах рассеяния кросс-валидационных прогнозов можно увидеть объекты с ложным уверенным прогнозом $spec-z \sim 0.5$, что особенно заметно в областях $spec-z > 3.5$, где находится небольшое количество объектов. Такие прогнозы связаны с неправильной размекой в данных DR14q.
-
-С точки зрения ошибок второго рода -- когда в контексте отбора далеких квазаров принимается неверная нулевая гипотеза, что объяет имеет красное смещение > 3 -- модель \ref{model:dw} показывает большее количество ошибок (то есть прогноз > 3 и имеет высокую уверенность, при этом лежит высоко над диагональю) по сравнению с \ref{model:pw} и \ref{model:spdw}, что хорошо видно на ддиаграмме рассеяния для DR16q. Но эта же модель показывает лучшую полноту на наиболее далеких объектах (zspec > 6) -- правильные прогнозы модели являются более уверенными по сравнению с моделями \ref{model:pw} и \ref{model:spdw}, которые почти не показывают уверенных прогнозов на таких объектах.
+%На рис. \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} слева приведены графики зависимости метрик качества точенчных прогнозов $NMAD$ \eqref{eq:nmad} и $n_{>0.15}$ \eqref{eq:n015} от значения спектрального красного смещения для представленных пяти моделей на кросс-валидации и тестовой выборке квазаров DR16q, соответственно. Основное, что можно заметить на графиках -- разнородность поведения моделей на разных красных смещениях. При этом поведение моделей может как согласовываться (все представленные модели показывают ухудшение точности в области $spec-z \sim 1.2$ по метрике NMAD) так и отличаться в зависимости от используемых данных (добавление в модель данных Pan-STARRS сильно улучшает точность моделей для близких квазаров на $spec-z < 1$ и квазаров на $spec-z \sim 2.3$ по метрике NMAD и уменьшает долю выбросов на $spec-z \sim 1.7$. В области $2.6 < spec-z < 3.7$ наивысшую точность показывают модели с использованием данных SDSS.
+%
+%На рисунках \ref{fig:scatter-cv2-total} и \ref{fig:scatter-dr16q_wo_train} диаграммы рассеяния прогнозов моделей \ref{model:spdw} и \ref{model:pw} (верхние 2 графика) и \ref{model:pdw} и \ref{model:dw} (нижние 2 графика) на кросс-валидации и для тестовой выборки квазаров DR16q, соответственно. Для моделей \ref{model:pdw} и \ref{model:dw} показаны только объекты, для которых не удалось сделать прогнозы моделью \ref{model:spdw}. На диаграммах видно облако точек, которые отстоят далеко от главной диагонали и выходят за границы серой области -- катастрофические выбросы, согласно метрике \eqref{eq:n015}, то есть ошибка прогноза $dz_{norm}$ \eqref{eq:dznorm} превышает 0.15. Модель \ref{model:pw} имеет крупное облако точек в районе $[0, 3.5] \times [0, 3.5]$. У наиблее точной модели облако точек уменьшается, что особенно заметно на DR16q.
+%
+%Так же на на диаграммах рассеяния кросс-валидационных прогнозов можно видеть, что наиблее далекие объекты ($6.5 < spec-z < 7.0$) обнаруживаются в большинстве своем только моделью DESI LIS. Прогноз наиболее точной моделью \ref{model:spdw} для таких объектов нельзя сделать ввиду отсутствия или неполноты фотометрии SDSS и/или Pan-STARRS1 для этих объектов.
+%
+%На диаграммах рассеяния кросс-валидационных прогнозов можно увидеть объекты с ложным уверенным прогнозом $spec-z \sim 0.5$, что особенно заметно в областях $spec-z > 3.5$, где находится небольшое количество объектов. Такие прогнозы связаны с неправильной размекой в данных DR14q.
+%
+%С точки зрения ошибок второго рода -- когда в контексте отбора далеких квазаров принимается неверная нулевая гипотеза, что объяет имеет красное смещение > 3 -- модель \ref{model:dw} показывает большее количество ошибок (то есть прогноз > 3 и имеет высокую уверенность, при этом лежит высоко над диагональю) по сравнению с \ref{model:pw} и \ref{model:spdw}, что хорошо видно на ддиаграмме рассеяния для DR16q. Но эта же модель показывает лучшую полноту на наиболее далеких объектах (zspec > 6) -- правильные прогнозы модели являются более уверенными по сравнению с моделями \ref{model:pw} и \ref{model:spdw}, которые почти не показывают уверенных прогнозов на таких объектах.
 
 \begin{figure*}
     \centering
@@ -692,25 +758,13 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
     \label{fig:scatter-cv2-total}
 \end{figure*}
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.99\linewidth]{images/scatterplots-stripe82x-sorted.png}
-    \caption{Scatterplots of predictions on Stripe82X X-ray test sample of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
-    \label{fig:scatter-s82x}
-\end{figure*}
-
-
-\subsubsection{Зависимость от оптического потока}\label{ssec:accuracy-as-fzmag}
 На рис. \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} справа приведены графики зависимости метрик качества точечных прогнозов $NMAD$ \eqref{eq:nmad} и $n_{>0.15}$ \eqref{eq:n015} от значения оптической AB-величины в фильтре $z$ для представленных пяти моделей на кросс-валидации и тестовой выборке квазаров DR16q, соответственно. Наблюдается монотонная зависимость от яркости источника в оптике на всех выборках. На кросс валидации (галактики и квазары) все модели показывают точность значительно выше более ярких источниках ($z_{mag} < 20$), чем на слабых сточниках ($z_{mag} > 21$). Точность может отличаться в 2-3 раза (например, в таблице \ref{tab:total_metrics_table}, где приведены метрики в пяти интервалах по spec-z и по $z_{mag}$: на кросс-валидации модель на всем небе \ref{model:pw} показывает значения метрик $NMAD, n_{>0.15} = 0.043, 0.079$ на объектах $19 \leq z_{mag} < 20$ и $NMAD, n_{>0.15} = 0.089, 0.213$ на объектах $21 \leq z_{mag} < 23$, а наиболее точная модель \ref{model:spdw} -- $NMAD, n_{>0.15} = 0.026, 0.034$ и $NMAD, n_{>0.15} = 0.048, 0.093$, соответственно.
 
 На тестовой выборке квазаров DR16q наблюдается в целом та же зависимость, но, ввиду отсутствия объектов типа галактика в выборке, значения метрик ухудшаются на наиболее ярких квазарах $z_{mag} < 19$, что можно видеть на рис. \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} (все модели показывают точность не лучше $NMAD, n>0.15 = 0.02, 0.02$). При этом все модели показывают точность не хуже $NMAD, n>0.15 = 0.04, 0.10$ кроме модели \ref{model:dw}, которая показывает точность в среднем $NMAD, n>0.15 = 0.07, 0.15$.
 
 Добавление в модель признаков DESI LIS так же значительно улучшает точность моделей на слабых источниках (см. модели \ref{model:pw} и \ref{model:pdw} и модели \ref{model:spw} и \ref{model:spdw} на рис \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} и в таблице \ref{tab:total_metrics_table} для $21 < z_{mag} < 23$), при том модель \ref{model:dw} на основе только признаков DESI LIS и WISE превосходит по точности только модель \ref{model:pw} на основе только признаков Pan-STARRS, и только на наиболее слабых источниках (квазарах с $z_mag > 21.5$, см. рис. \ref{fig:metrics-dr16q}).
 
-\subsubsection{Зависимость от рентгеновского потока}\label{ssec:accuracy-as-ffx}
-
-В таблице \ref{tab:stripe82x-intersection} представлены метрики точности представленных пяти моделей на выборке Stripe82X для разных порогов по рентгеновскому потоку $FSoft$. Можно видеть, что точность всех моделей снижается до двух раз при увеличении глубины обзора. Модель \ref{model:dw} показывает однинаковую точность по метрике $NMAD = 0.73 \pm 0.01$, а доля выбросов ухудшается с $0.135$ на объектах $FSoft \geq 4e-14$ до $0.171$ при добавлении объектов $3e-15 \leq FSoft < 4e-14$.
-
+\clearpage
 \subsubsection{Зависимость от класса объекта (QSO/GALAXY)}
 \begin{figure*}
     \centering
@@ -769,6 +823,17 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
     \caption{Скаттерплоты в зависимости от zConf для модели \ref{model:spdw} на S82X}
     \label{fig:zconf-scatterplot-35}
 \end{figure*}
+
+\subsection{Точность в зависимости от zConf}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/zconf-cal.png}
+    \caption{zConf distribution}
+    \label{fig:zconf-cal-dr16q}
+\end{figure*}
+
+\clearpage
 
 \subsection{Точность и полнота прогнозов}\label{ssec:precision-and-completeness}
 
@@ -935,68 +1000,11 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 %             \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw} from Stripe82X X-ray test sample. The first column shows model, the next two columns -- Precision \ref{eq:precision} and Completeness \ref{eq:completeness} metrics for objects with $FSoft < 1e-14$, the second two columns -- for objects with $FSoft < 4e-14$, and the last two columns -- for the entire sample.}
 % \end{table*}
 
-\subsection{zConf}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/zconf-cal.png}
-    \caption{zConf distribution}
-    \label{fig:zconf-cal-dr16q}
-\end{figure*}
-
-\subsection{Сравнение разных моделей на объектах z > 5}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/xray-qso-zgr5.png}
-    \caption{Скаттерплоты на рентгеновских квазарах z > 5 (Chandra + Георгий)}
-    \label{fig:my_label}
-\end{figure*}
-
-\begin{table*}
-	\begin{tabular}{lrrrrrrrrr}
-            \hline
-            {} & \multicolumn{2}{l}{Intersection (35)} & \multicolumn{7}{l}{All possible} \\
-            {} &            $NMAD$ & $n_{>0.15}$ &       $NMAD$ & $n_{>0.15}$ & $N_{preds}$ & Precision & $n_{NaN}$ & $n_{low~conf}$ & $C_{total}$ \\
-            \hline
-            Pan-STARRS + WISE                   &             0.028 &       0.143 &        0.029 &       0.143 &          42 &     1.000 &     0.567 &          0.041 &       0.330 \\
-            Pan-STARRS + DESI LIS + WISE        &             0.024 &       0.143 &        0.027 &       0.171 &          41 &     1.000 &     0.577 &          0.062 &       0.289 \\
-            DESI LIS + WISE                     &             0.013 &       0.057 &        0.018 &       0.119 &          59 &     1.000 &     0.392 &          0.052 &       0.485 \\
-            SDSS + Pan-STARRS + DESI LIS + WISE &             0.027 &       0.257 &        0.027 &       0.257 &          35 &     0.962 &     0.639 &          0.010 &       0.258 \\
-            \hline
-            \end{tabular}
-            \caption{Точность на рентгеновских квазарах z > 5 (Chandra + Георгий)}
-\end{table*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/vhzqs-gr5.png}
-    \caption{Диаграммы рассеяния для VHzQs}
-    \label{fig:vhzqs-gr5}
-\end{figure*}
-
-\begin{table*}
-	\begin{tabular}{lrrrrrrrrr}
-            \hline
-            {} & \multicolumn{2}{l}{Intersection (186)} & \multicolumn{7}{l}{All possible} \\
-            {} &             $NMAD$ & $n_{>0.15}$ &       $NMAD$ & $n_{>0.15}$ & $N_{preds}$ & Precision & $n_{NaN}$ & $n_{low~conf}$ & $C_{total}$ \\
-            \hline
-            \ref{model:pw}   &              0.024 &       0.134 &        0.026 &       0.154 &         260 &     1.000 &     0.467 &          0.055 &       0.395 \\
-            \ref{model:pdw}  &              0.020 &       0.091 &        0.020 &       0.120 &         301 &     1.000 &     0.383 &          0.059 &       0.484 \\
-            \ref{model:dw}   &              0.017 &       0.059 &        0.023 &       0.099 &         364 &     0.993 &     0.254 &          0.051 &       0.621 \\
-            \ref{model:spw}  &              0.025 &       0.140 &        0.025 &       0.140 &         193 &     1.000 &     0.605 &          0.041 &       0.299 \\
-            \ref{model:spdw} &              0.019 &       0.113 &        0.020 &       0.113 &         222 &     1.000 &     0.545 &          0.041 &       0.363 \\
-            \hline
-            \end{tabular}
-            \caption{Точность на оптических квазарах $z>5$ из  VHzQs (Ross \& Cross)}
-\end{table*}
-
-
 % ===============================================================================
 % ===============================================================================
 % ===============================================================================
 
-\section{Conclusion}\label{sec:conclusion}
+\section{Conclusion and discussion}\label{sec:conclusion}
 
 % В рамках работы было построено множество моделей photo-z на основе различных признаков, которые строятся по данным трех современных фотометрических обзоров~--- SDSS, Pan-STARRS1 и DESI Legacy Imaging Survey. Обучающая выборка состоит из $\sim$580000 оптических квазаров и галактик и сбалансирована, чтобы аппроксимировать распределение рентгеновских объектов. Разметка взята из спектрального каталога оптических объектов SDSS.
 
@@ -1012,6 +1020,8 @@ The presented photo-z models are integrated into the SRGz system designed to con
 
 Провалы в точности по zspec. Переход на ансамбли нейронных сетей. Источник данных о поглощении на всем небе?
 
+\clearpage
+
 \section*{Acknowledgments}
 ..
 
@@ -1021,86 +1031,86 @@ The presented photo-z models are integrated into the SRGz system designed to con
 
 \appendix
 
-\section{Advanced metrics charts}
-
-\begin{landscape}
-\begin{figure}
-    \centering
-    \includegraphics[width=25cm]{images/metrics-adv-photoz-x-zconf-cv2.png}
-    \caption{Метрики в зависимости от photo-z для разных порогов по zConf на кросс-валидации}
-    \label{fig:my_label}
-\end{figure}
-\end{landscape}
-
-
-\begin{landscape}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-adv-photoz-x-zconf-dr16q.png}
-    \caption{Метрики в зависимости от photo-z для разных порогов по zConf на DR16q}
-    \label{fig:my_label}
-\end{figure}
-\end{landscape}
-
-
-\begin{landscape}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-adv-photoz-x-zmag-cv2.png}
-    \caption{Метрики в зависимости от photo-z для разных порогов по $z_mag$ на кросс-валидации}
-    \label{fig:my_label}
-\end{figure}
-\end{landscape}
-
-
-\begin{landscape}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-adv-photoz-x-zmag-dr16q.png}
-    \caption{Метрики в зависимости от photo-z для разных порогов по $z_mag$ на DR16q}
-    \label{fig:my_label}
-\end{figure}
-\end{landscape}
-
-
-\begin{landscape}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-adv-zspec-x-zconf-cv2.png}
-    \caption{Метрики в зависимости от spec-z для разных порогов по zConf на кросс-валидации}
-    \label{fig:my_label}
-\end{figure}
-\end{landscape}
-
-
-\begin{landscape}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-adv-zspec-x-zconf-dr16q.png}
-    \caption{Метрики в зависимости от spec-z для разных порогов по zConf на DR16q}
-    \label{fig:my_label}
-\end{figure}
-\end{landscape}
-
-
-\begin{landscape}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-adv-zspec-x-zmag-cv2.png}
-    \caption{Метрики в зависимости от spec-z для разных порогов по $z_mag$ на кросс-валидации}
-    \label{fig:my_label}
-\end{figure}
-\end{landscape}
-
-
-\begin{landscape}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/metrics-adv-zspec-x-zmag-dr16q.png}
-    \caption{Метрики в зависимости от spec-z для разных порогов по $z_mag$ на DR16q}
-    \label{fig:my_label}
-\end{figure}
-\end{landscape}
+%\section{Advanced metrics charts}
+%
+%\begin{landscape}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=25cm]{images/metrics-adv-photoz-x-zconf-cv2.png}
+%    \caption{Метрики в зависимости от photo-z для разных порогов по zConf на кросс-валидации}
+%    \label{fig:my_label}
+%\end{figure}
+%\end{landscape}
+%
+%
+%\begin{landscape}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.9\linewidth]{images/metrics-adv-photoz-x-zconf-dr16q.png}
+%    \caption{Метрики в зависимости от photo-z для разных порогов по zConf на DR16q}
+%    \label{fig:my_label}
+%\end{figure}
+%\end{landscape}
+%
+%
+%\begin{landscape}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.9\linewidth]{images/metrics-adv-photoz-x-zmag-cv2.png}
+%    \caption{Метрики в зависимости от photo-z для разных порогов по $z_mag$ на кросс-валидации}
+%    \label{fig:my_label}
+%\end{figure}
+%\end{landscape}
+%
+%
+%\begin{landscape}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.9\linewidth]{images/metrics-adv-photoz-x-zmag-dr16q.png}
+%    \caption{Метрики в зависимости от photo-z для разных порогов по $z_mag$ на DR16q}
+%    \label{fig:my_label}
+%\end{figure}
+%\end{landscape}
+%
+%
+%\begin{landscape}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.9\linewidth]{images/metrics-adv-zspec-x-zconf-cv2.png}
+%    \caption{Метрики в зависимости от spec-z для разных порогов по zConf на кросс-валидации}
+%    \label{fig:my_label}
+%\end{figure}
+%\end{landscape}
+%
+%
+%\begin{landscape}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.9\linewidth]{images/metrics-adv-zspec-x-zconf-dr16q.png}
+%    \caption{Метрики в зависимости от spec-z для разных порогов по zConf на DR16q}
+%    \label{fig:my_label}
+%\end{figure}
+%\end{landscape}
+%
+%
+%\begin{landscape}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.9\linewidth]{images/metrics-adv-zspec-x-zmag-cv2.png}
+%    \caption{Метрики в зависимости от spec-z для разных порогов по $z_mag$ на кросс-валидации}
+%    \label{fig:my_label}
+%\end{figure}
+%\end{landscape}
+%
+%
+%\begin{landscape}
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.9\linewidth]{images/metrics-adv-zspec-x-zmag-dr16q.png}
+%    \caption{Метрики в зависимости от spec-z для разных порогов по $z_mag$ на DR16q}
+%    \label{fig:my_label}
+%\end{figure}
+%\end{landscape}
 
 
 \end{document}
