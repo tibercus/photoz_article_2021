@@ -615,24 +615,24 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 \begin{figure*}
     \centering
     \includegraphics[width=0.9\linewidth]{images/stripe82x-sota35-colored_final.png}
-    \caption{Scatterplots of predictions of template model (Ananna, 2017), combined prediction of models \ref{model:pw} -- \ref{model:spdw}, neural network model (Brescia, 2019) on Stripe82X X-ray test sample with $FSoft > 3e-15$ (from left to right). The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}. The number of predictions with each model in combined predictions is following: \ref{model:spdw} -- 2197, \ref{model:dw} -- 442, has no prediction, comparing to Ananna and Brescia -- 11.}
+    \caption{Scatterplots of predictions of template model (Ananna, 2017), combined prediction of models \ref{model:pw} -- \ref{model:spdw}, neural network model (Brescia, 2019) on Stripe82X X-ray test sample with $FSoft > 3e-15$ (from left to right). The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}. The number of predictions with each model in combined predictions is following: \ref{model:spdw} -- 2197, \ref{model:dw} -- 442, \ref{model:pw} -- 13,has no prediction, comparing to Ananna and Brescia -- 1 (because of absence of counterpart in Pan-STARRS and DESI LIS).}
     \label{fig:scatter-s82x-sota35}
 \end{figure*}
 
 \begin{table*}
 	\begin{tabular}{llllllllll}
             \hline
-            {} & \multicolumn{3}{l}{$FSoft \geq 3e-15$ (2170 objects)} & \multicolumn{3}{l}{$FSoft \geq 1e-14$ (1272 objects)} & \multicolumn{3}{l}{$FSoft \geq 4e-14$ (207 objects)} \\
-            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                           $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
-            Model          &                                   &                 &                  &                                   &                 &                  &                                  &                 &                 \\
+            {} & \multicolumn{3}{l}{$FSoft \geq 3e-15$ (2159 objects)} & \multicolumn{3}{l}{$FSoft \geq 1e-14$ (1268 objects)} & \multicolumn{3}{l}{$FSoft \geq 4e-14$ (207 objects)} \\
+            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                            $NMAD$ &       $n>0.15$ &  $C_{68} - 0.68$ &                           $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
+            Model            &                                   &                 &                  &                                   &                &                  &                                  &                 &                 \\
             \hline
-            \ref{model:pw}             &                             0.056 &           0.149 &            0.025 &                              0.05 &           0.119 &            0.033 &                            0.037 &           0.092 &  \textbf{0.025} \\
-            \ref{model:pdw}            &                             0.045 &           0.107 &            0.079 &                             0.042 &           0.094 &            0.076 &                             0.03 &           0.068 &           0.074 \\
-            \ref{model:dw}             &                             0.073 &           0.171 &  \textbf{-0.012} &                             0.073 &           0.154 &  \textbf{-0.022} &                            0.074 &           0.135 &          -0.057 \\
-            \ref{model:spw}            &                             0.039 &           0.105 &            0.094 &                             0.035 &            0.08 &            0.102 &                   \textbf{0.027} &           0.058 &           0.107 \\
-            \ref{model:spdw}           &                    \textbf{0.033} &  \textbf{0.087} &            0.109 &                     \textbf{0.03} &  \textbf{0.073} &            0.117 &                   \textbf{0.027} &  \textbf{0.043} &           0.122 \\
-            TM &                             0.065 &           0.174 &           -- &                             0.068 &           0.185 &            -- &                            0.073 &           0.222 &          -0.477 \\
-            NN             &                             0.065 &            0.16 &           -- &                             0.067 &            0.17 &           -- &                             0.07 &           0.222 &          -- \\
+            \ref{model:pw}   &                             0.056 &           0.145 &            0.028 &                              0.05 &          0.116 &            0.035 &                            0.037 &           0.092 &  \textbf{0.025} \\
+            \ref{model:pdw}  &                             0.044 &           0.103 &            0.083 &                             0.042 &          0.091 &            0.079 &                             0.03 &           0.068 &           0.074 \\
+            \ref{model:dw}   &                             0.073 &           0.168 &  \textbf{-0.009} &                             0.072 &          0.153 &  \textbf{-0.021} &                            0.074 &           0.135 &          -0.057 \\
+            \ref{model:spw}  &                             0.039 &           0.101 &            0.098 &                             0.035 &          0.077 &            0.105 &                   \textbf{0.027} &           0.058 &           0.107 \\
+            \ref{model:spdw} &                    \textbf{0.033} &  \textbf{0.083} &            0.113 &                     \textbf{0.03} &  \textbf{0.07} &             0.12 &                   \textbf{0.027} &  \textbf{0.043} &           0.122 \\
+            Template Model   &                             0.064 &           0.171 &           -0.334 &                             0.068 &          0.183 &           -0.379 &                            0.073 &           0.222 &          -0.477 \\
+            NN Model         &                             0.064 &           0.157 &           -0.254 &                             0.067 &          0.168 &           -0.298 &                             0.07 &           0.222 &          -0.385 \\
             \hline
             \end{tabular}
             \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) on objects from Stripe82X X-ray test sample that have prediction by every model. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample. <<TM>> stands for Template model (Ananna, 2017), and <<NN>> for Neural Network model (Brescia, 2019).}
@@ -642,52 +642,82 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 \begin{table*}
 	\begin{tabular}{llllrlllrlllr}
             \hline
-            {} & \multicolumn{4}{l}{$FSoft \geq 3e-15$ (2639 objects)} & \multicolumn{4}{l}{$FSoft \geq 1e-14$ (1494 objects)} & \multicolumn{4}{l}{$FSoft \geq 4e-14$ (239 objects)} \\
+            {} & \multicolumn{4}{l}{$FSoft \geq 3e-15$ (2652 objects)} & \multicolumn{4}{l}{$FSoft \geq 1e-14$ (1500 objects)} & \multicolumn{4}{l}{$FSoft \geq 4e-14$ (241 objects)} \\
             {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                            $NMAD$ &       $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
             Model                               &                                   &                 &                  &             &                                   &                &                  &             &                                  &                 &                  &             \\
             \hline
-            \ref{model:pw}                      &                             0.056 &           0.145 &            0.029 &        2179 &                              0.05 &          0.117 &            0.034 &        1278 &                            0.038 &           0.096 &            0.023 &         209 \\
+            \ref{model:pw}                      &                             0.056 &           0.146 &            0.028 &        2192 &                              0.05 &          0.118 &            0.035 &        1284 &                            0.037 &           0.095 &            0.026 &         211 \\
             \ref{model:pdw}                     &                             0.045 &           0.107 &            0.082 &        2220 &                             0.042 &          0.093 &            0.079 &        1287 &                             0.03 &           0.071 &            0.068 &         210 \\
             \ref{model:dw}                      &                             0.074 &           0.173 &  \textbf{-0.005} &        2639 &                             0.072 &          0.154 &  \textbf{-0.013} &        1494 &                            0.074 &           0.142 &           -0.048 &         239 \\
-            \ref{model:spw}                     &                             0.039 &           0.101 &            0.098 &        2159 &                             0.035 &          0.077 &            0.105 &        1268 &                   \textbf{0.027} &           0.058 &            0.107 &         207 \\
-            \ref{model:spdw}                    &                    \textbf{0.033} &  \textbf{0.084} &            0.113 &        2197 &                     \textbf{0.03} &  \textbf{0.07} &             0.12 &        1276 &                   \textbf{0.027} &  \textbf{0.043} &            0.118 &         208 \\
+            \ref{model:spw}                     &                             0.039 &             0.1 &            0.099 &        2170 &                             0.035 &          0.078 &            0.105 &        1274 &                   \textbf{0.026} &           0.057 &            0.109 &         209 \\
+            \ref{model:spdw}                    &                    \textbf{0.033} &  \textbf{0.084} &            0.113 &        2197 &                     \textbf{0.03} &  \textbf{0.07} &             0.12 &        1276 &                            0.027 &  \textbf{0.043} &            0.118 &         208 \\
             \ref{model:dw} w/o \ref{model:spdw} &                             0.078 &           0.179 &            0.021 &         442 &                             0.067 &          0.156 &             0.04 &         218 &                            0.063 &           0.161 &  \textbf{-0.003} &          31 \\
-            CP                                  &                             0.038 &             0.1 &            0.098 &        2639 &                             0.033 &          0.082 &            0.108 &        1494 &                            0.028 &           0.059 &            0.102 &         239 \\
-            Template Model                      &                             0.065 &           0.172 &           -- &        2639 &                             0.067 &          0.181 &           -- &        1494 &                            0.074 &           0.218 &           -- &         239 \\
-            NN Model                            &                             0.066 &           0.156 &           -- &        2639 &                             0.066 &          0.167 &           -- &        1494 &                            0.071 &           0.222 &           -- &         239 \\
+            CP                                  &                             0.038 &           0.101 &            0.097 &        2652 &                             0.034 &          0.083 &            0.109 &        1500 &                            0.028 &           0.058 &            0.104 &         241 \\
+            Template Model                      &                             0.065 &           0.172 &           -0.328 &        2652 &                             0.067 &          0.181 &           -0.375 &        1500 &                            0.074 &            0.22 &           -0.481 &         241 \\
+            NN Model                            &                             0.066 &           0.156 &           -0.247 &        2652 &                             0.066 &          0.167 &           -0.291 &        1500 &                            0.074 &           0.224 &           -0.373 &         241 \\
             \hline
             \end{tabular}
             \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) from Stripe82X X-ray test sample. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample. <<TM>> stands for Template model (Ananna, 2017), <<NN>> for Neural Network model (Brescia, 2019), <<CP>> stands for combined predictions of models \ref{model:spdw} and \ref{model:dw}.}
 \end{table*}
 
 \begin{table*}
-	\begin{tabular}{lllllrlllrllll}
+	\begin{tabular}{lllllrlllrlllr}
             \hline
                 &    & \multicolumn{4}{l}{$FSoft \geq 3e-15$} & \multicolumn{4}{l}{$FSoft \geq 1e-14$} & \multicolumn{4}{l}{$FSoft \geq 4e-14$} \\
                 &    &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
             Obj. Type & Model &                    &                 &                  &             &                    &                 &                  &             &                    &                 &                  &             \\
             \hline
-            Galaxy & \ref{model:pw} &              0.047 &           0.116 &  \textbf{-0.017} &         415 &              0.047 &           0.091 &           -0.017 &         175 &                 -- &              -- &               -- &          -- \\
-                & \ref{model:pdw} &              0.038 &           0.102 &            0.052 &         422 &              0.037 &            0.08 &   \textbf{0.013} &         176 &                 -- &              -- &               -- &          -- \\
-                & \ref{model:dw} &              0.047 &           0.131 &            0.086 &         504 &              0.049 &            0.11 &            0.081 &         209 &                 -- &              -- &               -- &          -- \\
-                & \ref{model:spw} &              0.041 &           0.097 &            0.075 &         412 &              0.036 &            0.08 &            0.056 &         174 &                 -- &              -- &               -- &          -- \\
-                & \ref{model:spdw} &     \textbf{0.037} &           0.098 &            0.093 &         419 &     \textbf{0.034} &  \textbf{0.074} &             0.08 &         175 &                 -- &              -- &               -- &          -- \\
-                & \ref{model:dw} w/o \ref{model:spdw} &               0.05 &           0.129 &            0.155 &          85 &              0.042 &           0.118 &            0.232 &          34 &                 -- &              -- &               -- &          -- \\
-                & CP &              0.038 &           0.103 &            0.104 &         504 &     \textbf{0.034} &           0.081 &            0.105 &         209 &                 -- &              -- &               -- &          -- \\
-                & TM &              0.069 &           0.095 &           -0.394 &         504 &              0.071 &           0.105 &           -0.441 &         209 &                 -- &              -- &               -- &          -- \\
-                & NN &              0.068 &  \textbf{0.085} &           -0.295 &         504 &              0.071 &           0.105 &           -0.369 &         209 &                 -- &              -- &               -- &          -- \\
-            QSO & \ref{model:pw} &              0.061 &           0.156 &            0.036 &        1400 &               0.05 &           0.121 &            0.041 &         895 &              0.033 &           0.075 &             0.05 &       159.0 \\
-                & \ref{model:pdw} &              0.049 &           0.113 &            0.084 &        1425 &              0.042 &           0.092 &            0.092 &         900 &              0.028 &           0.063 &            0.087 &       159.0 \\
-                & \ref{model:dw} &              0.083 &           0.191 &            -0.03 &        1692 &              0.076 &            0.16 &           -0.033 &        1040 &              0.076 &           0.153 &           -0.057 &       183.0 \\
-                & \ref{model:spw} &               0.04 &            0.11 &             0.11 &        1386 &              0.035 &           0.081 &            0.112 &         889 &     \textbf{0.025} &            0.05 &            0.138 &       159.0 \\
-                & \ref{model:spdw} &     \textbf{0.034} &  \textbf{0.089} &            0.123 &        1409 &      \textbf{0.03} &  \textbf{0.074} &             0.13 &         894 &     \textbf{0.025} &  \textbf{0.038} &             0.15 &       159.0 \\
-                & \ref{model:dw} w/o \ref{model:spdw} &              0.085 &           0.191 &  \textbf{-0.023} &         283 &              0.072 &           0.151 &  \textbf{-0.016} &         146 &               0.07 &           0.208 &  \textbf{-0.013} &        24.0 \\
-                & CP &               0.04 &           0.106 &            0.099 &        1692 &              0.034 &           0.085 &            0.109 &        1040 &              0.027 &            0.06 &            0.129 &       183.0 \\
-                & TM &               0.07 &           0.203 &           -0.303 &        1692 &               0.07 &           0.196 &           -0.356 &        1040 &              0.077 &           0.224 &           -0.472 &       183.0 \\
-                & NN &               0.07 &           0.181 &           -0.226 &        1692 &              0.067 &           0.179 &           -0.271 &        1040 &              0.076 &            0.23 &           -0.369 &       183.0 \\
+            Galaxy & \ref{model:pw} &              0.048 &           0.117 &  \textbf{-0.018} &         420 &               0.05 &           0.096 &           -0.023 &         178 &              0.081 &           0.071 &           -0.323 &          14 \\
+                & \ref{model:pdw} &              0.038 &           0.102 &            0.053 &         423 &              0.037 &           0.079 &   \textbf{0.015} &         177 &              0.049 &           0.067 &   \textbf{-0.08} &          15 \\
+                & \ref{model:dw} &              0.047 &           0.131 &            0.086 &         505 &              0.049 &            0.11 &            0.082 &         210 &              0.034 &           0.059 &            0.085 &          17 \\
+                & \ref{model:spw} &              0.042 &           0.099 &            0.075 &         416 &               0.04 &           0.085 &            0.054 &         177 &              0.085 &           0.071 &           -0.251 &          14 \\
+                & \ref{model:spdw} &     \textbf{0.037} &           0.098 &            0.094 &         420 &     \textbf{0.034} &  \textbf{0.074} &            0.081 &         176 &              0.062 &    \textbf{0.0} &           -0.213 &          15 \\
+                & \ref{model:dw} w/o \ref{model:spdw} &               0.05 &           0.129 &            0.155 &          85 &              0.042 &           0.118 &            0.232 &          34 &     \textbf{0.006} &    \textbf{0.0} &            -0.18 &           2 \\
+                & CP &              0.038 &           0.104 &            0.104 &         509 &              0.035 &           0.085 &            0.103 &         212 &              0.048 &    \textbf{0.0} &           -0.209 &          17 \\
+                & TM &               0.07 &           0.094 &           -0.393 &         509 &              0.072 &           0.104 &           -0.439 &         212 &               0.08 &           0.059 &            -0.68 &          17 \\
+                & NN &              0.068 &  \textbf{0.084} &           -0.295 &         509 &              0.073 &           0.104 &           -0.369 &         212 &              0.086 &           0.059 &           -0.562 &          17 \\
+            QSO & \ref{model:pw} &              0.061 &           0.158 &            0.037 &        1408 &               0.05 &           0.121 &            0.042 &         899 &              0.033 &           0.075 &            0.053 &         161 \\
+                & \ref{model:pdw} &              0.049 &           0.113 &            0.084 &        1425 &              0.042 &           0.092 &            0.092 &         900 &              0.028 &           0.063 &            0.087 &         159 \\
+                & \ref{model:dw} &              0.083 &           0.191 &            -0.03 &        1692 &              0.076 &            0.16 &           -0.033 &        1040 &              0.076 &           0.153 &           -0.057 &         183 \\
+                & \ref{model:spw} &               0.04 &            0.11 &            0.111 &        1393 &              0.035 &           0.081 &            0.113 &         893 &     \textbf{0.024} &            0.05 &             0.14 &         161 \\
+                & \ref{model:spdw} &     \textbf{0.034} &  \textbf{0.089} &            0.123 &        1409 &      \textbf{0.03} &  \textbf{0.074} &             0.13 &         894 &              0.025 &  \textbf{0.038} &             0.15 &         159 \\
+                & \ref{model:dw} w/o \ref{model:spdw} &              0.085 &           0.191 &  \textbf{-0.023} &         283 &              0.072 &           0.151 &  \textbf{-0.016} &         146 &               0.07 &           0.208 &  \textbf{-0.013} &          24 \\
+                & CP &               0.04 &           0.108 &            0.099 &        1700 &              0.034 &           0.085 &             0.11 &        1044 &              0.027 &           0.059 &            0.131 &         185 \\
+                & TM &               0.07 &           0.204 &           -0.304 &        1700 &               0.07 &           0.197 &           -0.356 &        1044 &              0.077 &           0.227 &           -0.475 &         185 \\
+                & NN &               0.07 &           0.182 &           -0.226 &        1700 &              0.067 &            0.18 &           -0.271 &        1044 &              0.076 &           0.232 &           -0.366 &         185 \\
             \hline
             \end{tabular}
-            \caption{Точность Stripe82X на разных классах объектов}
+            \caption{Точность Stripe82X на разных спектральных классах объектов}
+\end{table*}
+
+\begin{table*}
+	\begin{tabular}{lllllrlllrlllr}
+            \hline
+                       &    & \multicolumn{4}{l}{$FSoft \geq 3e-15$} & \multicolumn{4}{l}{$FSoft \geq 1e-14$} & \multicolumn{4}{l}{$FSoft \geq 4e-14$} \\
+                       &    &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
+            Obj. Type & Model &                    &                 &                  &             &                    &                 &                 &             &                    &                 &                  &             \\
+            \hline
+            Extended & \ref{model:pw} &              0.046 &           0.081 &   \textbf{0.017} &         664 &              0.043 &           0.072 &  \textbf{0.013} &         349 &              0.042 &           0.078 &           -0.071 &          64 \\
+                       & \ref{model:pdw} &               0.04 &  \textbf{0.071} &            0.071 &         672 &              0.038 &            0.06 &           0.056 &         352 &     \textbf{0.034} &           0.062 &            0.012 &          65 \\
+                       & \ref{model:dw} &              0.058 &           0.127 &            0.049 &         808 &               0.06 &            0.11 &           0.032 &         417 &              0.068 &           0.156 &           -0.057 &          77 \\
+                       & \ref{model:spw} &               0.04 &           0.079 &             0.11 &         657 &              0.035 &           0.061 &           0.115 &         346 &               0.04 &           0.048 &            0.018 &          63 \\
+                       & \ref{model:spdw} &     \textbf{0.035} &  \textbf{0.071} &            0.131 &         665 &     \textbf{0.031} &  \textbf{0.049} &           0.127 &         348 &     \textbf{0.034} &  \textbf{0.031} &            0.007 &          64 \\
+                       & \ref{model:dw} w/o \ref{model:spdw} &              0.064 &            0.14 &             0.11 &         143 &              0.058 &           0.101 &           0.117 &          69 &               0.06 &           0.077 &           -0.065 &          13 \\
+                       & CP &              0.038 &           0.083 &            0.128 &         811 &              0.035 &           0.057 &           0.126 &         418 &              0.039 &           0.039 &  \textbf{-0.005} &          77 \\
+                       & TM &               0.07 &           0.127 &           -0.379 &         811 &              0.074 &           0.129 &          -0.426 &         418 &              0.077 &           0.065 &           -0.511 &          77 \\
+                       & NN &              0.069 &           0.107 &           -0.298 &         811 &              0.074 &           0.112 &          -0.359 &         418 &              0.077 &           0.052 &           -0.459 &          77 \\
+            Point-like & \ref{model:pw} &              0.062 &           0.175 &            0.033 &        1528 &              0.054 &           0.136 &           0.043 &         935 &              0.035 &           0.102 &            0.068 &         147 \\
+                       & \ref{model:pdw} &              0.047 &           0.122 &            0.087 &        1548 &              0.043 &           0.106 &           0.088 &         935 &               0.03 &           0.076 &            0.092 &         145 \\
+                       & \ref{model:dw} &              0.082 &           0.193 &           -0.028 &        1831 &              0.077 &           0.171 &           -0.03 &        1077 &              0.075 &           0.136 &           -0.044 &         162 \\
+                       & \ref{model:spw} &              0.038 &            0.11 &            0.094 &        1513 &              0.035 &           0.084 &           0.101 &         928 &     \textbf{0.025} &           0.062 &            0.149 &         146 \\
+                       & \ref{model:spdw} &     \textbf{0.032} &  \textbf{0.089} &            0.105 &        1532 &      \textbf{0.03} &  \textbf{0.078} &           0.117 &         928 &     \textbf{0.025} &  \textbf{0.049} &            0.167 &         144 \\
+                       & \ref{model:dw} w/o \ref{model:spdw} &              0.081 &           0.197 &  \textbf{-0.021} &         299 &              0.071 &           0.181 &  \textbf{0.005} &         149 &               0.07 &           0.222 &   \textbf{0.042} &          18 \\
+                       & CP &              0.038 &           0.109 &            0.084 &        1841 &              0.033 &           0.093 &           0.102 &        1082 &              0.027 &           0.067 &            0.155 &         164 \\
+                       & TM &              0.062 &           0.192 &           -0.305 &        1841 &              0.064 &           0.201 &          -0.355 &        1082 &              0.072 &           0.293 &           -0.467 &         164 \\
+                       & NN &              0.064 &           0.178 &           -0.225 &        1841 &              0.063 &           0.189 &          -0.264 &        1082 &              0.067 &           0.305 &           -0.332 &         164 \\
+            \hline
+            \end{tabular}
+            \caption{Точность Stripe82X на разных морфологических классах объектов}
 \end{table*}
 
 Очередная цель этой статьи -- сравнение с моделями Photo-z, известными в литературе -- шаблонной моделью (Ananna, 2017) и нейросетевой моделью (Brescia, 2019). Для этого модели были протестированы на выборке Stripe82X, и были подсчитаны метрики точности \eqref{eq:nmad} и \eqref{eq:n015} на пересечении множества объектов, для которых удалось получить прогноз всеми моделями. Для наиболее точной модели получены значения метрик $~2$ раза лучше, чем для шаблонной и нейросетевой моделей для объектов $FSoft \geq 3e-15$ (см. табл. \ref{tab:stripe82x-intersection}).
@@ -890,48 +920,48 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 \begin{table*}
 	\begin{tabular}{lllllllllll}
             \hline
-                              &                  & \multicolumn{3}{l}{Stripe82x-A17 sample} & \multicolumn{3}{l}{Quasars of DR16q} & \multicolumn{3}{l}{Cross-Validation} \\
-                              &                  &               $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ \\
+                                   &                  & \multicolumn{3}{l}{Stripe82x-A17 sample} & \multicolumn{3}{l}{Quasars of DR16q} & \multicolumn{3}{l}{Cross-Validation} \\
+                                   &                  &               $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ \\
             subsample & model &                      &                 &                  &                  &                 &                  &                  &                 &                  \\
             \hline
 \hline
             $All$ & \ref{model:pw} &                0.056 &           0.146 &            0.028 &            0.065 &            0.17 &            0.022 &            0.047 &           0.111 &            0.045 \\
-                              & \ref{model:pdw} &                0.045 &           0.107 &            0.082 &             0.05 &           0.125 &            0.062 &            0.037 &           0.085 &            0.072 \\
-                              & \ref{model:dw} &                0.074 &           0.173 &  \textbf{-0.005} &            0.083 &           0.194 &  \textbf{-0.014} &            0.058 &           0.143 &  \textbf{-0.008} \\
-                              & \ref{model:spw} &                0.039 &             0.1 &            0.098 &            0.041 &            0.09 &            0.077 &            0.033 &           0.055 &            0.082 \\
-                              & \ref{model:spdw} &       \textbf{0.033} &  \textbf{0.084} &            0.113 &   \textbf{0.037} &  \textbf{0.078} &            0.089 &   \textbf{0.028} &  \textbf{0.048} &            0.093 \\
+                                   & \ref{model:pdw} &                0.045 &           0.107 &            0.082 &             0.05 &           0.125 &            0.062 &            0.037 &           0.085 &            0.072 \\
+                                   & \ref{model:dw} &                0.074 &           0.173 &  \textbf{-0.005} &            0.083 &           0.194 &  \textbf{-0.014} &            0.058 &           0.143 &  \textbf{-0.008} \\
+                                   & \ref{model:spw} &                0.039 &             0.1 &            0.099 &            0.041 &            0.09 &            0.077 &            0.033 &           0.055 &            0.082 \\
+                                   & \ref{model:spdw} &       \textbf{0.033} &  \textbf{0.084} &            0.113 &   \textbf{0.037} &  \textbf{0.078} &            0.089 &   \textbf{0.028} &  \textbf{0.048} &            0.093 \\
 \hline
             $z_{spec} < 0.5$ & \ref{model:pw} &                0.035 &  \textbf{0.066} &   \textbf{0.016} &            0.038 &           0.113 &   \textbf{0.028} &            0.023 &           0.031 &   \textbf{0.003} \\
-                              & \ref{model:pdw} &                 0.03 &            0.07 &            0.061 &            0.033 &           0.112 &            0.044 &            0.016 &           0.027 &            0.072 \\
-                              & \ref{model:dw} &                0.048 &           0.103 &            0.042 &            0.077 &           0.197 &           -0.056 &            0.019 &           0.045 &           -0.004 \\
-                              & \ref{model:spw} &                0.029 &           0.068 &            0.075 &            0.032 &  \textbf{0.085} &            0.063 &            0.021 &           0.028 &            0.022 \\
-                              & \ref{model:spdw} &       \textbf{0.027} &           0.074 &            0.094 &   \textbf{0.031} &           0.097 &            0.056 &   \textbf{0.015} &  \textbf{0.025} &            0.094 \\
+                                   & \ref{model:pdw} &                 0.03 &            0.07 &            0.061 &            0.033 &           0.112 &            0.044 &            0.016 &           0.027 &            0.072 \\
+                                   & \ref{model:dw} &                0.048 &           0.103 &            0.042 &            0.077 &           0.197 &           -0.056 &            0.019 &           0.045 &           -0.004 \\
+                                   & \ref{model:spw} &                0.029 &           0.068 &            0.075 &            0.032 &  \textbf{0.085} &            0.063 &            0.021 &           0.028 &            0.022 \\
+                                   & \ref{model:spdw} &       \textbf{0.027} &           0.074 &            0.094 &   \textbf{0.031} &           0.097 &            0.056 &   \textbf{0.015} &  \textbf{0.025} &            0.094 \\
 \hline
-            $0.5 \leq z_{spec} < 1$ & \ref{model:pw} &                0.053 &           0.146 &            0.028 &            0.048 &           0.142 &             0.06 &            0.038 &           0.089 &            0.047 \\
-                              & \ref{model:pdw} &                0.045 &           0.131 &            0.068 &            0.042 &           0.117 &            0.081 &             0.03 &           0.078 &             0.08 \\
-                              & \ref{model:dw} &                0.081 &           0.193 &  \textbf{-0.019} &            0.086 &           0.189 &  \textbf{-0.032} &            0.049 &           0.126 &  \textbf{-0.013} \\
-                              & \ref{model:spw} &                 0.04 &           0.107 &            0.109 &            0.037 &             0.1 &            0.101 &            0.031 &           0.059 &            0.089 \\
-                              & \ref{model:spdw} &       \textbf{0.037} &    \textbf{0.1} &            0.122 &   \textbf{0.035} &  \textbf{0.091} &             0.12 &   \textbf{0.026} &  \textbf{0.058} &            0.111 \\
+            $0.5 \leq z_{spec} < 1$ & \ref{model:pw} &                0.053 &           0.147 &            0.028 &            0.048 &           0.142 &             0.06 &            0.038 &           0.089 &            0.047 \\
+                                   & \ref{model:pdw} &                0.045 &           0.131 &            0.068 &            0.042 &           0.117 &            0.081 &             0.03 &           0.078 &             0.08 \\
+                                   & \ref{model:dw} &                0.081 &           0.193 &  \textbf{-0.019} &            0.086 &           0.189 &  \textbf{-0.032} &            0.049 &           0.126 &  \textbf{-0.013} \\
+                                   & \ref{model:spw} &                 0.04 &           0.108 &            0.108 &            0.037 &             0.1 &            0.101 &            0.031 &           0.059 &            0.089 \\
+                                   & \ref{model:spdw} &       \textbf{0.037} &    \textbf{0.1} &            0.122 &   \textbf{0.035} &  \textbf{0.091} &             0.12 &   \textbf{0.026} &  \textbf{0.058} &            0.111 \\
 \hline
             $1 \leq z_{spec} < 1.5$ & \ref{model:pw} &                 0.08 &           0.172 &            0.025 &            0.083 &           0.194 &            0.033 &            0.069 &            0.14 &            0.056 \\
-                              & \ref{model:pdw} &                0.061 &           0.108 &            0.079 &            0.068 &           0.144 &            0.069 &            0.059 &           0.099 &            0.074 \\
-                              & \ref{model:dw} &                0.082 &           0.139 &   \textbf{0.012} &            0.087 &           0.176 &   \textbf{0.007} &            0.078 &           0.134 &   \textbf{0.019} \\
-                              & \ref{model:spw} &                0.055 &           0.108 &            0.097 &            0.057 &           0.114 &             0.11 &            0.045 &           0.068 &            0.109 \\
-                              & \ref{model:spdw} &       \textbf{0.048} &  \textbf{0.086} &            0.118 &   \textbf{0.055} &  \textbf{0.101} &            0.105 &   \textbf{0.043} &   \textbf{0.06} &            0.105 \\
+                                   & \ref{model:pdw} &                0.061 &           0.108 &            0.079 &            0.068 &           0.144 &            0.069 &            0.059 &           0.099 &            0.074 \\
+                                   & \ref{model:dw} &                0.082 &           0.139 &   \textbf{0.012} &            0.087 &           0.176 &   \textbf{0.007} &            0.078 &           0.134 &   \textbf{0.019} \\
+                                   & \ref{model:spw} &                0.055 &           0.108 &            0.097 &            0.057 &           0.114 &             0.11 &            0.045 &           0.068 &            0.109 \\
+                                   & \ref{model:spdw} &       \textbf{0.048} &  \textbf{0.086} &            0.118 &   \textbf{0.055} &  \textbf{0.101} &            0.105 &   \textbf{0.043} &   \textbf{0.06} &            0.105 \\
 \hline
-            $1.5 \leq z_{spec} < 2$ & \ref{model:pw} &                0.076 &           0.154 &            0.076 &            0.077 &           0.153 &            0.088 &            0.069 &           0.136 &            0.075 \\
-                              & \ref{model:pdw} &                0.044 &           0.099 &            0.127 &            0.056 &           0.125 &            0.089 &            0.051 &           0.109 &            0.077 \\
-                              & \ref{model:dw} &                0.081 &           0.258 &  \textbf{-0.035} &            0.094 &           0.255 &  \textbf{-0.008} &            0.089 &           0.238 &  \textbf{-0.042} \\
-                              & \ref{model:spw} &                 0.04 &           0.094 &            0.164 &            0.054 &             0.1 &            0.111 &            0.044 &           0.073 &            0.115 \\
-                              & \ref{model:spdw} &       \textbf{0.031} &  \textbf{0.061} &            0.147 &   \textbf{0.045} &  \textbf{0.089} &            0.121 &   \textbf{0.038} &  \textbf{0.061} &            0.105 \\
+            $1.5 \leq z_{spec} < 2$ & \ref{model:pw} &                0.077 &           0.159 &            0.075 &            0.077 &           0.153 &            0.088 &            0.069 &           0.136 &            0.075 \\
+                                   & \ref{model:pdw} &                0.044 &           0.099 &            0.127 &            0.056 &           0.125 &            0.089 &            0.051 &           0.109 &            0.077 \\
+                                   & \ref{model:dw} &                0.081 &           0.258 &  \textbf{-0.035} &            0.094 &           0.255 &  \textbf{-0.008} &            0.089 &           0.238 &  \textbf{-0.042} \\
+                                   & \ref{model:spw} &                 0.04 &           0.093 &            0.165 &            0.054 &             0.1 &            0.111 &            0.044 &           0.073 &            0.115 \\
+                                   & \ref{model:spdw} &       \textbf{0.031} &  \textbf{0.061} &            0.147 &   \textbf{0.045} &  \textbf{0.089} &            0.121 &   \textbf{0.038} &  \textbf{0.061} &            0.105 \\
 \hline
-            $2 \leq z_{spec}$ & \ref{model:pw} &                0.066 &           0.221 &  \textbf{-0.004} &            0.069 &           0.188 &           -0.028 &            0.059 &           0.142 &            0.048 \\
-                              & \ref{model:pdw} &                0.043 &           0.126 &            0.096 &            0.048 &           0.122 &            0.044 &            0.047 &           0.101 &            0.064 \\
-                              & \ref{model:dw} &                0.087 &           0.198 &           -0.042 &            0.078 &           0.179 &  \textbf{-0.012} &             0.08 &           0.164 &  \textbf{-0.002} \\
-                              & \ref{model:spw} &                0.038 &           0.136 &            0.037 &            0.036 &           0.072 &            0.041 &            0.033 &           0.053 &            0.081 \\
-                              & \ref{model:spdw} &       \textbf{0.027} &  \textbf{0.092} &            0.074 &   \textbf{0.031} &  \textbf{0.056} &            0.063 &    \textbf{0.03} &  \textbf{0.043} &            0.072 \\
+            $2 \leq z_{spec}$ & \ref{model:pw} &                0.066 &            0.22 &  \textbf{-0.003} &            0.069 &           0.188 &           -0.028 &            0.059 &           0.142 &            0.048 \\
+                                   & \ref{model:pdw} &                0.043 &           0.126 &            0.096 &            0.048 &           0.122 &            0.044 &            0.047 &           0.101 &            0.064 \\
+                                   & \ref{model:dw} &                0.087 &           0.198 &           -0.042 &            0.078 &           0.179 &  \textbf{-0.012} &             0.08 &           0.164 &  \textbf{-0.002} \\
+                                   & \ref{model:spw} &                0.037 &           0.136 &            0.038 &            0.036 &           0.072 &            0.041 &            0.033 &           0.053 &            0.081 \\
+                                   & \ref{model:spdw} &       \textbf{0.027} &  \textbf{0.092} &            0.074 &   \textbf{0.031} &  \textbf{0.056} &            0.063 &    \textbf{0.03} &  \textbf{0.043} &            0.072 \\
 \hline
-            \hline
+\hline
             $z_{mag} < 19$ & \ref{model:pw} &                0.035 &           0.025 &    \textbf{0.03} &            0.039 &           0.077 &            0.052 &            0.027 &           0.033 &            0.035 \\
                                    & \ref{model:pdw} &                0.026 &           0.016 &            0.069 &            0.034 &           0.069 &            0.064 &            0.019 &           0.028 &            0.077 \\
                                    & \ref{model:dw} &                0.037 &           0.064 &            0.046 &            0.071 &            0.15 &  \textbf{-0.018} &            0.026 &           0.059 &  \textbf{-0.006} \\
