@@ -832,6 +832,20 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 
 \begin{figure*}
     \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-cv2-qso-by-z-mag}
+    \caption{Метрики в зависимости от zConf на ярких и слабых квазарах кросс-валидации}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-cv2-gal-by-z-mag}
+    \caption{Метрики в зависимости от zConf на ярких и слабых галактиках кросс-валидации}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
     \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-dr16q.png}
     \caption{Метрики в зависимости от zConf на DR16q}
     \label{fig:metrics-zconf-cv2}
@@ -839,7 +853,7 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2.png}
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-log.png}
     \caption{Метрики в зависимости от zConf}
     \label{fig:metrics-zconf-cv2}
 \end{figure*}
@@ -1012,16 +1026,15 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
             \hline
             {} & \multicolumn{5}{l}{$FSoft \geq 3e-15$ (2653 objects)} & \multicolumn{5}{l}{$FSoft \geq 1e-14$ (1501 objects)} & \multicolumn{5}{l}{$FSoft \geq 4e-14$ (242 objects)} \\
             {} &                         Precision &     $C_{preds}$ &   $C_{secureO}$ &     $C_{Xray}$ & $N_{preds}$ &                         Precision &     $C_{preds}$ &   $C_{secureO}$ &      $C_{Xray}$ & $N_{preds}$ &                        Precision &     $C_{preds}$ &   $C_{secureO}$ &      $C_{Xray}$ & $N_{preds}$ \\
-            Model &                                   &                 &                 &                &             &                                   &                 &                 &                 &             &                                  &                 &                 &                 &             \\
+            Model            &                                   &                 &                 &                &             &                                   &                 &                 &                 &             &                                  &                 &                 &                 &             \\
             \hline
-            PW    &                             0.935 &           0.726 &           0.597 &          0.304 &        2183 &                             0.937 &           0.773 &           0.659 &           0.427 &        1280 &                            0.944 &           0.876 &            0.76 &           0.546 &         210 \\
-            PDW   &                             0.944 &           0.762 &           0.637 &          0.325 &        2220 &                             0.948 &           0.807 &           0.692 &           0.449 &        1287 &                            0.953 &           0.876 &            0.76 &           0.546 &         210 \\
-            DW    &                             0.885 &            0.67 &  \textbf{0.666} &  \textbf{0.34} &        2639 &                              0.89 &           0.704 &           0.701 &           0.455 &        1494 &                            0.882 &            0.72 &           0.711 &            0.51 &         239 \\
-            SPW   &                             0.963 &           0.794 &           0.647 &           0.33 &        2162 &                              0.97 &           0.846 &           0.716 &           0.464 &        1270 &                            0.964 &           0.904 &           0.777 &           0.558 &         208 \\
-            SPDW  &                    \textbf{0.969} &  \textbf{0.805} &  \textbf{0.666} &  \textbf{0.34} &        2197 &                    \textbf{0.975} &  \textbf{0.849} &  \textbf{0.722} &  \textbf{0.468} &        1276 &                   \textbf{0.974} &  \textbf{0.918} &  \textbf{0.789} &  \textbf{0.567} &         208 \\
+            \ref{model:pw}   &                             0.934 &           0.725 &           0.599 &          0.305 &        2192 &                             0.937 &           0.771 &            0.66 &           0.428 &        1284 &                            0.944 &           0.877 &           0.764 &           0.549 &         211 \\
+            \ref{model:pdw}  &                             0.944 &           0.762 &           0.637 &          0.325 &        2220 &                             0.948 &           0.807 &           0.692 &           0.449 &        1287 &                            0.953 &           0.876 &            0.76 &           0.546 &         210 \\
+            \ref{model:dw}   &                             0.885 &            0.67 &  \textbf{0.666} &  \textbf{0.34} &        2639 &                              0.89 &           0.704 &           0.701 &           0.455 &        1494 &                            0.882 &            0.72 &           0.711 &            0.51 &         239 \\
+            \ref{model:spw}  &                             0.963 &           0.793 &           0.649 &          0.331 &        2170 &                              0.97 &           0.845 &           0.717 &           0.465 &        1274 &                            0.964 &           0.904 &           0.781 &           0.561 &         209 \\
+            \ref{model:spdw} &                    \textbf{0.969} &  \textbf{0.805} &  \textbf{0.666} &  \textbf{0.34} &        2197 &                    \textbf{0.975} &  \textbf{0.849} &  \textbf{0.722} &  \textbf{0.468} &        1276 &                   \textbf{0.974} &  \textbf{0.918} &  \textbf{0.789} &  \textbf{0.567} &         208 \\
             \hline
-            \end{tabular}
-            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw} from Stripe82X X-ray test sample. The first column shows model, the next two columns -- Precision \ref{eq:precision} and Completeness \ref{eq:completeness} metrics for objects with $FSoft < 1e-14$, the second two columns -- for objects with $FSoft < 4e-14$, and the last two columns -- for the entire sample.}
+            \end{tabular}            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw} from Stripe82X X-ray test sample. The first column shows model, the next two columns -- Precision \ref{eq:precision} and Completeness \ref{eq:completeness} metrics for objects with $FSoft < 1e-14$, the second two columns -- for objects with $FSoft < 4e-14$, and the last two columns -- for the entire sample.}
 \end{table*}
 
 % \begin{table*}
