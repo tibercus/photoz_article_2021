@@ -523,7 +523,125 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 
 \section{Results}
 
-\subsection{Анализ качества моделей на рентгеновских данных (Stripe82X)}
+В этом разделе проводится многосторонний анализ поведения представленных моделей. В разделе \ref{ssec:results-s82x} модели тестируются на данных рентгеновской выборки Stripe82X и сравниваются с моделями SOTA (Ananna, Brescia). В следующем разделе \ref{ssec:results-cv2-and-dr16q} проводится анализ поведения моделей на выборках большого объема в зависимости от разных факторов (оптическая яркость, красное смещение объектов и т.д.). В разделе \ref{ssec:results-zconf} проводится анализ прогнозируемой достоверности прогноза zConf с целью выбора порога отбора качественных прогнозов. В последнем разделе \ref{ssec:results-prec-comp} оценивается точность и полнота этого отбора.
+
+\subsection{Анализ качества моделей на рентгеновских данных (Stripe82X)}\label{ssec:results-s82x}
+
+В таблице \ref{tab:stripe82x-intersection} представлено прямое сравнение моделей \ref{model:pw} -- \ref{model:spdw} на выборке Stripe82X (т.е. на множестве объектов, для которых есть прогнозы всеми пятью моделями) по метрикам \ref{eq:nmad}, \ref{eq:n015} и  \ref{eq:c68} для трех порогов по рентгеновскому потоку, которые соответствуют (ЧЕМУ?). Можно видеть, что точность всех моделей \ref{model:pw} -- \ref{model:spdw} ухудшается для более глубоких рентгеновских данных (по метрике NMAD примерно до 1.5 раз и в 1.5 -- 2 раза по доле катастрофических выбросов). Лучшую точность при прямом сравнении показывает модель \ref{model:spdw}, основанная на данных всех трех используемых обзоров.
+
+Лучшую калибровку 68\% доверительных интервалов показывает модель \ref{model:dw}, основанная только на самом глубоком из используемых обзоров, то есть DESI LIS, и имеющая посредственную точность по NMAD и доле выбросов. Интересно, что относительное изменение точности при добавлении более глубоких рентгеновских данных у этой модели меньше, чем для других моделей -- точность по метрике NMAD не меняется, а для выбросов увеличивается на 9 -- 13\% при последовательном добавлении более глубоких рентгеновских данных в тестирование.
+
+Наиболее интересует модель \ref{model:pw}, которая может применяться на всем российском небе eRosita. Эта модель показывает точность при прямом сравнении в 1.5 -- 2 раза хуже наиболее точной модели.
+
+\begin{table*}
+	\begin{tabular}{llllllllll}
+            \hline
+            {} & \multicolumn{3}{l}{$FSoft \geq 3e-15$ (2159 objects)} & \multicolumn{3}{l}{$FSoft \geq 1e-14$ (1268 objects)} & \multicolumn{3}{l}{$FSoft \geq 4e-14$ (207 objects)} \\
+            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                            $NMAD$ &       $n>0.15$ &  $C_{68} - 0.68$ &                           $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
+            Model            &                                   &                 &                  &                                   &                &                  &                                  &                 &                 \\
+            \hline
+            \ref{model:pw}   &                             0.056 &           0.145 &            0.028 &                              0.05 &          0.116 &            0.035 &                            0.037 &           0.092 &  \textbf{0.025} \\
+            \ref{model:pdw}  &                             0.044 &           0.103 &            0.083 &                             0.042 &          0.091 &            0.079 &                             0.03 &           0.068 &           0.074 \\
+            \ref{model:dw}   &                             0.073 &           0.168 &  \textbf{-0.009} &                             0.072 &          0.153 &  \textbf{-0.021} &                            0.074 &           0.135 &          -0.057 \\
+            \ref{model:spw}  &                             0.039 &           0.101 &            0.098 &                             0.035 &          0.077 &            0.105 &                   \textbf{0.027} &           0.058 &           0.107 \\
+            \ref{model:spdw} &                    \textbf{0.033} &  \textbf{0.083} &            0.113 &                     \textbf{0.03} &  \textbf{0.07} &             0.12 &                   \textbf{0.027} &  \textbf{0.043} &           0.122 \\
+            (Ananna, 2017)   &                             0.064 &           0.171 &           -- &                             0.068 &          0.183 &           -- &                            0.073 &           0.222 &          -- \\
+            (Brescia, 2019)         &                             0.064 &           0.157 &           -- &                             0.067 &          0.168 &           -- &                             0.07 &           0.222 &          -- \\
+            \hline
+            \end{tabular}
+            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) on objects from Stripe82X X-ray test sample that have prediction by every model. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample.}
+            \label{tab:stripe82x-intersection}
+\end{table*}
+
+Так же в рамках этой работы представленные модели сравниваются с моделями SOTA (Ananna, Brescia). Это сравнение проводится напрямую, как в таблице \ref{tab:stripe82x-intersection}, и на всех объектах с надежным оптическим компаньоном с потоком $FSoft \geq 3e-15$, при этом для объектов, для которых невозможно сделать прогнозы наиболее точной моделью, берутся прогнозы моделей \ref{model:dw} и \ref{model:pw}. Эти результаты представлены в таблице \ref{tab:stripe82x-combined}.
+
+При прямом сравнении, лучшая из представленных моделей \ref{model:spdw} показывает точность почти в 2 раза лучше по метрикам NMAD и доля катастрофических выбросов, чем модели SOTA. При этом модель на всем небе \ref{model:pw} показывает точность немного лучше, но сопоставимую с SOTA.
+
+При сравнении на всех объектах, разница в точности составляет почти 1.5 раза по метрикам NMAD и для выбросов. Существенную долю ухудшения точности комбинированных прогнозов по сравнению с точностью прогнозов лучшей модели на прямом сравнении вносят прогнозы-выбросы модели \ref{model:dw}.
+
+\begin{table*}
+	\begin{tabular}{llllrlllrlllr}
+            \hline
+            {} & \multicolumn{4}{l}{$FSoft \geq 3e-15$ (2652 objects)} & \multicolumn{4}{l}{$FSoft \geq 1e-14$ (1500 objects)} & \multicolumn{4}{l}{$FSoft \geq 4e-14$ (241 objects)} \\
+            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                            $NMAD$ &       $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
+            Model                               &                                   &                 &                  &             &                                   &                &                  &             &                                  &                 &                  &             \\
+            \hline
+            \ref{model:pw}                      &                             0.056 &           0.146 &            0.028 &        2192 &                              0.05 &          0.118 &            0.035 &        1284 &                            0.037 &           0.095 &            0.026 &         211 \\
+            \ref{model:pdw}                     &                             0.045 &           0.107 &            0.082 &        2220 &                             0.042 &          0.093 &            0.079 &        1287 &                             0.03 &           0.071 &            0.068 &         210 \\
+            \ref{model:dw}                      &                             0.074 &           0.173 &  \textbf{-0.005} &        2639 &                             0.072 &          0.154 &  \textbf{-0.013} &        1494 &                            0.074 &           0.142 &           -0.048 &         239 \\
+            \ref{model:spw}                     &                             0.039 &             0.1 &            0.099 &        2170 &                             0.035 &          0.078 &            0.105 &        1274 &                   \textbf{0.026} &           0.057 &            0.109 &         209 \\
+            \ref{model:spdw}                    &                    \textbf{0.033} &  \textbf{0.084} &            0.113 &        2197 &                     \textbf{0.03} &  \textbf{0.07} &             0.12 &        1276 &                            0.027 &  \textbf{0.043} &            0.118 &         208 \\
+            \ref{model:dw} w/o \ref{model:spdw} &                             0.078 &           0.179 &            0.021 &         442 &                             0.067 &          0.156 &             0.04 &         218 &                            0.063 &           0.161 &  \textbf{-0.003} &          31 \\
+            Comb. model                                  &                             0.038 &           0.101 &            0.097 &        2652 &                             0.034 &          0.083 &            0.109 &        1500 &                            0.028 &           0.058 &            0.104 &         241 \\
+            (Ananna)                      &                             0.065 &           0.172 &           -- &        2652 &                             0.067 &          0.181 &           -- &        1500 &                            0.074 &            0.22 &           -- &         241 \\
+            (Brescia)                            &                             0.066 &           0.156 &           -- &        2652 &                             0.066 &          0.167 &           -- &        1500 &                            0.074 &           0.224 &           -- &         241 \\
+            \hline
+            \end{tabular}
+            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) from Stripe82X X-ray test sample. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample. <<Comb. model>> stands for combined predictions of models \ref{model:spdw} and \ref{model:dw}.}\label{tab:stripe82x-combined}
+\end{table*}
+
+Кроме того модели сравниваются на разных популяциях объектов (спектральные галактики и квазары, см. таблицу \ref{tab:stripe82x-spec-class}; протяженные и точечные источники, см. таблицу \ref{tab:stripe82x-phot-class}). Заметим, что не для всех объектов Stripe82X имеется классификация по спектру, поэтому, при анализе на спектральных классах, использовались только объекты с имеющейся классификацией галактика/квазар. На спектральных галактиках комбинированный прогноз показывает бо'льшую долю выбросов по сравнению с SOTA, при этом, превосходит по NMAD. На квазарах комбинированный прогноз превосходит SOTA почти в 2 раза по обеим метрикам точности. На оптических классах объектов (точечные и протяженные) комбинированные прогнозы показывают существенно лучшую точность по обеим метрикам. При этом прогнозы на точечных источниках показывают бо'льшую долю выбросов по сравнению с прогнозами протяженных объектов. 
+
+\begin{table*}
+	\begin{tabular}{lllllrlllrlllr}
+            \hline
+                &    & \multicolumn{4}{l}{$FSoft \geq 3e-15$} & \multicolumn{4}{l}{$FSoft \geq 1e-14$} & \multicolumn{4}{l}{$FSoft \geq 4e-14$} \\
+                &    &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
+            Obj. Type & Model &                    &                 &                  &             &                    &                 &                  &             &                    &                 &                  &             \\
+            \hline
+            Galaxy & \ref{model:pw} &              0.048 &           0.117 &  \textbf{-0.018} &         420 &               0.05 &           0.096 &           -0.023 &         178 &              0.081 &           0.071 &           -0.323 &          14 \\
+                & \ref{model:pdw} &              0.038 &           0.102 &            0.053 &         423 &              0.037 &           0.079 &   \textbf{0.015} &         177 &              0.049 &           0.067 &   \textbf{-0.08} &          15 \\
+                & \ref{model:dw} &              0.047 &           0.131 &            0.086 &         505 &              0.049 &            0.11 &            0.082 &         210 &              0.034 &           0.059 &            0.085 &          17 \\
+                & \ref{model:spw} &              0.042 &           0.099 &            0.075 &         416 &               0.04 &           0.085 &            0.054 &         177 &              0.085 &           0.071 &           -0.251 &          14 \\
+                & \ref{model:spdw} &     \textbf{0.037} &           0.098 &            0.094 &         420 &     \textbf{0.034} &  \textbf{0.074} &            0.081 &         176 &              0.062 &    \textbf{0.0} &           -0.213 &          15 \\
+                & \ref{model:dw} w/o \ref{model:spdw} &               0.05 &           0.129 &            0.155 &          85 &              0.042 &           0.118 &            0.232 &          34 &     \textbf{0.006} &    \textbf{0.0} &            -0.18 &           2 \\
+                & Comb. model &              0.038 &           0.104 &            0.104 &         509 &              0.035 &           0.085 &            0.103 &         212 &              0.048 &    \textbf{0.0} &           -0.209 &          17 \\
+                & (Ananna) &               0.07 &           0.094 &           -- &         509 &              0.072 &           0.104 &           -- &         212 &               0.08 &           0.059 &            -- &          17 \\
+                & (Brescia) &              0.068 &  \textbf{0.084} &           -- &         509 &              0.073 &           0.104 &           -- &         212 &              0.086 &           0.059 &           -- &          17 \\
+            QSO & \ref{model:pw} &              0.061 &           0.158 &            0.037 &        1408 &               0.05 &           0.121 &            0.042 &         899 &              0.033 &           0.075 &            0.053 &         161 \\
+                & \ref{model:pdw} &              0.049 &           0.113 &            0.084 &        1425 &              0.042 &           0.092 &            0.092 &         900 &              0.028 &           0.063 &            0.087 &         159 \\
+                & \ref{model:dw} &              0.083 &           0.191 &            -0.03 &        1692 &              0.076 &            0.16 &           -0.033 &        1040 &              0.076 &           0.153 &           -0.057 &         183 \\
+                & \ref{model:spw} &               0.04 &            0.11 &            0.111 &        1393 &              0.035 &           0.081 &            0.113 &         893 &     \textbf{0.024} &            0.05 &             0.14 &         161 \\
+                & \ref{model:spdw} &     \textbf{0.034} &  \textbf{0.089} &            0.123 &        1409 &      \textbf{0.03} &  \textbf{0.074} &             0.13 &         894 &              0.025 &  \textbf{0.038} &             0.15 &         159 \\
+                & \ref{model:dw} w/o \ref{model:spdw} &              0.085 &           0.191 &  \textbf{-0.023} &         283 &              0.072 &           0.151 &  \textbf{-0.016} &         146 &               0.07 &           0.208 &  \textbf{-0.013} &          24 \\
+                & Comb. model &               0.04 &           0.108 &            0.099 &        1700 &              0.034 &           0.085 &             0.11 &        1044 &              0.027 &           0.059 &            0.131 &         185 \\
+                & (Ananna) &               0.07 &           0.204 &           -- &        1700 &               0.07 &           0.197 &           -- &        1044 &              0.077 &           0.227 &           -- &         185 \\
+                & (Brescia) &               0.07 &           0.182 &           -- &        1700 &              0.067 &            0.18 &           -- &        1044 &              0.076 &           0.232 &           -- &         185 \\
+            \hline
+            \end{tabular}
+            \caption{Точность Stripe82X на разных спектральных классах объектов}\label{tab:stripe82x-spec-class}
+\end{table*}
+
+\begin{table*}
+	\begin{tabular}{lllllrlllrlllr}
+            \hline
+                       &    & \multicolumn{4}{l}{$FSoft \geq 3e-15$} & \multicolumn{4}{l}{$FSoft \geq 1e-14$} & \multicolumn{4}{l}{$FSoft \geq 4e-14$} \\
+                       &    &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
+            Obj. Type & Model &                    &                 &                  &             &                    &                 &                 &             &                    &                 &                  &             \\
+            \hline
+            Extended & \ref{model:pw} &              0.046 &           0.081 &   \textbf{0.017} &         664 &              0.043 &           0.072 &  \textbf{0.013} &         349 &              0.042 &           0.078 &           -0.071 &          64 \\
+                       & \ref{model:pdw} &               0.04 &  \textbf{0.071} &            0.071 &         672 &              0.038 &            0.06 &           0.056 &         352 &     \textbf{0.034} &           0.062 &            0.012 &          65 \\
+                       & \ref{model:dw} &              0.058 &           0.127 &            0.049 &         808 &               0.06 &            0.11 &           0.032 &         417 &              0.068 &           0.156 &           -0.057 &          77 \\
+                       & \ref{model:spw} &               0.04 &           0.079 &             0.11 &         657 &              0.035 &           0.061 &           0.115 &         346 &               0.04 &           0.048 &            0.018 &          63 \\
+                       & \ref{model:spdw} &     \textbf{0.035} &  \textbf{0.071} &            0.131 &         665 &     \textbf{0.031} &  \textbf{0.049} &           0.127 &         348 &     \textbf{0.034} &  \textbf{0.031} &            0.007 &          64 \\
+                       & \ref{model:dw} w/o \ref{model:spdw} &              0.064 &            0.14 &             0.11 &         143 &              0.058 &           0.101 &           0.117 &          69 &               0.06 &           0.077 &           -0.065 &          13 \\
+                       & Comb. model &              0.038 &           0.083 &            0.128 &         811 &              0.035 &           0.057 &           0.126 &         418 &              0.039 &           0.039 &  \textbf{-0.005} &          77 \\
+                       & (Ananna) &               0.07 &           0.127 &           -- &         811 &              0.074 &           0.129 &          -- &         418 &              0.077 &           0.065 &           -- &          77 \\
+                       & (Brescia) &              0.069 &           0.107 &           -- &         811 &              0.074 &           0.112 &          -- &         418 &              0.077 &           0.052 &           -- &          77 \\
+            Point-like & \ref{model:pw} &              0.062 &           0.175 &            0.033 &        1528 &              0.054 &           0.136 &           0.043 &         935 &              0.035 &           0.102 &            0.068 &         147 \\
+                       & \ref{model:pdw} &              0.047 &           0.122 &            0.087 &        1548 &              0.043 &           0.106 &           0.088 &         935 &               0.03 &           0.076 &            0.092 &         145 \\
+                       & \ref{model:dw} &              0.082 &           0.193 &           -0.028 &        1831 &              0.077 &           0.171 &           -0.03 &        1077 &              0.075 &           0.136 &           -0.044 &         162 \\
+                       & \ref{model:spw} &              0.038 &            0.11 &            0.094 &        1513 &              0.035 &           0.084 &           0.101 &         928 &     \textbf{0.025} &           0.062 &            0.149 &         146 \\
+                       & \ref{model:spdw} &     \textbf{0.032} &  \textbf{0.089} &            0.105 &        1532 &      \textbf{0.03} &  \textbf{0.078} &           0.117 &         928 &     \textbf{0.025} &  \textbf{0.049} &            0.167 &         144 \\
+                       & \ref{model:dw} w/o \ref{model:spdw} &              0.081 &           0.197 &  \textbf{-0.021} &         299 &              0.071 &           0.181 &  \textbf{0.005} &         149 &               0.07 &           0.222 &   \textbf{0.042} &          18 \\
+                       & Comb. model &              0.038 &           0.109 &            0.084 &        1841 &              0.033 &           0.093 &           0.102 &        1082 &              0.027 &           0.067 &            0.155 &         164 \\
+                       & (Ananna) &              0.062 &           0.192 &           -- &        1841 &              0.064 &           0.201 &          -- &        1082 &              0.072 &           0.293 &           -- &         164 \\
+                       & (Brescia) &              0.064 &           0.178 &           -- &        1841 &              0.063 &           0.189 &          -- &        1082 &              0.067 &           0.305 &           -- &         164 \\
+            \hline
+            \end{tabular}
+            \caption{Точность Stripe82X на разных фотометрических классах объектов}\label{tab:stripe82x-phot-class}
+\end{table*}
+
 \begin{enumerate}
 	\item Какая модель лучшая на пересечении
 	\item Точность модели на всем небе и самой глубокой
@@ -532,7 +650,79 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 	\item как превосходит на разных популяциях объектов (яркие-слабые, галактики-квазары)
 \end{enumerate}
 
-\subsection{Поведение моделей на кросс-валидации и выборке квазаров DR16q}
+\subsection{Поведение моделей на кросс-валидации и выборке квазаров DR16q}\label{ssec:results-cv2-and-dr16q}
+
+В этом разделе проведен анализ поведения представленных моделей на выборках большого объема (кросс-валидация, квазары DR16q) в зависимости от спектрального красного смещения, спектрального класса, оптической яркости и прогноза photo-z.
+
+На графиках \ref{fig:metrics-dr16q} и \ref{fig:metrics-cv2-total} показаны зависимости метрик точности NMAD и доля выбросов в зависимости от спектрального красного смещения, прогноза красного смещения и оптической яркости объектов. Видно, что модели показывают разное качество прогнозов на разных красных смещениях. Наблюдаются ухудшения точности в районе $spec-z \sim 1.0$ для всех моделей, $spec-z \sim 1.7$ для модели \ref{model:dw} и $spec-z \sim 3.0$ для моделей, не использующих данные SDSS, \ref{model:dw}, \ref{model:pdw}, \ref{model:pw}. %. Так же можно видеть, что близкие квазары ($spec-z < 1$) дают существенную долю выбросов по сравнению с галактиками 
+
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-dr16q-ab-mini.png}
+    \caption{Plots of NMAD \eqref{eq:nmad} (upper line of plots) and the fraction of catastrophic outliers \eqref{eq:n015} (lower line of plots) metrics as a function of (from left to right) spectral redshift value, photometric redshift prediction value, and stellar magnitude in the filter z) on DR16q quasars test sample. The solid line shows model \ref{model:spdw}, the dot line shows model \ref{model:pw}, the dashed line shows model \ref{model:pdw}, the dash-dot line shows model \ref{model:dw}, and dash-dot-dot line shows model \ref{model:spw}.}
+    \label{fig:metrics-dr16q}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-cv2-ab-mini.png}
+    \caption{Plots of NMAD \eqref{eq:nmad} (upper line of plots) and the fraction of catastrophic outliers \eqref{eq:n015} (lower line of plots) metrics as a function of (from left to right) spectral redshift value, photometric redshift prediction value, and stellar magnitude in the filter z) of cross-validation predictions. The solid line shows model \ref{model:spdw}, the dot line shows model \ref{model:pw}, the dashed line shows model \ref{model:pdw}, the dash-dot line shows model \ref{model:dw}, and dash-dot-dot line shows model \ref{model:spw}.}
+    \label{fig:metrics-cv2-total}
+\end{figure*}
+
+Так же отметим наличие монотонной зависимости точности прогнозов от оптической яркости объектов -- прогнозы для слабых источников обладают точностью хуже, чем прогнозы для ярких источников. Точность лучшей модели \ref{model:spdw} варьируется от $NMAD/n_{>0.15} \sim 0.06/0.015$ на наиболее слабых объектах до $0.02, 0.05$ на наиболее ярких объектах. Модель на всем небе \ref{model:pw} на ярких объектах точнсть, сопоставимую с точностью модели \ref{model:spdw}, а на слабых объектах точность резко ухудшается до $NMAD/n_{>0.15} = 0.12/0.3$ для объектов $z_{mag} = 22$. Модель на наиболее глубоких данных \ref{model:dw} показывает точность лучше модели \ref{model:pw} в этой же области, но сильно хуже остальных моделей на ярких объектах ($NMAD/n_{>0.15} = 0.07/0.15$)
+
+Далее на графиках \ref{fig:class-galaxy-cv2} и \ref{fig:class-qso-dr16q} показаны точности на ярких ($z_{mag} < 20$) и слабых ($20 < z_{mag} < 22$) спектральных галактиках SDSS DR14q (кросс-валидационные прогнозы) и квазарах DR16q с надежными визуально проинспектированными спектрами, соответственно. Порог $z_{mag} < 22$ выбран, чтобы проводить анализ на объектах, для которых возможно снять качественные спектры.
+
+Видно, что для ярких галактик все модели показывают точность $NMAD < 0.05$ и $n_{>0.15} < 0.1$ на всех красных смещениях. Для слабых галактик точность лучшей в среднем модели \ref{model:spdw} может ухудшаться до $NMAD \sim 0.1$ и $n_{>0.15} \sim 0.35$ для близких и наиболее далеких галактик (в областях $spec-z \sim 0.2, 1.0$) с улучшениями до $NMAD < 0.05$ и $n_{>0.15} < 0.1$ в области $0.5 < spec-z < 0.8$.
+
+Для ярких квазаров прогнозы самой точной модели \ref{model:spdw} показывают метрики $NMAD < 0.05$ на всех красных смещениях и доля выбросов $< 0.07$ с ухудшением до $\sim 0.12$ на $spec-z < 0.5$. Модель на всем небе \ref{model:pw} показывает существенную долю выбросов (около 0.2) для объектов $spec-z \sim 3$. Для слабых квазаров картина следующая: наиболее прогнозы наиболее близких объектов показывают существенную долю выбросов; с ростом красного смещения точность модели \ref{model:spdw} в среднем улучшается; модель на всем небе \ref{model:pw} показывает долю выбросов > 0.4 для объектов $spec-z \sim 3.3$. При этом модель на наиболее глубоких данных \ref{model:dw} показывает существенно меньшую долю выбросов в этой же области, а использование в модели данных как Pan-STARRS, так и DESI LIS позволяет улучшить точность прогнозов до $n_{>0.15} \sim 0.2$.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/class-galaxy-cv2.png}
+    \caption{Метрики на ярких и слабых галактиках на кросс-валидации в зависимости от spec-z}
+    \label{fig:class-galaxy-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/class-qso-dr16q.png}
+    \caption{Метрики на ярких и слабых квазарах DR16q в зависимости от spec-z}
+    \label{fig:class-qso-dr16q}
+\end{figure*}
+
+На следующих графиках \ref{fig:scatter-cv2-gal} и \ref{fig:scatter-dr16q_wo_train} показаны диаграммы рассеяния прогнозов моделей \ref{model:spdw}, \ref{model:pw} и \ref{model:dw} на галактиках (кросс-валидация) и квазарах DR16q. Цветом и размером кружка показана оценка достоверности прогноза zConf \ref{eq:zconf}. Наиболее уверенные прогнозы нанесены в последнюю очередь, чтобы было явно видно катастрофические выбросы, которым присвоена высокая степень достоверности. Серой областью, ограниченной двумя черными пунктирными линиями, показана область объектов, не являющейся катастрофическими выбросами согласно метрике \ref{eq:n015}. Видно, что основная часть прогнозов сконцентрирована близко к диагонали, внутри закрашенной области, то есть являются точными.
+
+Для галактик модель \ref{model:dw} дает уверенные выбросы в области $[spec-z < 0.5] \times [photo-z > 3.0]$. Такие ошибки мы определяем как ошибки второго рода, когда близкому объекту ложно прогнозируется большое красное смещение, при этом прогноз обладает высокой уверенностью. Прогнозы лучшей модели \ref{model:spdw} показывают меньше ошибок второго рода в этой области, и они являются менее уверенными, но появляются ошибки в области $[spec-z \sim 1.0] \times [photo-z \sim 2.0]$. Меньше всего ошибок второго рода показывает модель на всем небе \ref{model:pw}, но эта модель показывает в целом точность хуже модели \ref{model:spdw} -- визуально облако точек выше диагонали имеет больший размер. Это же подтверждается графиками \ref{fig:class-galaxy-cv2}.
+
+Уверенные прогнозы для квазаров хорошо сконцентрированы вокруг диагонали, наблюдается небольшое ошибок второго рода и ошибок первого рода (уверенные прогнозы значимо ниже диагонали). Визуально наименьшую долю выбросов показывает модель \ref{model:spdw}, что так же подтвержадется графиками \ref{fig:class-qso-dr16q}.
+
+На графике \ref{fig:scatter-cv2-total} показаны диаграммы рассеяния кросс-валидационных прогнозов и галактик, и квазаров. Видно, что меньше всего ошибок второго рода, дает модель \ref{model:pw}. Модель на наиболее глубоких данных \ref{model:dw} дает много ошибок второго рода в области $photo-z > 3$, однако показывает лучшие результаты ля наиболее далеких объектов (по сравнению с моделью \ref{model:pw}, у которой существенная доля точных прогнозов для объектов $spec-z > 5.5$ имеет низкую оценку уверенности zConf \ref{eq:zconf}.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.55\linewidth]{images/scatterplots-cv2-gal-sorted.png}
+    \caption{Scatterplots of cross-validation predictions of galaxies of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
+    \label{fig:scatter-cv2-gal}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/scatterplots-dr16q-wo-train-sorted.png}
+    \caption{Scatterplots of predictions on SDSS DR16 quasars test sample of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
+    \label{fig:scatter-dr16q_wo_train}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/scatterplots-cv2-total-sorted.png}
+    \caption{Scatterplots of cross-validation predictions of galaxies and quasars of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
+    \label{fig:scatter-cv2-total}
+\end{figure*}
+
 \begin{enumerate}
 	\item На разных красных смещениях модели имеют разнородную точность (смотрим на графики в зависимости от красного смещения)
 	\item по красному смещению на ярких-слабых
@@ -544,7 +734,7 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 	\item Ложные уверенные прогнозы (смотрим на диаграммы рассеяния и спектры) (сравнение поведения моделей на квазарах и на кросс-валидации)
 \end{enumerate}
 
-\subsection{Характеристика оценок уверенности zConf}
+\subsection{Характеристика оценок уверенности zConf}\label{ssec:results-zconf}
 \begin{enumerate}
 	\item 2 актуальные задачи отбора объектов (поиск уникальных объектов, доля выбросов не более 20 процентов, и составление выборок с заданной точностью, 4\% выбросов)
 	\item Смотрим на графики со всеми объектами и z\_phot > 3 с требованием 20\% выбросов и видим что это требование достигается на zConf == 0.4 для всех моделей.
@@ -552,7 +742,7 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 	\item Смотрим на графики и понимаем, что zConf > 0.4 == шлак
 \end{enumerate}
 
-\subsection{Точность и полнота прогнозов}
+\subsection{Точность и полнота прогнозов}\label{ssec:results-prec-comp}
 \begin{enumerate}
 	\item выбрали zConf в предыдущем пункте
 	\item полнота
@@ -619,107 +809,6 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
     \label{fig:scatter-s82x-sota35}
 \end{figure*}
 
-\begin{table*}
-	\begin{tabular}{llllllllll}
-            \hline
-            {} & \multicolumn{3}{l}{$FSoft \geq 3e-15$ (2159 objects)} & \multicolumn{3}{l}{$FSoft \geq 1e-14$ (1268 objects)} & \multicolumn{3}{l}{$FSoft \geq 4e-14$ (207 objects)} \\
-            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ &                            $NMAD$ &       $n>0.15$ &  $C_{68} - 0.68$ &                           $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ \\
-            Model            &                                   &                 &                  &                                   &                &                  &                                  &                 &                 \\
-            \hline
-            \ref{model:pw}   &                             0.056 &           0.145 &            0.028 &                              0.05 &          0.116 &            0.035 &                            0.037 &           0.092 &  \textbf{0.025} \\
-            \ref{model:pdw}  &                             0.044 &           0.103 &            0.083 &                             0.042 &          0.091 &            0.079 &                             0.03 &           0.068 &           0.074 \\
-            \ref{model:dw}   &                             0.073 &           0.168 &  \textbf{-0.009} &                             0.072 &          0.153 &  \textbf{-0.021} &                            0.074 &           0.135 &          -0.057 \\
-            \ref{model:spw}  &                             0.039 &           0.101 &            0.098 &                             0.035 &          0.077 &            0.105 &                   \textbf{0.027} &           0.058 &           0.107 \\
-            \ref{model:spdw} &                    \textbf{0.033} &  \textbf{0.083} &            0.113 &                     \textbf{0.03} &  \textbf{0.07} &             0.12 &                   \textbf{0.027} &  \textbf{0.043} &           0.122 \\
-            Template Model   &                             0.064 &           0.171 &           -- &                             0.068 &          0.183 &           -- &                            0.073 &           0.222 &          -- \\
-            NN Model         &                             0.064 &           0.157 &           -- &                             0.067 &          0.168 &           -- &                             0.07 &           0.222 &          -- \\
-            \hline
-            \end{tabular}
-            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) on objects from Stripe82X X-ray test sample that have prediction by every model. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample. <<TM>> stands for Template model (Ananna, 2017), and <<NN>> for Neural Network model (Brescia, 2019).}
-            \label{tab:stripe82x-intersection}
-\end{table*}
-
-\begin{table*}
-	\begin{tabular}{llllrlllrlllr}
-            \hline
-            {} & \multicolumn{4}{l}{$FSoft \geq 3e-15$ (2652 objects)} & \multicolumn{4}{l}{$FSoft \geq 1e-14$ (1500 objects)} & \multicolumn{4}{l}{$FSoft \geq 4e-14$ (241 objects)} \\
-            {} &                            $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                            $NMAD$ &       $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &                           $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
-            Model                               &                                   &                 &                  &             &                                   &                &                  &             &                                  &                 &                  &             \\
-            \hline
-            \ref{model:pw}                      &                             0.056 &           0.146 &            0.028 &        2192 &                              0.05 &          0.118 &            0.035 &        1284 &                            0.037 &           0.095 &            0.026 &         211 \\
-            \ref{model:pdw}                     &                             0.045 &           0.107 &            0.082 &        2220 &                             0.042 &          0.093 &            0.079 &        1287 &                             0.03 &           0.071 &            0.068 &         210 \\
-            \ref{model:dw}                      &                             0.074 &           0.173 &  \textbf{-0.005} &        2639 &                             0.072 &          0.154 &  \textbf{-0.013} &        1494 &                            0.074 &           0.142 &           -0.048 &         239 \\
-            \ref{model:spw}                     &                             0.039 &             0.1 &            0.099 &        2170 &                             0.035 &          0.078 &            0.105 &        1274 &                   \textbf{0.026} &           0.057 &            0.109 &         209 \\
-            \ref{model:spdw}                    &                    \textbf{0.033} &  \textbf{0.084} &            0.113 &        2197 &                     \textbf{0.03} &  \textbf{0.07} &             0.12 &        1276 &                            0.027 &  \textbf{0.043} &            0.118 &         208 \\
-            \ref{model:dw} w/o \ref{model:spdw} &                             0.078 &           0.179 &            0.021 &         442 &                             0.067 &          0.156 &             0.04 &         218 &                            0.063 &           0.161 &  \textbf{-0.003} &          31 \\
-            CP                                  &                             0.038 &           0.101 &            0.097 &        2652 &                             0.034 &          0.083 &            0.109 &        1500 &                            0.028 &           0.058 &            0.104 &         241 \\
-            Template Model                      &                             0.065 &           0.172 &           -- &        2652 &                             0.067 &          0.181 &           -- &        1500 &                            0.074 &            0.22 &           -- &         241 \\
-            NN Model                            &                             0.066 &           0.156 &           -- &        2652 &                             0.066 &          0.167 &           -- &        1500 &                            0.074 &           0.224 &           -- &         241 \\
-            \hline
-            \end{tabular}
-            \caption{Prediction metrics for models \ref{model:pw} -- \ref{model:spdw}, template model (Ananna, 2017) and neural network model (Brescia, 2019) from Stripe82X X-ray test sample. The first column shows model, the next three columns -- NMAD \eqref{eq:nmad}, catastrophic outliers fraction \eqref{eq:n015}, and 68\% confidence interval calibration \eqref{eq:c68} metrics for objects with $FSoft < 1e-14$, the second three columns -- for objects with $FSoft < 4e-14$, and the last three columns -- for the entire sample. <<TM>> stands for Template model (Ananna, 2017), <<NN>> for Neural Network model (Brescia, 2019), <<CP>> stands for combined predictions of models \ref{model:spdw} and \ref{model:dw}.}
-\end{table*}
-
-\begin{table*}
-	\begin{tabular}{lllllrlllrlllr}
-            \hline
-                &    & \multicolumn{4}{l}{$FSoft \geq 3e-15$} & \multicolumn{4}{l}{$FSoft \geq 1e-14$} & \multicolumn{4}{l}{$FSoft \geq 4e-14$} \\
-                &    &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
-            Obj. Type & Model &                    &                 &                  &             &                    &                 &                  &             &                    &                 &                  &             \\
-            \hline
-            Galaxy & \ref{model:pw} &              0.048 &           0.117 &  \textbf{-0.018} &         420 &               0.05 &           0.096 &           -0.023 &         178 &              0.081 &           0.071 &           -0.323 &          14 \\
-                & \ref{model:pdw} &              0.038 &           0.102 &            0.053 &         423 &              0.037 &           0.079 &   \textbf{0.015} &         177 &              0.049 &           0.067 &   \textbf{-0.08} &          15 \\
-                & \ref{model:dw} &              0.047 &           0.131 &            0.086 &         505 &              0.049 &            0.11 &            0.082 &         210 &              0.034 &           0.059 &            0.085 &          17 \\
-                & \ref{model:spw} &              0.042 &           0.099 &            0.075 &         416 &               0.04 &           0.085 &            0.054 &         177 &              0.085 &           0.071 &           -0.251 &          14 \\
-                & \ref{model:spdw} &     \textbf{0.037} &           0.098 &            0.094 &         420 &     \textbf{0.034} &  \textbf{0.074} &            0.081 &         176 &              0.062 &    \textbf{0.0} &           -0.213 &          15 \\
-                & \ref{model:dw} w/o \ref{model:spdw} &               0.05 &           0.129 &            0.155 &          85 &              0.042 &           0.118 &            0.232 &          34 &     \textbf{0.006} &    \textbf{0.0} &            -0.18 &           2 \\
-                & CP &              0.038 &           0.104 &            0.104 &         509 &              0.035 &           0.085 &            0.103 &         212 &              0.048 &    \textbf{0.0} &           -0.209 &          17 \\
-                & TM &               0.07 &           0.094 &           -- &         509 &              0.072 &           0.104 &           -- &         212 &               0.08 &           0.059 &            -- &          17 \\
-                & NN &              0.068 &  \textbf{0.084} &           -- &         509 &              0.073 &           0.104 &           -- &         212 &              0.086 &           0.059 &           -- &          17 \\
-            QSO & \ref{model:pw} &              0.061 &           0.158 &            0.037 &        1408 &               0.05 &           0.121 &            0.042 &         899 &              0.033 &           0.075 &            0.053 &         161 \\
-                & \ref{model:pdw} &              0.049 &           0.113 &            0.084 &        1425 &              0.042 &           0.092 &            0.092 &         900 &              0.028 &           0.063 &            0.087 &         159 \\
-                & \ref{model:dw} &              0.083 &           0.191 &            -0.03 &        1692 &              0.076 &            0.16 &           -0.033 &        1040 &              0.076 &           0.153 &           -0.057 &         183 \\
-                & \ref{model:spw} &               0.04 &            0.11 &            0.111 &        1393 &              0.035 &           0.081 &            0.113 &         893 &     \textbf{0.024} &            0.05 &             0.14 &         161 \\
-                & \ref{model:spdw} &     \textbf{0.034} &  \textbf{0.089} &            0.123 &        1409 &      \textbf{0.03} &  \textbf{0.074} &             0.13 &         894 &              0.025 &  \textbf{0.038} &             0.15 &         159 \\
-                & \ref{model:dw} w/o \ref{model:spdw} &              0.085 &           0.191 &  \textbf{-0.023} &         283 &              0.072 &           0.151 &  \textbf{-0.016} &         146 &               0.07 &           0.208 &  \textbf{-0.013} &          24 \\
-                & CP &               0.04 &           0.108 &            0.099 &        1700 &              0.034 &           0.085 &             0.11 &        1044 &              0.027 &           0.059 &            0.131 &         185 \\
-                & TM &               0.07 &           0.204 &           -- &        1700 &               0.07 &           0.197 &           -- &        1044 &              0.077 &           0.227 &           -- &         185 \\
-                & NN &               0.07 &           0.182 &           -- &        1700 &              0.067 &            0.18 &           -- &        1044 &              0.076 &           0.232 &           -- &         185 \\
-            \hline
-            \end{tabular}
-            \caption{Точность Stripe82X на разных спектральных классах объектов}
-\end{table*}
-
-\begin{table*}
-	\begin{tabular}{lllllrlllrlllr}
-            \hline
-                       &    & \multicolumn{4}{l}{$FSoft \geq 3e-15$} & \multicolumn{4}{l}{$FSoft \geq 1e-14$} & \multicolumn{4}{l}{$FSoft \geq 4e-14$} \\
-                       &    &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ & $C_{68} - 0.68$ & $N_{preds}$ &             $NMAD$ &        $n>0.15$ &  $C_{68} - 0.68$ & $N_{preds}$ \\
-            Obj. Type & Model &                    &                 &                  &             &                    &                 &                 &             &                    &                 &                  &             \\
-            \hline
-            Extended & \ref{model:pw} &              0.046 &           0.081 &   \textbf{0.017} &         664 &              0.043 &           0.072 &  \textbf{0.013} &         349 &              0.042 &           0.078 &           -0.071 &          64 \\
-                       & \ref{model:pdw} &               0.04 &  \textbf{0.071} &            0.071 &         672 &              0.038 &            0.06 &           0.056 &         352 &     \textbf{0.034} &           0.062 &            0.012 &          65 \\
-                       & \ref{model:dw} &              0.058 &           0.127 &            0.049 &         808 &               0.06 &            0.11 &           0.032 &         417 &              0.068 &           0.156 &           -0.057 &          77 \\
-                       & \ref{model:spw} &               0.04 &           0.079 &             0.11 &         657 &              0.035 &           0.061 &           0.115 &         346 &               0.04 &           0.048 &            0.018 &          63 \\
-                       & \ref{model:spdw} &     \textbf{0.035} &  \textbf{0.071} &            0.131 &         665 &     \textbf{0.031} &  \textbf{0.049} &           0.127 &         348 &     \textbf{0.034} &  \textbf{0.031} &            0.007 &          64 \\
-                       & \ref{model:dw} w/o \ref{model:spdw} &              0.064 &            0.14 &             0.11 &         143 &              0.058 &           0.101 &           0.117 &          69 &               0.06 &           0.077 &           -0.065 &          13 \\
-                       & CP &              0.038 &           0.083 &            0.128 &         811 &              0.035 &           0.057 &           0.126 &         418 &              0.039 &           0.039 &  \textbf{-0.005} &          77 \\
-                       & TM &               0.07 &           0.127 &           -- &         811 &              0.074 &           0.129 &          -- &         418 &              0.077 &           0.065 &           -- &          77 \\
-                       & NN &              0.069 &           0.107 &           -- &         811 &              0.074 &           0.112 &          -- &         418 &              0.077 &           0.052 &           -- &          77 \\
-            Point-like & \ref{model:pw} &              0.062 &           0.175 &            0.033 &        1528 &              0.054 &           0.136 &           0.043 &         935 &              0.035 &           0.102 &            0.068 &         147 \\
-                       & \ref{model:pdw} &              0.047 &           0.122 &            0.087 &        1548 &              0.043 &           0.106 &           0.088 &         935 &               0.03 &           0.076 &            0.092 &         145 \\
-                       & \ref{model:dw} &              0.082 &           0.193 &           -0.028 &        1831 &              0.077 &           0.171 &           -0.03 &        1077 &              0.075 &           0.136 &           -0.044 &         162 \\
-                       & \ref{model:spw} &              0.038 &            0.11 &            0.094 &        1513 &              0.035 &           0.084 &           0.101 &         928 &     \textbf{0.025} &           0.062 &            0.149 &         146 \\
-                       & \ref{model:spdw} &     \textbf{0.032} &  \textbf{0.089} &            0.105 &        1532 &      \textbf{0.03} &  \textbf{0.078} &           0.117 &         928 &     \textbf{0.025} &  \textbf{0.049} &            0.167 &         144 \\
-                       & \ref{model:dw} w/o \ref{model:spdw} &              0.081 &           0.197 &  \textbf{-0.021} &         299 &              0.071 &           0.181 &  \textbf{0.005} &         149 &               0.07 &           0.222 &   \textbf{0.042} &          18 \\
-                       & CP &              0.038 &           0.109 &            0.084 &        1841 &              0.033 &           0.093 &           0.102 &        1082 &              0.027 &           0.067 &            0.155 &         164 \\
-                       & TM &              0.062 &           0.192 &           -- &        1841 &              0.064 &           0.201 &          -- &        1082 &              0.072 &           0.293 &           -- &         164 \\
-                       & NN &              0.064 &           0.178 &           -- &        1841 &              0.063 &           0.189 &          -- &        1082 &              0.067 &           0.305 &           -- &         164 \\
-            \hline
-            \end{tabular}
-            \caption{Точность Stripe82X на разных морфологических классах объектов}
-\end{table*}
-
 Очередная цель этой статьи -- сравнение с моделями Photo-z, известными в литературе -- шаблонной моделью (Ananna, 2017) и нейросетевой моделью (Brescia, 2019). Для этого модели были протестированы на выборке Stripe82X, и были подсчитаны метрики точности \eqref{eq:nmad} и \eqref{eq:n015} на пересечении множества объектов, для которых удалось получить прогноз всеми моделями. Для наиболее точной модели получены значения метрик $~2$ раза лучше, чем для шаблонной и нейросетевой моделей для объектов $FSoft \geq 3e-15$ (см. табл. \ref{tab:stripe82x-intersection}).
 
 На рисунке \ref{fig:scatter-s82x-sota35} приведены диаграммы рассеяния шаблонной и нейросетевой моделей и комбинированные прогнозы представленных моделей (то есть, если не удалось сделать прогноз лучшей по точности моделей, пытаемся сделать прогноз следующей по точности моделью и т.д.). Видно, что наши модели показывают меньшее число ошибок второго рода (катастрофические выбросы в районе $spec-z ~ 0.5, photo-z ~ 2.0$ и сильно меньшее число выбросов ниже диагонали.
@@ -750,33 +839,7 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 %
 %С точки зрения ошибок второго рода -- когда в контексте отбора далеких квазаров принимается неверная нулевая гипотеза, что объяет имеет красное смещение > 3 -- модель \ref{model:dw} показывает большее количество ошибок (то есть прогноз > 3 и имеет высокую уверенность, при этом лежит высоко над диагональю) по сравнению с \ref{model:pw} и \ref{model:spdw}, что хорошо видно на ддиаграмме рассеяния для DR16q. Но эта же модель показывает лучшую полноту на наиболее далеких объектах (zspec > 6) -- правильные прогнозы модели являются более уверенными по сравнению с моделями \ref{model:pw} и \ref{model:spdw}, которые почти не показывают уверенных прогнозов на таких объектах.
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.99\linewidth]{images/metrics-dr16q-ab-mini.png}
-    \caption{Plots of NMAD \eqref{eq:nmad} (upper line of plots) and the fraction of catastrophic outliers \eqref{eq:n015} (lower line of plots) metrics as a function of (from left to right) spectral redshift value, photometric redshift prediction value, and stellar magnitude in the filter z) on DR16q quasars test sample. The solid line shows model \ref{model:spdw}, the dot line shows model \ref{model:pw}, the dashed line shows model \ref{model:pdw}, the dash-dot line shows model \ref{model:dw}, and dash-dot-dot line shows model \ref{model:spw}.}
-    \label{fig:metrics-dr16q}
-\end{figure*}
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.99\linewidth]{images/metrics-cv2-ab-mini.png}
-    \caption{Plots of NMAD \eqref{eq:nmad} (upper line of plots) and the fraction of catastrophic outliers \eqref{eq:n015} (lower line of plots) metrics as a function of (from left to right) spectral redshift value, photometric redshift prediction value, and stellar magnitude in the filter z) of cross-validation predictions. The solid line shows model \ref{model:spdw}, the dot line shows model \ref{model:pw}, the dashed line shows model \ref{model:pdw}, the dash-dot line shows model \ref{model:dw}, and dash-dot-dot line shows model \ref{model:spw}.}
-    \label{fig:metrics-cv2-total}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.55\linewidth]{images/scatterplots-cv2-gal-sorted.png}
-    \caption{Scatterplots of cross-validation predictions of galaxies of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
-    \label{fig:scatter-cv2-gal}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.99\linewidth]{images/scatterplots-dr16q-wo-train-sorted.png}
-    \caption{Scatterplots of predictions on SDSS DR16 quasars test sample of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
-    \label{fig:scatter-dr16q_wo_train}
-\end{figure*}
 
 % \begin{figure*}
 %     \centering
@@ -784,13 +847,6 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 %     \caption{Scatterplots of cross-validation predictions of quasars of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
 %     \label{fig:scatter-cv2-qso}
 % \end{figure*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.99\linewidth]{images/scatterplots-cv2-total-sorted.png}
-    \caption{Scatterplots of cross-validation predictions of galaxies and quasars of three models (from left to right) -- \ref{model:spdw}, \ref{model:pw}, \ref{model:dw}. The abscissa axis shows the spectral redshift value, and the ordinate axis shows the photometric redshift prediction. The color and size of dots show the prediction reliability zConf \eqref{eq:zconf}. The gray area around the diagonal is the area of predictions that are not catastrophic emissions according to metric \eqref{eq:n015}.}
-    \label{fig:scatter-cv2-total}
-\end{figure*}
 
 На рис. \ref{fig:metrics-cv2-total} и \ref{fig:metrics-dr16q} справа приведены графики зависимости метрик качества точечных прогнозов $NMAD$ \eqref{eq:nmad} и $n_{>0.15}$ \eqref{eq:n015} от значения оптической AB-величины в фильтре $z$ для представленных пяти моделей на кросс-валидации и тестовой выборке квазаров DR16q, соответственно. Наблюдается монотонная зависимость от яркости источника в оптике на всех выборках. На кросс валидации (галактики и квазары) все модели показывают точность значительно выше более ярких источниках ($z_{mag} < 20$), чем на слабых сточниках ($z_{mag} > 21$). Точность может отличаться в 2-3 раза (например, в таблице \ref{tab:total_metrics_table}, где приведены метрики в пяти интервалах по spec-z и по $z_{mag}$: на кросс-валидации модель на всем небе \ref{model:pw} показывает значения метрик $NMAD, n_{>0.15} = 0.043, 0.079$ на объектах $19 \leq z_{mag} < 20$ и $NMAD, n_{>0.15} = 0.089, 0.213$ на объектах $21 \leq z_{mag} < 23$, а наиболее точная модель \ref{model:spdw} -- $NMAD, n_{>0.15} = 0.026, 0.034$ и $NMAD, n_{>0.15} = 0.048, 0.093$, соответственно.
 
@@ -800,19 +856,6 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 
 \clearpage
 \subsubsection{Зависимость от класса объекта (QSO/GALAXY)}
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.99\linewidth]{images/class-galaxy-cv2.png}
-    \caption{Метрики на ярких и слабых галактиках на кросс-валидации в зависимости от spec-z}
-    \label{fig:class-galaxy-cv2}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.99\linewidth]{images/class-qso-dr16q.png}
-    \caption{Метрики на ярких и слабых квазарах DR16q в зависимости от spec-z}
-    \label{fig:class-qso-dr16q}
-\end{figure*}
 
 %\begin{figure*}
 %    \centering
