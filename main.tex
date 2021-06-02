@@ -875,8 +875,8 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-cv2-qso-by-z-mag}
-    \caption{Метрики в зависимости от zConf на ярких и слабых квазарах кросс-валидации}
+    \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-dr16q-qso-by-z-mag}
+    \caption{Метрики в зависимости от zConf на ярких и слабых квазарах DR16q}
     \label{fig:metrics-zconf-cv2}
 \end{figure*}
 
@@ -897,7 +897,7 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 \begin{figure*}
     \centering
     \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-log.png}
-    \caption{Метрики в зависимости от zConf}
+    \caption{Метрики в зависимости от zConf (кросс-валидация, дифференциальная по zConf)}
     \label{fig:metrics-zconf-cv2}
 \end{figure*}
 
@@ -928,6 +928,20 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
     \centering
     \includegraphics[width=0.9\linewidth]{images/zconf-by-photo_z-x-n015.png}
     \caption{Выбор порога zConf по прогнозу photo-z и порогу по доле выбросов.}
+    \label{fig:my_label}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/zconf-by-photo_z-x-n015_zl20.png}
+    \caption{Выбор порога zConf по прогнозу photo-z и порогу по доле выбросов ($z_{mag} \leq 20$).}
+    \label{fig:my_label}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/zconf-by-photo_z-x-n015_zgr20.png}
+    \caption{Выбор порога zConf по прогнозу photo-z и порогу по доле выбросов ($20 < z_{mag} \leq 22$).}
     \label{fig:my_label}
 \end{figure*}
 
@@ -1127,6 +1141,74 @@ The presented photo-z models are integrated into the SRGz system designed to con
 \bibliography{main}
 
 \appendix
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/class-qso-cv2.png}
+    \caption{Метрики на ярких и слабых квазарвх на кросс-валидации в зависимости от spec-z}
+    \label{fig:class-galaxy-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-cv2-qso-by-z-mag}
+    \caption{Метрики в зависимости от zConf на ярких и слабых квазарах кросс-валидации}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-gal-log.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация галактики, дифференциальная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-qso-log.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация квазары, дифференциальная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-dr16q-log.png}
+    \caption{Метрики в зависимости от zConf (DR16q, дифференциальная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-log-cum.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация, кумулятивная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-gal-log-cum.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация галактики, кумулятивная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-qso-log-cum.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация квазары, кумулятивная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-dr16q-log-cum.png}
+    \caption{Метрики в зависимости от zConf (DR16q, кумулятивная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
 
 %\section{Advanced metrics charts}
 %
