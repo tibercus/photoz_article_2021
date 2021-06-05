@@ -875,6 +875,14 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 
 \begin{figure*}
     \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-dr16q.png}
+    \caption{Метрики в зависимости от zConf на DR16q}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
     \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-dr16q-qso-by-z-mag}
     \caption{Метрики в зависимости от zConf на ярких и слабых квазарах DR16q}
     \label{fig:metrics-zconf-cv2}
@@ -889,14 +897,7 @@ In this paper, we evaluate the calibration of the 68 percent confidence interval
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-dr16q.png}
-    \caption{Метрики в зависимости от zConf на DR16q}
-    \label{fig:metrics-zconf-cv2}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-log.png}
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-log_zspec.png}
     \caption{Метрики в зависимости от zConf (кросс-валидация, дифференциальная по zConf)}
     \label{fig:metrics-zconf-cv2}
 \end{figure*}
@@ -1152,11 +1153,31 @@ The presented photo-z models are integrated into the SRGz system designed to con
 
 \begin{figure*}
     \centering
+    \includegraphics[width=0.99\linewidth]{images/class-extended-cv2.png}
+    \caption{Метрики на ярких и слабых протяженных источниках на кросс-валидации в зависимости от spec-z}
+    \label{fig:class-galaxy-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/class-pointlike-cv2.png}
+    \caption{Метрики на ярких и слабых точечных источниках на кросс-валидации в зависимости от spec-z}
+    \label{fig:class-galaxy-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
     \includegraphics[width=0.99\linewidth]{images/metrics-by-zconf-cv2-qso-by-z-mag}
     \caption{Метрики в зависимости от zConf на ярких и слабых квазарах кросс-валидации}
     \label{fig:metrics-zconf-cv2}
 \end{figure*}
 
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-log.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация, дифференциальная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
 
 \begin{figure*}
     \centering
@@ -1207,6 +1228,61 @@ The presented photo-z models are integrated into the SRGz system designed to con
 \begin{figure*}
     \centering
     \includegraphics[width=0.99\linewidth]{images/metrics-zconf-dr16q-log-cum.png}
+    \caption{Метрики в зависимости от zConf (DR16q, кумулятивная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+=========================================================
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-gal-log_zspec.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация галактики, дифференциальная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-qso-log_zspec.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация квазары, дифференциальная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-dr16q-log_zspec.png}
+    \caption{Метрики в зависимости от zConf (DR16q, дифференциальная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-log-cum_zspec.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация, кумулятивная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-gal-log-cum_zspec.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация галактики, кумулятивная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-cv2-qso-log-cum_zspec.png}
+    \caption{Метрики в зависимости от zConf (кросс-валидация квазары, кумулятивная по zConf)}
+    \label{fig:metrics-zconf-cv2}
+\end{figure*}
+
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.99\linewidth]{images/metrics-zconf-dr16q-log-cum_zspec.png}
     \caption{Метрики в зависимости от zConf (DR16q, кумулятивная по zConf)}
     \label{fig:metrics-zconf-cv2}
 \end{figure*}
@@ -1291,6 +1367,27 @@ The presented photo-z models are integrated into the SRGz system designed to con
 %    \label{fig:my_label}
 %\end{figure}
 %\end{landscape}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/zconf-by-spec_z-x-n015.png}
+    \caption{Выбор порога zConf по spec-z и порогу по доле выбросов.}
+    \label{fig:my_label}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/zconf-by-spec_z-x-n015_zl20.png}
+    \caption{Выбор порога zConf по spec-z и порогу по доле выбросов ($z_{mag} \leq 20$).}
+    \label{fig:my_label}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/zconf-by-spec_z-x-n015_zgr20.png}
+    \caption{Выбор порога zConf по spec-z и порогу по доле выбросов ($20 < z_{mag} \leq 22$).}
+    \label{fig:my_label}
+\end{figure*}
 
 
 \end{document}
